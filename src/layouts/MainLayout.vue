@@ -1,11 +1,12 @@
 <template>
+  <style lang="css"></style>
   <q-layout view="hHh lpR fFf" class="bg-grey-1"> </q-layout>
 </template>
 
 <script>
 import { ref } from "vue";
 import { fabYoutube } from "@quasar/extras/fontawesome-v6";
-
+import "src/assets/css/tailwind.css";
 export default {
   name: "MyLayout",
 

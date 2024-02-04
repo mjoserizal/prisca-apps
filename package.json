@@ -13,10 +13,12 @@
     "build": "quasar build"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.1",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.6.7",
     "pinia": "^2.0.11",
     "quasar": "^2.8.0",
+    "tailwindcss": "^3.4.1",
     "vue": "^3.2.29",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.2.5"
@@ -24,11 +26,11 @@
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^3.3.1",
     "@quasar/app-vite": "^1.4.3",
-    "autoprefixer": "^10.4.2",
+    "autoprefixer": "^10.4.17",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",
-    "postcss": "^8.4.14",
+    "postcss": "^8.4.33",
     "prettier": "^2.5.1"
   },
   "engines": {
