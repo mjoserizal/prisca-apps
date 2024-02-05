@@ -20,7 +20,7 @@
 
         <q-space />
 
-        <div class="YL__toolbar-input-container row no-wrap">
+        <!-- <div class="YL__toolbar-input-container row no-wrap">
           <q-input
             dense
             outlined
@@ -36,47 +36,36 @@
             icon="search"
             unelevated
           />
-        </div>
+        </div> -->
 
         <q-space />
 
         <div class="q-gutter-sm row items-center no-wrap">
           <q-btn
+            flat
             round
             dense
-            flat
-            color="grey-8"
-            icon="video_call"
-            v-if="$q.screen.gt.sm"
+            icon="account_circle"
+            @click="toggleAccountDropdown"
           >
-            <q-tooltip>Create a video or post</q-tooltip>
-          </q-btn>
-          <q-btn
-            round
-            dense
-            flat
-            color="grey-8"
-            icon="apps"
-            v-if="$q.screen.gt.sm"
-          >
-            <q-tooltip>Apps</q-tooltip>
-          </q-btn>
-          <q-btn
-            round
-            dense
-            flat
-            color="grey-8"
-            icon="message"
-            v-if="$q.screen.gt.sm"
-          >
-            <q-tooltip>Messages</q-tooltip>
-          </q-btn>
-          <q-btn round dense flat color="grey-8" icon="notifications">
-            <q-badge color="red" text-color="white" floating> 2 </q-badge>
-            <q-tooltip>Notifications</q-tooltip>
-          </q-btn>
-          <q-btn round flat>
-            <q-tooltip>Account</q-tooltip>
+            <q-menu auto-close>
+              <q-list>
+                <q-item clickable @click="handleAccountClick">
+                  <q-item-section avatar>
+                    <!-- <q-avatar>
+                      <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+                    </q-avatar> -->
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Account</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable @click="logout">
+                  <q-item-section> Logout </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
           </q-btn>
         </div>
       </q-toolbar>
@@ -100,7 +89,7 @@
           style="width: 160px; height: 80px"
         >
           <img
-            src="src/assets/ISM.png"
+            src="/public/images/ISM.png"
             alt="Logo"
             fit="contain"
             class="absolute-center"

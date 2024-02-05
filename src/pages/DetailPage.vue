@@ -1,61 +1,65 @@
 <template>
-  <q-page>
-    <q-page-container>
-      <div class="q-pa-md q-gutter-sm">
-        <q-banner rounded :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-2'">
-          <template v-slot:avatar>
-            <img
-              alt="produk"
-              :src="`data:image/jpeg;base64,${product.base64_image}`"
-              style="height: 150px"
-            />
-          </template>
-          <div class="q-mb-md" v-if="product.name">
-            <q-card>
-              <q-card-section>
-                <q-card-title class="text-h6">Title : </q-card-title>
-                <q-card-text>{{ product.name }}</q-card-text>
-              </q-card-section>
-            </q-card>
+  <q-page class="fit row wrap justify-start items-start content-start q-pa-sm">
+    <q-col class="col-12" v-if="product.title">
+      <q-card class="my-card" flat bordered style="height: 100%">
+        <img alt="produk" :src="product.thumbnail" style="height: 300px" />
+
+        <q-card-section>
+          <div class="row no-wrap items-center">
+            <div class="col text-h6 ellipsis">{{ product.title }}</div>
+            <div
+              class="col-auto text-grey text-caption q-pt-md row no-wrap items-center"
+            >
+              <q-icon name="place" />
+              250 ft
+            </div>
           </div>
-          <div class="q-mb-md" v-if="product.price">
-            <q-card>
-              <q-card-section>
-                <q-card-title class="text-h6">Price : </q-card-title>
-                <q-card-text>$ {{ product.price }}</q-card-text>
-              </q-card-section>
-            </q-card>
+
+          <q-rating v-model="product.rating" :max="5" size="32px" />
+
+          <div class="text-subtitle1 q-mt-sm text-ellipsis overflow-hidden">
+            {{ product.description }}
           </div>
-          <div class="q-mb-md" v-if="product.description">
-            <q-card>
-              <q-card-section>
-                <q-card-title class="text-h6">Description : </q-card-title>
-                <q-card-text>{{ product.description }}</q-card-text>
-              </q-card-section>
-            </q-card>
-          </div>
-        </q-banner>
-      </div>
-    </q-page-container>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          $ {{ product.price }}
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          Author: {{ product.brand }}
+        </q-card-section>
+
+        <q-separator />
+
+        <!-- <q-card-actions class="justify-between">
+          <router-link :to="{ name: 'index' }">
+            <q-btn flat color="primary">Back to List</q-btn>
+          </router-link>
+        </q-card-actions> -->
+      </q-card>
+    </q-col>
   </q-page>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import axios from "axios";
 
-export default {
+export default defineComponent({
   name: "DetailPage",
+
   props: {
     id: {
       type: String,
       required: true,
     },
   },
+
   setup(props) {
     const product = ref({});
+    const stars = ref(0);
 
-    const fetchProductDetails = async () => {
+    const getProductDetails = async () => {
       try {
         const token = localStorage.getItem("token");
 
@@ -68,22 +72,22 @@ export default {
         };
 
         const response = await axios.get(
-          `http://192.168.1.23:8000/api/product/${props.id}`,
+          `https://dummyjson.com/products/${props.id}`,
           config
         );
-        product.value = response.data.product;
+        product.value = response.data;
       } catch (error) {
         console.log("Error fetching data: ", error);
       }
     };
 
     onMounted(() => {
-      fetchProductDetails();
+      getProductDetails();
     });
 
-    return { product };
+    return { product, stars };
   },
-};
+});
 </script>
 
 <style></style>

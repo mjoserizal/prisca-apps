@@ -1,5 +1,13 @@
 const routes = [
   {
+    path: "/catalogue",
+    name: "catalogue",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      { path: "", component: () => import("pages/CataloguePage.vue") },
+    ],
+  },
+  {
     path: "/dashboard",
     name: "dashboard",
     component: () => import("components/HeaderSidebar.vue"),
