@@ -9,15 +9,14 @@
       </div>
 
       <div class="row items-center">
-        <!-- <q-input
-          v-model="searchInput"
-          placeholder="Search..."
-          dense
-          outlined
-          style="max-width: 200px"
-          class="self-stretch"
-        /> -->
-        <q-btn color="primary" @click="openFilterPanel" label="Filter" />
+        <q-btn color="indigo" @click="openFilterPanel" class="filter-button">
+          <i
+            class="fa-solid fa-arrow-down-wide-short"
+            style="padding-right: 10px"
+          ></i>
+          <!-- Move icon outside the label -->
+          Filter
+        </q-btn>
       </div>
     </div>
     <q-page
@@ -135,22 +134,22 @@ export default defineComponent({
       Swal.fire({
         title: "Filter Options",
         html: `
-          <label for="priceRange">Price Range: $<span id="priceRangeValue">${
-            priceRangeValue.value
-          }</span></label>
-          <input type="range" id="priceRange" name="priceRange" min="0" max="1000" value="${
-            priceRangeValue.value
-          }">
-          <br><br>
-          <select id="brandFilter" name="brandFilter">
-            <option value="">${
-              currentBrandFilter ? "Show All Brands" : "Select Brand"
-            }</option>
-            ${uniqueBrands
-              .map((brand) => `<option value="${brand}">${brand}</option>`)
-              .join("")}
-          </select>
-        `,
+      <label for="priceRange">Price Range: $<span id="priceRangeValue">${
+        priceRangeValue.value
+      }</span></label>
+      <input type="range" id="priceRange" name="priceRange" min="0" max="2000" value="${
+        priceRangeValue.value
+      }">
+      <br><br>
+      <select id="brandFilter" name="brandFilter">
+        <option value="">${
+          currentBrandFilter ? "Show All Brands" : "Select Brand"
+        }</option>
+        ${uniqueBrands
+          .map((brand) => `<option value="${brand}">${brand}</option>`)
+          .join("")}
+      </select>
+    `,
         showCancelButton: true,
         confirmButtonText: "Apply Filters",
         didOpen: () => {
@@ -169,14 +168,17 @@ export default defineComponent({
         },
       }).then((result) => {
         if (result.isConfirmed) {
-          const priceRange = parseFloat(
+          const minPrice = parseFloat(
             document.getElementById("priceRange").value
           );
+          const maxPrice = minPrice + 99; // Set max price to 99 more than min price
+
           const brandFilter = document.getElementById("brandFilter").value;
 
           products.value = originalProducts.value.filter((product) => {
+            const productPrice = parseFloat(product.price);
             const passPriceFilter =
-              priceRange === 1000 || parseFloat(product.price) <= priceRange;
+              productPrice >= minPrice && productPrice <= maxPrice;
             const passBrandFilter =
               !brandFilter || product.brand === brandFilter;
             return passPriceFilter && passBrandFilter;
