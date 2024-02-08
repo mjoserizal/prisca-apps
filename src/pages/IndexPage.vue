@@ -8,13 +8,19 @@
         </q-breadcrumbs>
       </div>
 
-      <div class="row items-center">
+      <div class="row items-center q-gutter-md">
+        <q-input
+          outlined
+          dense
+          v-model="searchInput"
+          placeholder="Search product..."
+          class="search-input"
+        />
         <q-btn color="indigo" @click="openFilterPanel" class="filter-button">
           <i
             class="fa-solid fa-arrow-down-wide-short"
             style="padding-right: 10px"
           ></i>
-          <!-- Move icon outside the label -->
           Filter
         </q-btn>
       </div>

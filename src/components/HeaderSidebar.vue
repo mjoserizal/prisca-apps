@@ -110,11 +110,9 @@
             <q-item-section avatar>
               <q-icon :name="menuItem.icon" color="white" />
             </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-white">{{
-                menuItem.text
-              }}</q-item-label>
-            </q-item-section>
+            <router-link :to="menuItem.route" class="text-white">
+              <q-item-section>{{ menuItem.text }}</q-item-section>
+            </router-link>
           </q-item>
         </div>
         <!-- Menu Group -->
@@ -136,8 +134,10 @@ import { ref } from "vue";
 import { computed } from "vue";
 import { useStore } from "vuex";
 import store from "app/src/router/store";
+import { useRouter } from "vue-router";
 export default {
   setup() {
+    const router = useRouter();
     const leftDrawerOpen = ref(false);
     const search = ref("");
     const vuexStore = useStore(store);
@@ -151,9 +151,17 @@ export default {
     };
 
     const menuItems = [
-      { icon: "fas fa-home", text: "Catalogue" },
-      { icon: "fas fa-shopping-cart", text: "Purchase Cart" },
-      { icon: "fas fa-file-invoice", text: "Purchase Request" },
+      { icon: "fas fa-home", text: "Catalogue", route: "/dashboard" },
+      {
+        icon: "fas fa-shopping-cart",
+        text: "Purchase Cart",
+        route: "/purchase-cart",
+      },
+      {
+        icon: "fas fa-file-invoice",
+        text: "Purchase Request",
+        route: "/catalogue",
+      },
       // Add more menu items as needed
     ];
 

@@ -33,7 +33,9 @@ const routes = [
     path: "/purchase-cart",
     name: "PurchaseCartPage",
     component: () => import("components/HeaderSidebar.vue"),
-    children: [{ path: "", component: () => import("pages/PurchasePage.vue") }],
+    children: [
+      { path: "", component: () => import("pages/PurchaseCartPage.vue") },
+    ],
   },
 ];
 

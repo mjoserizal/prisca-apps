@@ -97,6 +97,7 @@ import axios from "axios";
 import "@fortawesome/fontawesome-free";
 import { useStore } from "vuex";
 import store from "src/router/store";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "DetailPage",
 
@@ -109,8 +110,9 @@ export default defineComponent({
 
   setup(props) {
     const product = ref({});
-    const slide = ref(1); // Change slide reference initialization
+    const slide = ref(1);
     const vuexStore = useStore(store);
+    const router = useRouter();
     const getProductDetails = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -133,13 +135,17 @@ export default defineComponent({
       }
     };
     const addToCart = () => {
-      store.dispatch("addToCart");
+      // Simpan detail produk di local storage
+      const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+      cartItems.push(product.value);
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      // router.push("/purchase-cart");
     };
     onMounted(() => {
       getProductDetails();
     });
 
-    return { product, slide, addToCart }; // Return slide reference
+    return { product, slide, addToCart };
   },
 });
 </script>

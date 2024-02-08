@@ -17,7 +17,7 @@
           </q-card-section>
           <q-card-section>
             <q-form class="q-gutter-md">
-              <q-input filled v-model="email" label="email" lazy-rules />
+              <q-input filled v-model="username" label="username" lazy-rules />
 
               <q-input
                 type="password"
@@ -53,30 +53,27 @@ export default defineComponent({
 
   setup() {
     const router = useRouter();
-    const email = ref("");
+    const username = ref("");
     const password = ref("");
 
     const login = async () => {
       try {
-        const response = await axios.post(
-          "http://192.168.1.23:8000/api/login",
-          {
-            email: email.value,
-            password: password.value,
-          }
-        );
+        const response = await axios.post("https://dummyjson.com/auth/login", {
+          username: username.value,
+          password: password.value,
+        });
 
         // Check if response is successful (status code 200)
         if (response.status === 200) {
           // Assuming the token is returned in the response
           const token = response.data.token;
-
+          const username = response.data.username;
           // Store the token in local storage
           localStorage.setItem("token", token);
 
           // Log the token to the console
           console.log("Token:", token);
-
+          console.log("Username:", username);
           // Redirect to the dashboard
           router.push("/dashboard");
         } else {
@@ -90,7 +87,7 @@ export default defineComponent({
     };
 
     return {
-      email,
+      username,
       password,
       login,
     };
