@@ -83,15 +83,9 @@
 
     <q-card-actions class="justify-end">
       <router-link :to="{ name: 'detail', params: { id: product.id } }">
-        <q-btn
-          align="right"
-          class="btn-fixed-width"
-          color="primary"
-          style="border-radius: 8px"
+        <q-btn @click="addToCart" color="deep-orange" style="border-radius: 6px"
+          >Tambahkan ke Keranjang</q-btn
         >
-          <q-icon name="fa-solid fa-cart-shopping"></q-icon>
-          <span class="text-white" style="margin-left: 5px">Checkout</span>
-        </q-btn>
       </router-link>
     </q-card-actions>
   </q-card>
@@ -101,6 +95,8 @@
 import { defineComponent, ref, onMounted } from "vue";
 import axios from "axios";
 import "@fortawesome/fontawesome-free";
+import { useStore } from "vuex";
+import store from "src/router/store";
 export default defineComponent({
   name: "DetailPage",
 
@@ -114,7 +110,7 @@ export default defineComponent({
   setup(props) {
     const product = ref({});
     const slide = ref(1); // Change slide reference initialization
-
+    const vuexStore = useStore(store);
     const getProductDetails = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -136,12 +132,14 @@ export default defineComponent({
         console.log("Error fetching data: ", error);
       }
     };
-
+    const addToCart = () => {
+      store.dispatch("addToCart");
+    };
     onMounted(() => {
       getProductDetails();
     });
 
-    return { product, slide }; // Return slide reference
+    return { product, slide, addToCart }; // Return slide reference
   },
 });
 </script>

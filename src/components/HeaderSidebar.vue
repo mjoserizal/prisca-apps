@@ -21,6 +21,23 @@
         <q-space />
 
         <q-space />
+        <q-btn
+          flat
+          dense
+          round
+          icon="fa-solid fa-bag-shopping"
+          aria-label="Cart"
+          class="q-ml-xs"
+        >
+          <q-badge
+            color="deep-orange"
+            text-color="white"
+            floating
+            v-if="cartItemCount > 0"
+          >
+            {{ cartItemCount }}
+          </q-badge>
+        </q-btn>
 
         <div class="q-gutter-sm row items-center no-wrap">
           <q-btn
@@ -116,12 +133,15 @@
 
 <script>
 import { ref } from "vue";
-
+import { computed } from "vue";
+import { useStore } from "vuex";
+import store from "app/src/router/store";
 export default {
   setup() {
     const leftDrawerOpen = ref(false);
     const search = ref("");
-
+    const vuexStore = useStore(store);
+    const cartItemCount = computed(() => store.state.cartItemCount);
     const updateLeftDrawerOpen = (value) => {
       leftDrawerOpen.value = value;
     };
@@ -143,6 +163,7 @@ export default {
       search,
       toggleLeftDrawer,
       menuItems,
+      cartItemCount,
     };
   },
 };
