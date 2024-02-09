@@ -14,6 +14,34 @@ const routes = [
     children: [{ path: "", component: () => import("pages/IndexPage.vue") }],
   },
   {
+    path: "/product",
+    name: "product",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      { path: "", component: () => import("pages/ProductCatalogues.vue") },
+    ],
+  },
+  {
+    path: "/addproduct",
+    name: "addproduct",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("components/addproductform/SectionOne.vue"),
+      },
+    ],
+  },
+
+  {
+    path: "/product/:id",
+    name: "product-detail",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      { path: "", component: () => import("pages/ProductDetail.vue") },
+    ],
+  },
+  {
     path: "/",
     component: () => import("pages/LoginPage.vue"),
   },

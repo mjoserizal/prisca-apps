@@ -20,6 +20,24 @@
 
         <q-space />
 
+        <div class="YL__toolbar-input-container row no-wrap">
+          <q-input
+            dense
+            outlined
+            square
+            v-model="search"
+            placeholder="Search"
+            class="bg-white col"
+          />
+          <q-btn
+            class="YL__toolbar-input-btn"
+            color="grey-3"
+            text-color="grey-8"
+            icon="search"
+            unelevated
+          />
+        </div>
+
         <q-space />
         <q-btn
           flat
@@ -122,8 +140,7 @@
       </q-list>
       <!-- Sidebar Menu -->
     </q-drawer>
-
-    <q-page-container>
+    <q-page-container class="q-pt-lg q-px-lg">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -178,6 +195,12 @@ export default {
 </script>
 
 <style lang="sass">
+.q-page-container
+  padding-top: 1.5rem
+  padding-bottom: 1.5rem
+  padding-left: 1.5rem
+  padding-right: 1.5rem
+
 .YL
   &__toolbar-input-container
     min-width: 100px

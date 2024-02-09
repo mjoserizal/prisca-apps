@@ -58,10 +58,13 @@ export default defineComponent({
 
     const login = async () => {
       try {
-        const response = await axios.post("https://dummyjson.com/auth/login", {
-          username: username.value,
-          password: password.value,
-        });
+        const response = await axios.post(
+          "http://192.168.1.23:8000/api/login",
+          {
+            email: email.value,
+            password: password.value,
+          }
+        );
 
         // Check if response is successful (status code 200)
         if (response.status === 200) {
@@ -75,7 +78,7 @@ export default defineComponent({
           console.log("Token:", token);
           console.log("Username:", username);
           // Redirect to the dashboard
-          router.push("/dashboard");
+          router.push("/product");
         } else {
           console.error("Error during login:", response.statusText);
           // Handle login error, show message, etc.
