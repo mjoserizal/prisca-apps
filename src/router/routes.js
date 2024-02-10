@@ -32,7 +32,17 @@ const routes = [
       },
     ],
   },
-
+  {
+    path: "/listcatalogue",
+    name: "listcatalogue",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("src/pages/ListCatalogue.vue"),
+      },
+    ],
+  },
   {
     path: "/product/:id",
     name: "product-detail",

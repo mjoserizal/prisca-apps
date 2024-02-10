@@ -363,14 +363,20 @@
             class="block mb-2 text-sm font-medium text-gray-600"
             >Satuan:</label
           >
-          <input
-            type="text"
+          <select
             id="satuan"
             name="satuan"
             v-model="product.satuan"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
+          >
+            <option value="">Pilih Satuan</option>
+            <option value="kg">Kg</option>
+            <option value="gram">Gram</option>
+            <option value="pcs">Pcs</option>
+            <option value="box">Box</option>
+          </select>
         </div>
+
         <!-- Input Kondisi -->
         <div class="mb-4">
           <label class="block mb-2 text-sm font-medium text-gray-600"
@@ -378,18 +384,20 @@
           >
           <div class="flex items-center">
             <input
-              type="checkbox"
+              type="radio"
               id="condition-new"
-              name="condition-new"
-              v-model="product.condition.new"
+              name="condition"
+              value="new"
+              v-model="product.condition"
               class="mr-1"
             />
             <label for="condition-new" class="mr-4">New</label>
             <input
-              type="checkbox"
+              type="radio"
               id="condition-used"
-              name="condition-used"
-              v-model="product.condition.used"
+              name="condition"
+              value="used"
+              v-model="product.condition"
               class="mr-1"
             />
             <label for="condition-used">Used</label>
@@ -447,128 +455,429 @@
     </form>
 
     <form
-      @submit.prevent="submitProduct"
+      @submit.prevent="submitCommercialInfo"
       class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row m-6"
     >
+      <!-- Bagian kiri -->
       <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
-        <!-- Input Product Specification -->
-        <div class="mb-4" style="max-height: 200px; overflow-y: auto">
-          <label
-            for="product-specification"
-            class="block mb-2 text-sm font-medium text-gray-600"
-            >Product Specification:</label
-          >
-          <textarea
-            id="product-specification"
-            name="product-specification"
-            v-model="product.productSpecification"
-            rows="5"
-            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          ></textarea>
-        </div>
-
-        <!-- Input Feature -->
+        <!-- Input Price -->
         <div class="mb-4">
           <label
-            for="feature"
+            for="price"
             class="block mb-2 text-sm font-medium text-gray-600"
-            >Feature:</label
+            >Price:</label
           >
           <input
             type="text"
-            id="feature"
-            name="feature"
-            v-model="product.feature"
+            id="price"
+            name="price"
+            v-model="commercialInfo.price"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
-        <!-- Input Satuan -->
+        <!-- Input Discount -->
         <div class="mb-4">
           <label
-            for="satuan"
+            for="discount"
             class="block mb-2 text-sm font-medium text-gray-600"
-            >Satuan:</label
+            >Discount:</label
           >
           <input
             type="text"
-            id="satuan"
-            name="satuan"
-            v-model="product.satuan"
+            id="discount"
+            name="discount"
+            v-model="commercialInfo.discount"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
-        <!-- Input Kondisi -->
+        <!-- Input Price Expiration Date -->
+        <div class="mb-4">
+          <label
+            for="price-expiration-date"
+            class="block mb-2 text-sm font-medium text-gray-600"
+            >Price Expiration Date:</label
+          >
+          <input
+            type="date"
+            id="price-expiration-date"
+            name="price-expiration-date"
+            v-model="commercialInfo.priceExpirationDate"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+        <!-- Input Etalase (Dropdown) -->
+        <div class="mb-4">
+          <label
+            for="etalase"
+            class="block mb-2 text-sm font-medium text-gray-600"
+            >Etalase:</label
+          >
+          <select
+            id="etalase"
+            name="etalase"
+            v-model="commercialInfo.etalase"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            <option value="">Select Etalase</option>
+            <!-- Daftar opsi etalase -->
+          </select>
+        </div>
+        <!-- Input Grosir -->
         <div class="mb-4">
           <label class="block mb-2 text-sm font-medium text-gray-600"
-            >Condition:</label
+            >Grosir:</label
           >
-          <div class="flex items-center">
+          <div
+            class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+          >
             <input
               type="checkbox"
-              id="condition-new"
-              name="condition-new"
-              v-model="product.condition.new"
-              class="mr-1"
+              id="grosir-toggle"
+              name="grosir-toggle"
+              v-model="commercialInfo.grosirToggle"
+              class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
             />
-            <label for="condition-new" class="mr-4">New</label>
+            <label
+              for="grosir-toggle"
+              class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+            ></label>
+          </div>
+          <label for="grosir-toggle" class="text-xs text-gray-600">On</label>
+        </div>
+        <div v-if="commercialInfo.grosirToggle" class="mb-4 flex">
+          <div class="flex-1 mr-2">
+            <label
+              for="grosir-qty"
+              class="block mb-2 text-sm font-medium text-gray-600"
+              >Qty:</label
+            >
             <input
-              type="checkbox"
-              id="condition-used"
-              name="condition-used"
-              v-model="product.condition.used"
-              class="mr-1"
+              type="number"
+              id="grosir-qty"
+              name="grosir-qty"
+              v-model="commercialInfo.grosirQty"
+              min="0"
+              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-            <label for="condition-used">Used</label>
+          </div>
+          <div class="flex-1 ml-2">
+            <label
+              for="grosir-price"
+              class="block mb-2 text-sm font-medium text-gray-600"
+              >Price:</label
+            >
+            <input
+              type="text"
+              id="grosir-price"
+              name="grosir-price"
+              v-model="commercialInfo.grosirPrice"
+              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
           </div>
         </div>
-      </div>
-      <div class="flex-1 pl-0 md:pl-4">
-        <!-- Input Technical Spec -->
+
+        <!-- Input Pre-order -->
         <div class="mb-4">
-          <label
-            for="technical-spec"
-            class="block mb-2 text-sm font-medium text-gray-600"
-            >Technical Spec:</label
+          <label class="block mb-2 text-sm font-medium text-gray-600"
+            >Pre-order:</label
           >
-          <textarea
-            id="technical-spec"
-            name="technical-spec"
-            v-model="product.technicalSpec"
-            rows="5"
-            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          ></textarea>
+          <div
+            class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+          >
+            <input
+              type="checkbox"
+              id="pre-order"
+              name="pre-order"
+              v-model="commercialInfo.preOrder"
+              class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            />
+            <label
+              for="pre-order"
+              class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+            ></label>
+          </div>
+          <label for="pre-order" class="text-xs text-gray-600">On</label>
         </div>
-        <!-- Input Part Number -->
+        <!-- Input Pre-order Days -->
+        <div v-if="commercialInfo.preOrder" class="mb-4">
+          <label
+            for="pre-order-days"
+            class="block mb-2 text-sm font-medium text-gray-600"
+            >Pre-order Days:</label
+          >
+          <input
+            type="number"
+            id="pre-order-days"
+            name="pre-order-days"
+            v-model="commercialInfo.preOrderDays"
+            min="0"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+      </div>
+
+      <!-- Bagian kanan -->
+      <div class="flex-1 pl-0 md:pl-4">
+        <!-- Input Currency (Dropdown) -->
         <div class="mb-4">
           <label
-            for="part-number"
+            for="currency"
             class="block mb-2 text-sm font-medium text-gray-600"
-            >Part Number:</label
+            >Currency:</label
+          >
+          <select
+            id="currency"
+            name="currency"
+            v-model="commercialInfo.currency"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            <option value="">Select Currency</option>
+            <!-- Daftar opsi currency -->
+          </select>
+        </div>
+        <!-- Input Payment Terms -->
+        <div class="mb-4">
+          <label
+            for="payment-terms"
+            class="block mb-2 text-sm font-medium text-gray-600"
+            >Payment Terms:</label
           >
           <input
             type="text"
-            id="part-number"
-            name="part-number"
-            v-model="product.partNumber"
+            id="payment-terms"
+            name="payment-terms"
+            v-model="commercialInfo.paymentTerms"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
-        <!-- Input Video -->
+        <!-- Input Purchase Quantity -->
+        <div class="mb-4">
+          <label class="block mb-2 text-sm font-medium text-gray-600"
+            >Purchase Quantity:</label
+          >
+          <!-- Bagian kiri untuk Minimum Purchase Quantity -->
+          <div class="flex justify-between">
+            <div class="w-1/2 pr-2">
+              <label
+                for="min-purchase-quantity"
+                class="block mb-2 text-sm font-medium text-gray-600"
+                >Minimum:</label
+              >
+              <input
+                placeholder="0"
+                type="number"
+                id="min-purchase-quantity"
+                name="min-purchase-quantity"
+                v-model="commercialInfo.minPurchaseQuantity"
+                min="0"
+                max="100"
+                class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <!-- Bagian kanan untuk Maximum Purchase Quantity -->
+            <div class="w-1/2 pl-2">
+              <label
+                for="max-purchase-quantity"
+                class="block mb-2 text-sm font-medium text-gray-600"
+                >Maximum:</label
+              >
+              <input
+                placeholder="0"
+                type="number"
+                id="max-purchase-quantity"
+                name="max-purchase-quantity"
+                v-model="commercialInfo.maxPurchaseQuantity"
+                min="0"
+                max="100"
+                class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Stock -->
         <div class="mb-4">
           <label
-            for="video"
+            for="stock"
             class="block mb-2 text-sm font-medium text-gray-600"
-            >Video:</label
+            >Stock:</label
           >
           <input
-            type="file"
-            id="video"
-            name="video"
-            accept="video/*"
-            @change="onVideoChange"
+            type="number"
+            id="stock"
+            name="stock"
+            v-model="commercialInfo.stock"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
+
+        <!-- Input contract -->
+        <div class="mb-4">
+          <label class="block mb-2 text-sm font-medium text-gray-600"
+            >contract:</label
+          >
+          <div
+            class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+          >
+            <input
+              type="checkbox"
+              id="contract-toggle"
+              name="contract-toggle"
+              v-model="commercialInfo.enablecontract"
+              class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            />
+            <label
+              for="contract-toggle"
+              class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+            ></label>
+          </div>
+          <label for="contract-toggle" class="text-xs text-gray-600">On</label>
+        </div>
+      </div>
+    </form>
+
+    <form
+      @submit.prevent="submitOthersInfo"
+      class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row m-6"
+    >
+      <!-- Bagian kiri -->
+      <div class="flex-1 pr-4 mb-4 md:mb-0">
+        <!-- Input Incoterm -->
+        <div class="relative mb-4">
+          <input
+            type="text"
+            id="incoterm"
+            name="incoterm"
+            v-model="othersInfo.incoterm"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+          <label
+            for="incoterm"
+            class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
+            >Incoterm:</label
+          >
+        </div>
+        <!-- Input Warranty -->
+        <div class="relative mb-4">
+          <input
+            type="text"
+            id="warranty"
+            name="warranty"
+            v-model="othersInfo.warranty"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+          <label
+            for="warranty"
+            class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
+            >Warranty:</label
+          >
+        </div>
+        <!-- Input Maintenance -->
+        <div class="relative mb-4">
+          <input
+            type="text"
+            id="maintenance"
+            name="maintenance"
+            v-model="othersInfo.maintenance"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+          <label
+            for="maintenance"
+            class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
+            >Maintenance:</label
+          >
+        </div>
+        <!-- Input Make Active in Catalogue (Switch) -->
+        <div class="flex items-center mb-4">
+          <label class="mr-2 text-sm font-medium text-gray-600"
+            >Make Active in Catalogue:</label
+          >
+          <div
+            class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+          >
+            <input
+              type="checkbox"
+              id="make-active"
+              name="make-active"
+              v-model="othersInfo.makeActive"
+              class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            />
+            <label
+              for="make-active"
+              class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+            ></label>
+          </div>
+          <label for="make-active" class="text-xs text-gray-600">Active</label>
+        </div>
+      </div>
+
+      <!-- Bagian kanan -->
+      <div class="flex-1 pl-4">
+        <!-- Input SKU -->
+        <div class="relative mb-4">
+          <input
+            type="text"
+            id="sku"
+            name="sku"
+            v-model="othersInfo.sku"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+          <label
+            for="sku"
+            class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
+            >SKU:</label
+          >
+        </div>
+
+        <!-- Input Tags -->
+        <!-- <div class="relative">
+          <input
+            type="text"
+            v-model="tagInput"
+            @keyup.enter="addTag"
+            placeholder="Add a tag"
+            class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          <label
+            for="tags"
+            class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
+          >
+            Tags:
+          </label>
+
+          <div class="mt-2">
+            <span
+              v-for="(tag, index) in tags"
+              :key="index"
+              class="inline-flex items-center px-3 py-1 mr-2 mb-2 bg-gray-200 rounded-full"
+            >
+              {{ tag }}
+              <button
+                @click="removeTag(index)"
+                class="ml-1 text-gray-500 focus:outline-none hover:text-gray-700"
+              >
+                <svg
+                  class="w-3 h-3 fill-current"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M3 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v2H3V3zm14 5v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8h14zm-4 3a1 1 0 0 0 0 2h-2a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2zm-4 0a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2H9z"
+                  />
+                </svg>
+              </button>
+            </span>
+          </div>
+
+          <button
+            v-if="tagInput.trim()"
+            @click="addTag"
+            class="absolute top-0 right-2 -mt-2 px-3 py-1 bg-indigo-500 text-white rounded-md focus:outline-none hover:bg-indigo-600"
+          >
+            Add
+          </button>
+        </div> -->
       </div>
     </form>
   </div>
@@ -596,6 +905,33 @@ export default {
         partNumber: "",
         video: "",
       },
+      commercialInfo: {
+        price: "",
+        discount: "",
+        priceExpirationDate: "",
+        etalase: "",
+        grosirToggle: false,
+        grosirQty: 0,
+        grosirPrice: "",
+        currency: "",
+        paymentTerms: "",
+        minPurchaseQuantity: "",
+        maxPurchaseQuantity: "",
+        purchaseQuantity: "",
+        stock: "",
+        preOrder: false,
+        preOrderDays: 0,
+        contract: false,
+      },
+      othersInfo: {
+        incoterm: "",
+        warranty: "",
+        maintenance: "",
+        makeActive: false,
+        sku: "",
+        tagInput: "",
+        tags: [],
+      },
     };
   },
   methods: {
@@ -607,8 +943,25 @@ export default {
       const file = e.target.files[0];
       // handle the file
     },
+    addTag() {
+      const tag = this.tagInput.trim();
+      if (tag) {
+        this.tags.push(tag);
+        this.tagInput = "";
+      }
+    },
+    removeTag(index) {
+      this.tags.splice(index, 1);
+    },
     submitProduct() {
       // handle form submission
+    },
+    submitCommercialInfo() {
+      // Lakukan sesuatu dengan data komersial yang diisi
+      console.log(this.commercialInfo);
+    },
+    submitOthersInfo() {
+      // Handle form submission
     },
   },
 };
