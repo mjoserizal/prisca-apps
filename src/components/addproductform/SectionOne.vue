@@ -440,16 +440,27 @@
           <label
             for="video"
             class="block mb-2 text-sm font-medium text-gray-600"
-            >Video:</label
           >
-          <input
-            type="file"
-            id="video"
-            name="video"
-            accept="video/*"
-            @change="onVideoChange"
-            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
+            Video:
+          </label>
+          <div class="relative">
+            <input
+              type="file"
+              id="video"
+              name="video"
+              accept="video/*"
+              @change="onVideoChange"
+              class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 pl-3 pr-10 py-2"
+            />
+            <button
+              class="absolute inset-y-0 right-0 flex items-center px-4 text-sm text-white bg-indigo-500 rounded-r-lg hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
+            >
+              Upload
+            </button>
+          </div>
+          <div class="mt-1 text-sm text-gray-500" id="video_help">
+            Please upload a video file. Supported formats: MP4, AVI, MKV, etc.
+          </div>
         </div>
       </div>
     </form>
@@ -754,7 +765,7 @@
           <label
             for="incoterm"
             class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
-            >Incoterm:</label
+            >Incoterm</label
           >
         </div>
         <!-- Input Warranty -->
@@ -769,7 +780,7 @@
           <label
             for="warranty"
             class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
-            >Warranty:</label
+            >Warranty</label
           >
         </div>
         <!-- Input Maintenance -->
@@ -784,13 +795,13 @@
           <label
             for="maintenance"
             class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
-            >Maintenance:</label
+            >Maintenance</label
           >
         </div>
         <!-- Input Make Active in Catalogue (Switch) -->
         <div class="flex items-center mb-4">
           <label class="mr-2 text-sm font-medium text-gray-600"
-            >Make Active in Catalogue:</label
+            >Make Active in Catalogue</label
           >
           <div
             class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
@@ -825,7 +836,7 @@
           <label
             for="sku"
             class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
-            >SKU:</label
+            >SKU</label
           >
         </div>
 
