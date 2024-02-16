@@ -127,12 +127,7 @@ export default {
   data() {
     return {
       product: {
-        image: null,
-        name: "",
-        group: "",
-        category: "",
-        brand: "",
-        categoryName: "",
+        // Define your product properties here
         productSpecification: "",
         feature: "",
         satuan: "",
@@ -142,21 +137,18 @@ export default {
         },
         technicalSpec: "",
         partNumber: "",
-        video: "",
+        video: null,
       },
     };
   },
   methods: {
-    onFileChange(e) {
-      const file = e.target.files[0];
-      // handle the file
-    },
-    onLargeFileChange(e) {
-      const file = e.target.files[0];
-      // handle the file
-    },
     submitProduct() {
-      // handle form submission
+      // Implement your logic to submit the product data
+      console.log("Product submitted:", this.product);
+    },
+    onVideoChange(event) {
+      // Update the video property when a new video is selected
+      this.product.video = event.target.files[0];
     },
   },
 };

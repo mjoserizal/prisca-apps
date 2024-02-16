@@ -37,7 +37,7 @@
 <script>
 import { defineComponent, defineAsyncComponent } from "vue";
 import { ref, computed } from "vue";
-import { useCart } from "../hooks/cart";
+import { useCart } from "../../hooks/cart";
 
 export default defineComponent({
   name: "ProductCatalogues",

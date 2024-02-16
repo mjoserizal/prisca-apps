@@ -49,7 +49,7 @@
 
 <script>
 import { ref } from "vue";
-import { useCart } from "../hooks/cart"; // Sesuaikan path yang sesuai
+import { useCart } from "../../hooks/cart"; // Sesuaikan path yang sesuai
 
 export default {
   name: "ProductDetail",
