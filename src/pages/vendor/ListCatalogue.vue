@@ -1,7 +1,10 @@
 <template>
-  <div class="max-w-4xl mx-auto">
+  <div class="w-full">
     <div class="p-4">
-      <q-card class="no-shadow" bordered>
+      <q-card
+        class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+        bordered
+      >
         <q-card-section>
           <div class="text-h6 text-grey-8">Product List</div>
         </q-card-section>
@@ -38,6 +41,29 @@
                 />
               </div>
             </template>
+            <template v-slot:body-cell-status="props">
+              <q-td :props="props">
+                <span
+                  :class="{
+                    'text-green-500': props.row.status === 'Active',
+                    'text-red-500': props.row.status === 'Inactive',
+                  }"
+                  >{{ props.row.status }}</span
+                >
+              </q-td>
+            </template>
+            <template v-slot:body-cell-action="props">
+              <q-td :props="props">
+                <q-btn
+                  round
+                  dense
+                  flat
+                  color="primary"
+                  icon="edit"
+                  @click="editProduct(props.row)"
+                />
+              </q-td>
+            </template>
           </q-table>
         </q-card-section>
       </q-card>
@@ -60,6 +86,24 @@ const products = ref([
     productGroup: "Electronics",
     price: "IDR 50.000.000",
     status: "Active",
+  },
+  {
+    name: "ASUS Vivobook",
+    productGroup: "Electronics",
+    price: "IDR 50.000.000",
+    status: "Inactive",
+  },
+  {
+    name: "ASUS Vivobook",
+    productGroup: "Electronics",
+    price: "IDR 50.000.000",
+    status: "Inactive",
+  },
+  {
+    name: "ASUS Vivobook",
+    productGroup: "Electronics",
+    price: "IDR 50.000.000",
+    status: "Inactive",
   },
   {
     name: "ASUS Vivobook",
@@ -94,12 +138,18 @@ const columns = [
     name: "status",
     label: "Status",
     field: "status",
-    format: (val) =>
-      `<span class="${
-        val === "Active" ? "text-green-500" : "text-red-500"
-      }">${val}</span>`,
+  },
+  {
+    name: "action",
+    label: "Action",
+    align: "right",
+    field: "action",
   },
 ];
+
+const editProduct = (product) => {
+  console.log("Edit product:", product);
+};
 </script>
 
 <style scoped>
