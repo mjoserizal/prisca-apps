@@ -71,15 +71,17 @@
                 style="border-radius: 20px"
               />
             </router-link>
-            <!-- <router-link :to="{ name: 'edit', params: { id: product.id } }">
+            <router-link
+              :to="{ name: 'editProduct', params: { id: product.id } }"
+            >
               <q-btn
                 align="left"
                 class="btn-fixed-width"
-                color="primary"
+                color="warning"
                 label="Edit"
                 style="border-radius: 20px"
               />
-            </router-link> -->
+            </router-link>
           </q-card-actions>
         </q-card>
       </q-col>

@@ -39,6 +39,14 @@
                   @click="show_filter = !show_filter"
                   flat
                 />
+                <q-btn
+                  icon="settings"
+                  class="q-ml-sm"
+                  flat
+                  @click="openAdvanceSearch"
+                >
+                  Advance Search
+                </q-btn>
               </div>
             </template>
             <template v-slot:body-cell-status="props">
@@ -68,6 +76,58 @@
         </q-card-section>
       </q-card>
     </div>
+    <!-- Popup untuk Advance Search -->
+    <q-dialog v-model="show_advance_search" persistent>
+      <q-card style="width: 600px">
+        <q-card-section class="row items-center justify-between">
+          <q-space />
+          <q-btn
+            icon="close"
+            flat
+            round
+            dense
+            v-close-popup
+            class="text-grey-8"
+          />
+        </q-card-section>
+        <q-card-section class="q-gutter-md">
+          <div class="row">
+            <div class="col">
+              <q-select
+                filled
+                label="Category"
+                lazy-rules
+                :rules="[
+                  (val) => (val && val.length > 0) || 'Please type something',
+                ]"
+              ></q-select>
+            </div>
+            <div class="col">
+              <q-select
+                filled
+                emit-value
+                map-options
+                label="Status"
+                :options="statusOptions"
+              ></q-select>
+            </div>
+          </div>
+          <q-input filled label="Min Price" type="number"></q-input>
+          <q-input filled label="Max Price" type="number"></q-input>
+          <q-slider
+            filled
+            label="Price Range"
+            v-model="priceRange"
+            :min="0"
+            :max="2000"
+            step="10"
+          ></q-slider>
+        </q-card-section>
+        <q-card-actions align="right" class="text-primary">
+          <q-btn label="Search" type="submit" color="primary" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -115,6 +175,12 @@ const products = ref([
 
 const filter = ref("");
 const show_filter = ref(false);
+const show_advance_search = ref(false);
+const priceRange = ref(500);
+const statusOptions = [
+  { label: "Active", value: "Active" },
+  { label: "Inactive", value: "Inactive" },
+];
 
 const columns = [
   {
@@ -149,6 +215,15 @@ const columns = [
 
 const editProduct = (product) => {
   console.log("Edit product:", product);
+};
+
+const openAdvanceSearch = () => {
+  show_advance_search.value = true;
+};
+
+const onSubmitAdvanceSearch = () => {
+  // Handle advance search submission
+  console.log("Advance search submitted");
 };
 </script>
 

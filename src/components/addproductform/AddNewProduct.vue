@@ -12,7 +12,7 @@
           Large Product Image:
         </label>
         <div
-          class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-300 px-6 py-10"
+          class="mt-2 flex justify-center rounded-lg border border-dashed shadow-md border-gray-300 px-6 py-10"
         >
           <div class="text-center">
             <svg
@@ -69,7 +69,7 @@
               Upload Image 1:
             </label>
             <div
-              class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-300 px-6 py-10"
+              class="mt-2 flex justify-center shadow-md rounded-lg border border-dashed border-gray-300 px-6 py-10"
             >
               <div class="text-center">
                 <svg
@@ -125,7 +125,7 @@
               Upload Image 2:
             </label>
             <div
-              class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-300 px-6 py-10"
+              class="mt-2 flex justify-center rounded-lg border shadow-md border-dashed border-gray-300 px-6 py-10"
             >
               <div class="text-center">
                 <svg
@@ -180,7 +180,7 @@
               Upload Image 3:
             </label>
             <div
-              class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-300 px-6 py-10"
+              class="mt-2 flex justify-center rounded-lg shadow-md border border-dashed border-gray-300 px-6 py-10"
             >
               <div class="text-center">
                 <svg

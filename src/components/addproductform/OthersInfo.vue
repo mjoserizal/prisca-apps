@@ -6,88 +6,83 @@
     <!-- Bagian kiri -->
     <div class="flex-1 pr-4 mb-4 md:mb-0">
       <!-- Input Incoterm -->
-      <div class="relative mb-4">
+      <div class="relative mb-6">
         <input
           type="text"
           id="incoterm"
           name="incoterm"
           v-model="othersInfo.incoterm"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
         <label
           for="incoterm"
-          class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
+          class="absolute top-0 left-2 -mt-2 text-balance text-gray-600 bg-white px-1"
           >Incoterm</label
         >
       </div>
       <!-- Input Warranty -->
-      <div class="relative mb-4">
+      <div class="relative mb-6">
         <input
           type="text"
           id="warranty"
           name="warranty"
           v-model="othersInfo.warranty"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
         <label
           for="warranty"
-          class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
+          class="absolute top-0 left-2 -mt-2 text-balance text-gray-600 bg-white px-1"
           >Warranty</label
         >
       </div>
       <!-- Input Maintenance -->
-      <div class="relative mb-4">
+      <div class="relative mb-6">
         <input
           type="text"
           id="maintenance"
           name="maintenance"
           v-model="othersInfo.maintenance"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
         <label
           for="maintenance"
-          class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
+          class="absolute top-0 left-2 -mt-2 text-balance text-gray-600 bg-white px-1"
           >Maintenance</label
         >
       </div>
       <!-- Input Make Active in Catalogue (Switch) -->
-      <div class="flex items-center mb-4">
+      <div class="flex items-center mb-6">
         <label class="mr-2 text-sm font-medium text-gray-600"
           >Make Active in Catalogue</label
         >
         <div
-          class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+          class="relative inline-block mr-2 align-middle select-none transition duration-200 ease-in"
         >
-          <input
-            type="checkbox"
-            id="make-active"
-            name="make-active"
+          <q-toggle
             v-model="othersInfo.makeActive"
-            class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            color="primary"
+            label="Make Active in Catalogue"
+            :before="false"
+            label-position="left"
           />
-          <label
-            for="make-active"
-            class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-          ></label>
         </div>
-        <label for="make-active" class="text-xs text-gray-600">Active</label>
       </div>
     </div>
 
     <!-- Bagian kanan -->
     <div class="flex-1 pl-4">
       <!-- Input SKU -->
-      <div class="relative mb-4">
+      <div class="relative mb-6">
         <input
           type="text"
           id="sku"
           name="sku"
           v-model="othersInfo.sku"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
         <label
           for="sku"
-          class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
+          class="absolute top-0 left-2 -mt-2 text-balance text-gray-600 bg-white px-1"
           >SKU</label
         >
       </div>
@@ -99,11 +94,11 @@
             v-model="tagInput"
             @keyup.enter="addTag"
             placeholder="Add a tag"
-            class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            class="w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
           <label
             for="tags"
-            class="absolute top-0 left-2 -mt-2 text-xs text-gray-600 bg-white px-1"
+            class="absolute top-0 left-2 -mt-2 text-balance text-gray-600 bg-white px-1"
           >
             Tags:
           </label>

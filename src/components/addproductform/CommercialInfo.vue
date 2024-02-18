@@ -15,7 +15,7 @@
           id="price"
           name="price"
           v-model="commercialInfo.price"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
       <!-- Input Discount -->
@@ -30,7 +30,7 @@
           id="discount"
           name="discount"
           v-model="commercialInfo.discount"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
       <!-- Input Price Expiration Date -->
@@ -45,7 +45,7 @@
           id="price-expiration-date"
           name="price-expiration-date"
           v-model="commercialInfo.priceExpirationDate"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
       <!-- Input Etalase (Dropdown) -->
@@ -59,7 +59,7 @@
           id="etalase"
           name="etalase"
           v-model="commercialInfo.etalase"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
           <option value="">Select Etalase</option>
           <!-- Daftar opsi etalase -->
@@ -71,21 +71,15 @@
           >Grosir:</label
         >
         <div
-          class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+          class="relative inline-block mr-2 align-middle select-none transition duration-200 ease-in"
         >
-          <input
-            type="checkbox"
-            id="grosir-toggle"
-            name="grosir-toggle"
+          <q-toggle
             v-model="commercialInfo.grosirToggle"
-            class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            color="primary"
+            label="Grosir"
+            :before="false"
           />
-          <label
-            for="grosir-toggle"
-            class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-          ></label>
         </div>
-        <label for="grosir-toggle" class="text-xs text-gray-600">On</label>
       </div>
       <div v-if="commercialInfo.grosirToggle" class="mb-4 flex">
         <div class="flex-1 mr-2">
@@ -100,7 +94,7 @@
             name="grosir-qty"
             v-model="commercialInfo.grosirQty"
             min="0"
-            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <div class="flex-1 ml-2">
@@ -114,7 +108,7 @@
             id="grosir-price"
             name="grosir-price"
             v-model="commercialInfo.grosirPrice"
-            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
       </div>
@@ -125,21 +119,15 @@
           >Pre-order:</label
         >
         <div
-          class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
+          class="relative inline-block mr-2 align-middle select-none transition duration-200 ease-in"
         >
-          <input
-            type="checkbox"
-            id="pre-order"
-            name="pre-order"
+          <q-toggle
             v-model="commercialInfo.preOrder"
-            class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            color="primary"
+            :before="false"
+            label="Pre-Order"
           />
-          <label
-            for="pre-order"
-            class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-          ></label>
         </div>
-        <label for="pre-order" class="text-xs text-gray-600">On</label>
       </div>
       <!-- Input Pre-order Days -->
       <div v-if="commercialInfo.preOrder" class="mb-4">
@@ -154,7 +142,7 @@
           name="pre-order-days"
           v-model="commercialInfo.preOrderDays"
           min="0"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
     </div>
@@ -172,7 +160,7 @@
           id="currency"
           name="currency"
           v-model="commercialInfo.currency"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
           <option value="">Select Currency</option>
           <!-- Daftar opsi currency -->
@@ -190,7 +178,7 @@
           id="payment-terms"
           name="payment-terms"
           v-model="commercialInfo.paymentTerms"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
       <!-- Input Purchase Quantity -->
@@ -214,7 +202,7 @@
               v-model="commercialInfo.minPurchaseQuantity"
               min="0"
               max="100"
-              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
           <!-- Bagian kanan untuk Maximum Purchase Quantity -->
@@ -232,7 +220,7 @@
               v-model="commercialInfo.maxPurchaseQuantity"
               min="0"
               max="100"
-              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
         </div>
@@ -248,7 +236,7 @@
           id="stock"
           name="stock"
           v-model="commercialInfo.stock"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
 
@@ -260,19 +248,14 @@
         <div
           class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
         >
-          <input
-            type="checkbox"
-            id="contract-toggle"
-            name="contract-toggle"
+          <q-toggle
             v-model="commercialInfo.enablecontract"
-            class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            color="primary"
+            label="Contract"
+            :before="false"
+            label-position="left"
           />
-          <label
-            for="contract-toggle"
-            class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-          ></label>
         </div>
-        <label for="contract-toggle" class="text-xs text-gray-600">On</label>
       </div>
     </div>
   </form>

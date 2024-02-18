@@ -11,7 +11,12 @@ const routes = [
       {
         path: "/vendorproduct",
         component: () => import("pages/vendor/VendorProduct.vue"),
-        name: "vendorproduct",
+        name: "vendorProduct",
+      },
+      {
+        path: "/edit/:id",
+        component: () => import("pages/vendor/EditProduct.vue"),
+        name: "editProduct",
       },
       {
         path: "/catalogue",
@@ -26,13 +31,13 @@ const routes = [
       {
         path: "/addproduct",
         component: () => import("src/pages/vendor/AddProduct.vue"),
-        name: "addproduct",
+        name: "addProduct",
       },
 
       {
         path: "/listcatalogue",
         component: () => import("src/pages/vendor/ListCatalogue.vue"),
-        name: "listcatalogue",
+        name: "listCatalogue",
       },
       {
         path: "/product/:id",
