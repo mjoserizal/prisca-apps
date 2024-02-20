@@ -17,7 +17,7 @@
           name="product-specification"
           v-model="product.productSpecification"
           rows="5"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         ></textarea>
       </div>
 
@@ -33,7 +33,7 @@
           id="feature"
           name="feature"
           v-model="product.feature"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
       <!-- Input Satuan -->
@@ -46,7 +46,7 @@
           id="satuan"
           name="satuan"
           v-model="product.satuan"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
       <!-- Input Kondisi -->
@@ -55,22 +55,26 @@
           >Condition:</label
         >
         <div class="flex items-center">
-          <input
-            type="checkbox"
-            id="condition-new"
-            name="condition-new"
-            v-model="product.condition.new"
+          <q-radio
+            size="lg"
+            v-model="product.condition"
+            val="new"
             class="mr-1"
+            color="primary"
+            unchecked-icon="radio_button_unchecked"
+            checked-icon="radio_button_checked"
           />
-          <label for="condition-new" class="mr-4">New</label>
-          <input
-            type="checkbox"
-            id="condition-used"
-            name="condition-used"
-            v-model="product.condition.used"
+          <label class="mr-4">New</label>
+          <q-radio
+            size="lg"
+            v-model="product.condition"
+            val="used"
             class="mr-1"
+            color="primary"
+            unchecked-icon="radio_button_unchecked"
+            checked-icon="radio_button_checked"
           />
-          <label for="condition-used">Used</label>
+          <label>Used</label>
         </div>
       </div>
     </div>
@@ -87,7 +91,7 @@
           name="technical-spec"
           v-model="product.technicalSpec"
           rows="5"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         ></textarea>
       </div>
       <!-- Input Part Number -->
@@ -102,7 +106,7 @@
           id="part-number"
           name="part-number"
           v-model="product.partNumber"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
       <!-- Input Video -->
@@ -116,7 +120,7 @@
           name="video"
           accept="video/*"
           @change="onVideoChange"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
     </div>

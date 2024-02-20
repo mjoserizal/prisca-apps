@@ -79,53 +79,66 @@
     <!-- Popup untuk Advance Search -->
     <q-dialog v-model="show_advance_search" persistent>
       <q-card style="width: 600px">
-        <q-card-section class="row items-center justify-between">
-          <q-space />
-          <q-btn
-            icon="close"
-            flat
-            round
-            dense
-            v-close-popup
-            class="text-grey-8"
-          />
-        </q-card-section>
-        <q-card-section class="q-gutter-md">
-          <div class="row">
-            <div class="col">
-              <q-select
-                filled
-                label="Category"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 0) || 'Please type something',
-                ]"
-              ></q-select>
+        <q-form @submit="onSubmitAdvanceSearch">
+          <q-card-section class="row items-center justify-between">
+            <q-space />
+            <q-btn
+              icon="close"
+              flat
+              round
+              dense
+              v-close-popup
+              class="text-grey-8"
+            />
+          </q-card-section>
+          <q-card-section class="q-gutter-md">
+            <div class="row">
+              <div class="col pr-4">
+                <q-select
+                  filled
+                  label="Product Group"
+                  lazy-rules
+                  :rules="[
+                    (val) => (val && val.length > 0) || 'Please type something',
+                  ]"
+                ></q-select>
+              </div>
+              <div class="col pr-4">
+                <q-select
+                  filled
+                  label="Category"
+                  lazy-rules
+                  :rules="[
+                    (val) => (val && val.length > 0) || 'Please type something',
+                  ]"
+                ></q-select>
+              </div>
+              <div class="col">
+                <q-select
+                  filled
+                  emit-value
+                  map-options
+                  label="Status"
+                  :options="statusOptions"
+                ></q-select>
+              </div>
             </div>
-            <div class="col">
-              <q-select
-                filled
-                emit-value
-                map-options
-                label="Status"
-                :options="statusOptions"
-              ></q-select>
-            </div>
-          </div>
-          <q-input filled label="Min Price" type="number"></q-input>
-          <q-input filled label="Max Price" type="number"></q-input>
-          <q-slider
-            filled
-            label="Price Range"
-            v-model="priceRange"
-            :min="0"
-            :max="2000"
-            step="10"
-          ></q-slider>
-        </q-card-section>
-        <q-card-actions align="right" class="text-primary">
-          <q-btn label="Search" type="submit" color="primary" />
-        </q-card-actions>
+            <q-input filled label="Min Price" type="number"></q-input>
+            <q-input filled label="Max Price" type="number"></q-input>
+            <q-range
+              class="pr-4"
+              filled
+              label="Price Range"
+              v-model="priceRange"
+              :min="0"
+              :max="2000"
+              step="10"
+            ></q-range>
+          </q-card-section>
+          <q-card-actions align="right" class="text-primary">
+            <q-btn label="Search" type="submit" color="primary" />
+          </q-card-actions>
+        </q-form>
       </q-card>
     </q-dialog>
   </div>
@@ -146,24 +159,6 @@ const products = ref([
     productGroup: "Electronics",
     price: "IDR 50.000.000",
     status: "Active",
-  },
-  {
-    name: "ASUS Vivobook",
-    productGroup: "Electronics",
-    price: "IDR 50.000.000",
-    status: "Inactive",
-  },
-  {
-    name: "ASUS Vivobook",
-    productGroup: "Electronics",
-    price: "IDR 50.000.000",
-    status: "Inactive",
-  },
-  {
-    name: "ASUS Vivobook",
-    productGroup: "Electronics",
-    price: "IDR 50.000.000",
-    status: "Inactive",
   },
   {
     name: "ASUS Vivobook",
