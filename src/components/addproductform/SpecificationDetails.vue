@@ -146,13 +146,21 @@ export default {
     };
   },
   methods: {
-    submitProduct() {
-      // Implement your logic to submit the product data
-      console.log("Product submitted:", this.product);
-    },
     onVideoChange(event) {
       // Update the video property when a new video is selected
       this.product.video = event.target.files[0];
+    },
+
+    getData() {
+      return {
+        productSpecification: this.products.detail.productSpecification,
+        technicalSpec: this.products.detail.technicalSpecification,
+        features: this.products.detail.feature,
+        satuan: this.products.detail.satuan,
+        partNumber: this.products.detail.partNumber,
+        condition: this.products.detail.condition,
+        video: thsi.products.detail.video,
+      };
     },
   },
 };

@@ -15,6 +15,12 @@
           class="mt-2 flex justify-center rounded-lg border border-dashed shadow-md border-gray-300 px-6 py-10"
         >
           <div class="text-center">
+            <img
+              v-if="products.images['large-product-image']"
+              :src="products.images['large-product-image']"
+              alt="Preview"
+              class="h-auto w-auto object-cover mb-4"
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -46,7 +52,9 @@
                   type="file"
                   id="large-product-image"
                   name="large-product-image"
-                  @change="onLargeFileChange"
+                  @update:model-value="
+                    (val) => onImageChange('large-product-image', val)
+                  "
                   class="sr-only"
                 />
               </label>
@@ -72,6 +80,12 @@
               class="mt-2 flex justify-center shadow-md rounded-lg border border-dashed border-gray-300 px-6 py-10"
             >
               <div class="text-center">
+                <img
+                  v-if="products.images['product-image1']"
+                  :src="products.images['product-image1']"
+                  alt="Preview"
+                  class="h-auto w-auto object-cover mb-4"
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -103,7 +117,9 @@
                       type="file"
                       id="product-image1"
                       name="product-image1"
-                      @change="onFileChange"
+                      @update:model-value="
+                        (val) => onImageChange('product-image1', val)
+                      "
                       class="sr-only"
                     />
                   </label>
@@ -128,6 +144,12 @@
               class="mt-2 flex justify-center rounded-lg border shadow-md border-dashed border-gray-300 px-6 py-10"
             >
               <div class="text-center">
+                <img
+                  v-if="products.images['product-image2']"
+                  :src="products.images['product-image2']"
+                  alt="Preview"
+                  class="h-auto w-auto object-cover mb-4"
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -159,7 +181,9 @@
                       type="file"
                       id="product-image2"
                       name="product-image2"
-                      @change="onFileChange"
+                      @update:model-value="
+                        (val) => onImageChange('product-image2', val)
+                      "
                       class="sr-only"
                     />
                   </label>
@@ -183,6 +207,12 @@
               class="mt-2 flex justify-center rounded-lg shadow-md border border-dashed border-gray-300 px-6 py-10"
             >
               <div class="text-center">
+                <img
+                  v-if="products.images['product-image3']"
+                  :src="products.images['product-image3']"
+                  alt="Preview"
+                  class="h-auto w-auto object-cover mb-4"
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -214,7 +244,9 @@
                       type="file"
                       id="product-image3"
                       name="product-image3"
-                      @change="onFileChange"
+                      @update:model-value="
+                        (val) => onImageChange('product-image3', val)
+                      "
                       class="sr-only"
                     />
                   </label>
@@ -241,7 +273,7 @@
           type="text"
           id="product-name"
           name="product-name"
-          v-model="product.name"
+          v-model="products.name"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -250,18 +282,19 @@
         <label
           for="product-group"
           class="block mb-2 text-sm font-medium text-gray-600"
-          >Product Group:</label
         >
+          Product Group:
+        </label>
         <select
           id="product-group"
           name="product-group"
-          v-model="product.group"
+          v-model="products.group"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
           <option value="">Select Group</option>
-          <option value="Group 1">Group 1</option>
-          <option value="Group 2">Group 2</option>
-          <option value="Group 3">Group 3</option>
+          <option v-for="group in groups" :key="group.id" :value="group.id">
+            {{ group.name }}
+          </option>
         </select>
       </div>
 
@@ -269,18 +302,23 @@
         <label
           for="product-category"
           class="block mb-2 text-sm font-medium text-gray-600"
-          >Product Category:</label
         >
+          Product Category:
+        </label>
         <select
           id="product-category"
           name="product-category"
-          v-model="product.category"
+          v-model="products.category"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
           <option value="">Select Category</option>
-          <option value="Category 1">Category 1</option>
-          <option value="Category 2">Category 2</option>
-          <option value="Category 3">Category 3</option>
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.id"
+          >
+            {{ category.name }}
+          </option>
         </select>
       </div>
 
@@ -293,7 +331,7 @@
           type="text"
           id="brand"
           name="brand"
-          v-model="product.brand"
+          v-model="products.brand"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -309,36 +347,146 @@
           type="text"
           id="product-category-name"
           name="product-category-name"
-          v-model="product.categoryName"
+          v-model="products.product_category_name"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
+      </div>
+
+      <div class="flex justify-end mt-4">
+        <button
+          type="submit"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Submit
+        </button>
       </div>
     </div>
   </form>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
+  name: "FormBasic",
   data() {
     return {
-      product: {
+      products: {
         name: "",
         group: "",
         category: "",
         brand: "",
-        categoryName: "",
+        product_category_name: "",
+        images: {
+          "large-product-image": "",
+          "product-image1": "",
+          "product-image2": "",
+          "product-image3": "",
+        },
       },
+      groups: [],
+      categories: [],
     };
   },
+  created() {
+    this.fetchDropdownData();
+  },
   methods: {
-    onLargeFileChange(event) {
-      // Handle large image file change here
+    async fetchDropdownData() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const response = await axios.get(
+          "http://192.168.1.244:8000/api/vendor/show/drop",
+          config
+        );
+        console.log(response.data);
+        this.groups = response.data.data.groups;
+        this.categories = response.data.data.categories;
+      } catch (error) {
+        console.error("Failed to fetch dropdown data:", error);
+      }
     },
-    onFileChange(event) {
-      // Handle image file change here
+
+    onImageChange(field, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Simpan nama file saja
+      this.products.images[field] = file.name;
+      console.log(`${field}:`, file.name); // Tambahkan console log di sini
     },
-    submitProduct() {
-      // Submit product data here
+
+    async submitProduct() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("name", this.products.name);
+        formData.append("group_id", this.products.group);
+        formData.append("category_id", this.products.category);
+        formData.append("brand", this.products.brand);
+        formData.append(
+          "product_category_name",
+          this.products.product_category_name
+        );
+
+        // Tambahkan file ke FormData
+        for (let key in this.products.images) {
+          const file = document.querySelector(`input[name=${key}]`).files[0];
+          if (file) {
+            formData.append("image[]", file);
+            console.log(`${key}:`, file.name); // Tambahkan console log di sini
+          }
+        }
+
+        console.log("Data to be sent:");
+        for (let pair of formData.entries()) {
+          console.log(pair[0] + ": " + pair[1]);
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        };
+
+        const response = await axios.post(
+          "http://192.168.1.244:8000/api/vendor/addProduct2",
+          formData,
+          config
+        );
+        console.log("Response:", response.data);
+        // Reset form after successful submission if needed
+        this.products = {
+          name: "",
+          group: "",
+          category: "",
+          brand: "",
+          product_category_name: "",
+          images: {
+            "large-product-image": "",
+            "product-image1": "",
+            "product-image2": "",
+            "product-image3": "",
+          },
+        };
+      } catch (error) {
+        console.error("Failed to submit product:", error);
+      }
     },
   },
 };

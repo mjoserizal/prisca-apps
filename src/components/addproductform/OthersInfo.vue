@@ -1,10 +1,10 @@
 <template>
   <form
-    @submit.prevent="submitOthersInfo"
+    @submit.prevent="submitProduct"
     class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row m-6"
   >
     <!-- Bagian kiri -->
-    <div class="flex-1 pr-4 mb-4 md:mb-0">
+    <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
       <!-- Input Incoterm -->
       <div class="relative mb-6">
         <input
@@ -70,7 +70,7 @@
     </div>
 
     <!-- Bagian kanan -->
-    <div class="flex-1 pl-4">
+    <div class="flex-1 pl-0 md:pl-4">
       <!-- Input SKU -->
       <div class="relative mb-6">
         <input
@@ -145,22 +145,6 @@ export default {
     };
   },
   methods: {
-    submitOthersInfo() {
-      // Simulate async request
-      setTimeout(() => {
-        console.log("Submitting others info:", this.othersInfo);
-        // Reset the form after submission
-        this.othersInfo = {
-          incoterm: "",
-          warranty: "",
-          maintenance: "",
-          makeActive: false,
-          sku: "",
-        };
-        this.tags = [];
-        this.tagInput = "";
-      }, 500);
-    },
     addTag() {
       const tag = this.tagInput.trim();
       if (tag && !this.tags.includes(tag)) {
@@ -170,6 +154,16 @@ export default {
     },
     removeTag(index) {
       this.tags.splice(index, 1);
+    },
+
+    getData() {
+      return {
+        incoterm: this.products.other.incoterm,
+        warranty: this.products.other.warranty,
+        maintenance: this.products.other.maintenance,
+        sku: this.products.other.sku,
+        tags: this.products.other.tags,
+      };
     },
   },
 };

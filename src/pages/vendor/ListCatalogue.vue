@@ -15,11 +15,11 @@
             class="no-shadow"
             :rows="products"
             :columns="columns"
-            row-key="name"
+            row-key="id"
             :filter="filter"
           >
             <template v-slot:top-right>
-              <div class="flex items-center">
+              <div class="flex items-start">
                 <q-input
                   v-model="filter"
                   filled
@@ -28,10 +28,11 @@
                   debounce="300"
                   placeholder="Search"
                 >
-                  <template v-slot:append>
+                  <template v-slot:prepend>
                     <q-icon name="search" />
                   </template>
                 </q-input>
+
                 <q-btn
                   v-if="!show_filter"
                   icon="filter_list"
@@ -145,29 +146,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-const products = ref([
-  {
-    name: "DELL 391-2299",
-    productGroup: "Electronics",
-    price: "IDR 50.000.000",
-    status: "Active",
-  },
-  {
-    name: "Macbook Pro 13",
-    productGroup: "Electronics",
-    price: "IDR 50.000.000",
-    status: "Active",
-  },
-  {
-    name: "ASUS Vivobook",
-    productGroup: "Electronics",
-    price: "IDR 50.000.000",
-    status: "Inactive",
-  },
-]);
-
+const products = ref([]);
 const filter = ref("");
 const show_filter = ref(false);
 const show_advance_search = ref(false);
@@ -188,13 +170,20 @@ const columns = [
     sortable: true,
   },
   {
-    name: "productGroup",
+    name: "group",
     align: "center",
     label: "Product Group",
-    field: "productGroup",
+    field: "group",
     sortable: true,
   },
-  { name: "price", label: "Price", field: "price", sortable: true },
+
+  {
+    name: "price",
+    align: "center",
+    label: "Price",
+    field: "price",
+    sortable: true,
+  },
   {
     name: "status",
     label: "Status",
@@ -220,8 +209,49 @@ const onSubmitAdvanceSearch = () => {
   // Handle advance search submission
   console.log("Advance search submitted");
 };
+
+onMounted(async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not found.");
+      return;
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(
+      "http://192.168.1.244:8000/api/vendor/show/productByUserId",
+      config
+    );
+    if (response.data.success) {
+      products.value = response.data.products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        group: product.group,
+        category: product.category,
+        brand: product.brand,
+        price: product.commercial_info.commercialInfo.price,
+        status: product.detail.condition === "new" ? "Active" : "Inactive",
+      }));
+    } else {
+      console.error("Failed to fetch products:", response.data.message);
+    }
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+  }
+});
 </script>
 
+<script>
+export default {
+  name: "ListCatalogue",
+};
+</script>
 <style scoped>
-/* Tambahkan style scoped untuk mencegah dampak CSS ke elemen lain */
+.q-table tbody tr:not(:last-child) {
+  border-bottom: 1px solid #ddd;
+}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <form
-    @submit.prevent="submitCommercialInfo"
+    @submit.prevent="submitProduct"
     class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row m-6"
   >
     <!-- Bagian kiri -->
@@ -62,7 +62,13 @@
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
           <option value="">Select Etalase</option>
-          <!-- Daftar opsi etalase -->
+          <option
+            v-for="etalase in etalases"
+            :key="etalase.id"
+            :value="etalase.id"
+          >
+            {{ etalase.name }}
+          </option>
         </select>
       </div>
       <!-- Input Grosir -->
@@ -163,7 +169,13 @@
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
           <option value="">Select Currency</option>
-          <!-- Daftar opsi currency -->
+          <option
+            v-for="currency in currencies"
+            :key="currency.id"
+            :value="currency.id"
+          >
+            {{ currency.name }} ( {{ currency.symbol }})
+          </option>
         </select>
       </div>
       <!-- Input Payment Terms -->
@@ -260,9 +272,11 @@
     </div>
   </form>
 </template>
-
 <script>
+import axios from "axios";
+
 export default {
+  name: "commercialInfo",
   data() {
     return {
       commercialInfo: {
@@ -282,13 +296,56 @@ export default {
         stock: 0,
         enablecontract: false,
       },
+      etalases: [],
+      currencies: [],
     };
   },
+  created() {
+    this.fetchDropdownData();
+  },
   methods: {
-    submitCommercialInfo() {
-      // Implement your logic to submit the commercial info
-      console.log("Commercial info submitted:", this.commercialInfo);
+    async fetchDropdownData() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const response = await axios.get(
+          "http://192.168.1.244:8000/api/vendor/show/drop",
+          config
+        );
+        console.log(response.data);
+        this.etalases = response.data.data.etalases;
+        this.currencies = response.data.data.currencies;
+      } catch (error) {
+        console.error("Failed to fetch dropdown data:", error);
+      }
     },
+  },
+  getData() {
+    return {
+      price: this.commercial_info.commercialInfo.price,
+      discount: this.commercial_info.commercialInfo.discount,
+      priceExpirationDate: this.commercial_info.commercialInfo.price_exp,
+      etalase: this.commercial_info.commercialInfo.etalase_id,
+      grosirQty: this.commercial_info.commercialInfo.grosir.qty,
+      grosirPrice: this.commercial_info.commercialInfo.grosir.price,
+      preOrderDays: this.commercial_info.commercialInfo.pre_order,
+      currency: this.commercial_info.commercialInfo.currency_id,
+      paymentTerms: this.commercial_info.commercialInfo.paymentTerms,
+      minPurchaseQuantity:
+        this.commercial_info.commercialInfo.minPurchaseQuantity,
+      maxPurchaseQuantity:
+        this.commercial_info.commercialInfo.maxPurchaseQuantity,
+      stock: this.commercial_info.commercialInfo.stock,
+      enablecontract: this.commercial_info.commercialInfo.enablecontract,
+    };
   },
 };
 </script>

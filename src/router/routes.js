@@ -33,6 +33,11 @@ const routes = [
         component: () => import("src/pages/vendor/AddProduct.vue"),
         name: "addProduct",
       },
+      {
+        path: "/addinfo",
+        component: () => import("src/pages/vendor/AddInfo.vue"),
+        name: "addInfo",
+      },
 
       {
         path: "/listcatalogue",
@@ -57,7 +62,7 @@ const routes = [
       },
     ],
   },
-  { path: "/", component: () => import("pages/LoginPage.vue") },
+  { path: "/login", component: () => import("pages/LoginPage.vue") },
 ];
 
 export default routes;

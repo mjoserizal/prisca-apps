@@ -6,19 +6,19 @@
           v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }"
         >
           <q-card-section>
-            <!-- <q-avatar size="103px" class="absolute-center shadow-10">
-              <img src="src/assets/prisca logo.png" />
-            </q-avatar> -->
-          </q-card-section>
-          <q-card-section>
             <div class="text-center q-pt-lg">
               <div class="col text-h6 ellipsis">Login Prisca-Apps</div>
             </div>
           </q-card-section>
           <q-card-section>
             <q-form class="q-gutter-md">
-              <q-input filled v-model="username" label="username" lazy-rules />
-
+              <q-input
+                filled
+                v-model="email"
+                label="Email"
+                lazy-rules
+                :rules="emailRules"
+              />
               <q-input
                 type="password"
                 filled
@@ -33,6 +33,7 @@
                   @click="login"
                   type="button"
                   color="primary"
+                  :loading="loading"
                 />
               </div>
             </q-form>
@@ -53,34 +54,37 @@ export default defineComponent({
 
   setup() {
     const router = useRouter();
-    const username = ref("");
+    const email = ref("");
     const password = ref("");
 
     const login = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.1.23:8000/api/login",
+          "http://192.168.1.244:8000/api/login",
           {
             email: email.value,
             password: password.value,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
         );
 
-        // Check if response is successful (status code 200)
-        if (response.status === 200) {
+        // Check if response is successful (status code 200) and if success is true
+        if (response.status === 200 && response.data.success) {
           // Assuming the token is returned in the response
           const token = response.data.token;
-          const username = response.data.username;
+          const user = response.data.user;
+
           // Store the token in local storage
           localStorage.setItem("token", token);
-
-          // Log the token to the console
-          console.log("Token:", token);
-          console.log("Username:", username);
-          // Redirect to the dashboard
-          router.push("/product");
+          localStorage.setItem("user", JSON.stringify(user));
+          console.log(localStorage); // Redirect to the dashboard
+          router.push("/addproduct");
         } else {
-          console.error("Error during login:", response.statusText);
+          console.error("Error during login:", response.data.message);
           // Handle login error, show message, etc.
         }
       } catch (error) {
@@ -90,7 +94,7 @@ export default defineComponent({
     };
 
     return {
-      username,
+      email,
       password,
       login,
     };
