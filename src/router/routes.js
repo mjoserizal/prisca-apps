@@ -4,14 +4,16 @@ const routes = [
     name: "catalogue",
     component: () => import("components/HeaderSidebar.vue"),
     children: [
-      { path: "", component: () => import("pages/CataloguePage.vue") },
+      { path: "", component: () => import("pages/Buyer/CataloguePage.vue") },
     ],
   },
   {
     path: "/dashboard",
     name: "dashboard",
     component: () => import("components/HeaderSidebar.vue"),
-    children: [{ path: "", component: () => import("pages/IndexPage.vue") }],
+    children: [
+      { path: "", component: () => import("pages/Buyer/IndexPage.vue") },
+    ],
   },
   {
     path: "/",
@@ -23,7 +25,7 @@ const routes = [
     children: [
       {
         path: "",
-        component: () => import("pages/DetailPage.vue"),
+        component: () => import("pages/Buyer/DetailPage.vue"),
         name: "detail",
         props: true,
       },
@@ -34,7 +36,18 @@ const routes = [
     name: "PurchaseCartPage",
     component: () => import("components/HeaderSidebar.vue"),
     children: [
-      { path: "", component: () => import("pages/PurchaseCartPage.vue") },
+      { path: "", component: () => import("pages/Buyer/PurchaseCartPage.vue") },
+    ],
+  },
+  {
+    path: "/purchase-request",
+    name: "PurchaseRequestPage",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/Buyer/PurchaseRequestPage.vue"),
+      }, //, name: "PurchaseRequestPage", props: true, component: () => import("pages/PurchaseRequestPage.vue") },
     ],
   },
 ];

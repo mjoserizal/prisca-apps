@@ -12,12 +12,18 @@
           </q-card-section>
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">Login Prisca-Apps</div>
+              <q-img
+                src="/public/images/prisca logo.png"
+                style="width: 103px; height: 103px; margin: 0 auto"
+              />
+            </div>
+            <div class="text-center q-pt-lg">
+              <div class="col text-h6 ellipsis">Login to Prisca-Apps</div>
             </div>
           </q-card-section>
           <q-card-section>
             <q-form class="q-gutter-md">
-              <q-input filled v-model="username" label="username" lazy-rules />
+              <q-input filled v-model="email" label="email" lazy-rules />
 
               <q-input
                 type="password"
@@ -53,29 +59,39 @@ export default defineComponent({
 
   setup() {
     const router = useRouter();
-    const username = ref("");
+    const email = ref("");
     const password = ref("");
 
     const login = async () => {
       try {
-        const response = await axios.post("https://dummyjson.com/auth/login", {
-          username: username.value,
-          password: password.value,
-        });
+        const response = await axios.post(
+          "http://192.168.1.244:8000/api/login",
+          {
+            email: email.value,
+            password: password.value,
+          }
+        );
 
         // Check if response is successful (status code 200)
         if (response.status === 200) {
           // Assuming the token is returned in the response
           const token = response.data.token;
-          const username = response.data.username;
+          const userRole = response.data.user.role.name;
+
           // Store the token in local storage
           localStorage.setItem("token", token);
 
+          // Redirect based on user role
+          if (userRole === "company") {
+            router.push("/dashboard");
+          } else {
+            // Redirect to a different route based on other roles or handle accordingly
+            router.push("/other-route");
+          }
+
           // Log the token to the console
           console.log("Token:", token);
-          console.log("Username:", username);
-          // Redirect to the dashboard
-          router.push("/dashboard");
+          console.log("User Role:", userRole);
         } else {
           console.error("Error during login:", response.statusText);
           // Handle login error, show message, etc.
@@ -86,10 +102,28 @@ export default defineComponent({
       }
     };
 
+    const logout = () => {
+      axios
+        .post("http://192.168.1.244:8000/api/logout")
+        .then((response) => {
+          // Handle response jika diperlukan
+          console.log("Logout successful");
+          // Clear localStorage atau melakukan operasi lain setelah logout
+          localStorage.clear();
+          // Redirect ke halaman login atau halaman lainnya setelah logout
+          router.push("/login");
+        })
+        .catch((error) => {
+          // Handle error jika diperlukan
+          console.error("Logout failed:", error);
+        });
+    };
+
     return {
-      username,
+      email,
       password,
       login,
+      logout,
     };
   },
 });

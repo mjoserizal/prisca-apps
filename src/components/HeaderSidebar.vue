@@ -1,7 +1,10 @@
 <template>
   <q-layout view="hHh lpR fFf" class="bg-grey-1">
+    <!-- Header -->
     <q-header elevated class="bg-white text-grey-8 q-py-xs" height-hint="58">
+      <!-- Toolbar -->
       <q-toolbar>
+        <!-- Toggle Left Drawer Button -->
         <q-btn
           flat
           dense
@@ -11,16 +14,15 @@
           icon="menu"
         />
 
-        <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs">
-          <q-icon :name="fabYoutube" color="red" size="28px" />
-          <q-toolbar-title shrink class="text-weight-bold">
-            Prisca Apps
-          </q-toolbar-title>
-        </q-btn>
+        <!-- Logo -->
+        <q-img
+          src="/public/images/prisca logo.png"
+          style="margin-right: 8px; height: 50px; width: 50px"
+        />
 
         <q-space />
 
-        <q-space />
+        <!-- Cart Button -->
         <q-btn
           flat
           dense
@@ -28,17 +30,23 @@
           icon="fa-solid fa-bag-shopping"
           aria-label="Cart"
           class="q-ml-xs"
+          @click="
+            $router.push(
+              menuItems.find((item) => item.route === '/purchase-cart').route
+            )
+          "
         >
           <q-badge
             color="deep-orange"
             text-color="white"
             floating
-            v-if="cartItemCount > 0"
+            v-if="totalCartItems > 0"
           >
-            {{ cartItemCount }}
+            {{ totalCartItems }}
           </q-badge>
         </q-btn>
 
+        <!-- Account Button -->
         <div class="q-gutter-sm row items-center no-wrap">
           <q-btn
             flat
@@ -60,6 +68,7 @@
                   </q-item-section>
                 </q-item>
                 <q-separator />
+                <!-- Logout Button -->
                 <q-item clickable @click="logout">
                   <q-item-section> Logout </q-item-section>
                 </q-item>
@@ -70,15 +79,17 @@
       </q-toolbar>
     </q-header>
 
+    <!-- Left Drawer -->
     <q-drawer
       :model-value="leftDrawerOpen"
       @update:model-value="updateLeftDrawerOpen"
       show-if-above
       bordered
-      class="bg-blue-grey-9 text-white"
+      class="text-white"
+      style="background-color: #013a63"
       :width="220"
     >
-      <!-- SIDEBAR HEADER -->
+      <!-- Sidebar Header -->
       <div
         class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5"
       >
@@ -123,6 +134,7 @@
       <!-- Sidebar Menu -->
     </q-drawer>
 
+    <!-- Main Content -->
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -130,26 +142,16 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { computed } from "vue";
-import { useStore } from "vuex";
-import store from "app/src/router/store";
+import { ref, watch, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
+import axios from "axios";
+import { EventBus } from "src/router/EventBus";
 export default {
+  name: "HeaderSidebar",
   setup() {
     const router = useRouter();
     const leftDrawerOpen = ref(false);
-    const search = ref("");
-    const vuexStore = useStore(store);
-    const cartItemCount = computed(() => store.state.cartItemCount);
-    const updateLeftDrawerOpen = (value) => {
-      leftDrawerOpen.value = value;
-    };
-
-    const toggleLeftDrawer = () => {
-      leftDrawerOpen.value = !leftDrawerOpen.value;
-    };
-
     const menuItems = [
       { icon: "fas fa-home", text: "Catalogue", route: "/dashboard" },
       {
@@ -160,18 +162,101 @@ export default {
       {
         icon: "fas fa-file-invoice",
         text: "Purchase Request",
-        route: "/catalogue",
+        route: "/purchase-request",
       },
-      // Add more menu items as needed
     ];
+    const cartItems = ref([]);
+
+    const toggleLeftDrawer = () => {
+      leftDrawerOpen.value = !leftDrawerOpen.value;
+    };
+
+    const logout = () => {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You will be logged out",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, logout",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const token = localStorage.getItem("token");
+
+          axios
+            .post(
+              "http://192.168.1.244:8000/api/logout",
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
+            .then(() => {
+              localStorage.removeItem("userId");
+              localStorage.removeItem("token");
+              router.push("/");
+            })
+            .catch((error) => {
+              console.error("Error logging out:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+              });
+            });
+        }
+      });
+    };
+
+    // Fetch cart items from the server
+    const fetchCartItems = () => {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      axios
+        .get("http://192.168.1.244:8000/api/buyer/show/cart", config)
+        .then((response) => {
+          cartItems.value = response.data.cart || [];
+        })
+        .catch((error) => {
+          console.error("Error fetching cart items:", error);
+        });
+    };
+
+    // Calculate total cart items
+    const totalCartItems = ref(0);
+    watch(cartItems, (newCartItems, oldCartItems) => {
+      totalCartItems.value = newCartItems.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      );
+    });
+
+    // Initial fetch of cart items
+    onMounted(fetchCartItems);
+
+    // Listen for the "cartItemChanged" event from EventBus
+    EventBus.on("cartItemChanged", () => {
+      fetchCartItems(); // Refresh cart items after a change
+    });
+
+    // Initial fetch of cart items
+    fetchCartItems();
 
     return {
       leftDrawerOpen,
-      updateLeftDrawerOpen,
-      search,
-      toggleLeftDrawer,
       menuItems,
-      cartItemCount,
+      cartItems,
+      totalCartItems,
+      toggleLeftDrawer,
+      logout,
     };
   },
 };
