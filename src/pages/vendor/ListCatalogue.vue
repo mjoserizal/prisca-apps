@@ -19,37 +19,43 @@
             :filter="filter"
           >
             <template v-slot:top-right>
-              <div class="flex items-start">
-                <q-input
-                  v-model="filter"
-                  filled
-                  borderless
-                  dense
-                  debounce="300"
-                  placeholder="Search"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="search" />
-                  </template>
-                </q-input>
+              <div class="flex items-start justify-between w-full">
+                <div>
+                  <q-btn
+                    label="Add Product"
+                    color="primary"
+                    class="q-mr-md"
+                    to="/addinfo"
+                    exact
+                  />
+                </div>
 
-                <q-btn
-                  v-if="!show_filter"
-                  icon="filter_list"
-                  class="q-ml-sm"
-                  @click="show_filter = !show_filter"
-                  flat
-                />
-                <q-btn
-                  icon="settings"
-                  class="q-ml-sm"
-                  flat
-                  @click="openAdvanceSearch"
-                >
-                  Advance Search
-                </q-btn>
+                <div class="flex items-center">
+                  <q-input
+                    v-model="filter"
+                    filled
+                    borderless
+                    dense
+                    debounce="300"
+                    placeholder="Search"
+                  >
+                    <template v-slot:prepend>
+                      <q-icon name="search" />
+                    </template>
+                  </q-input>
+
+                  <q-btn
+                    icon="settings"
+                    class="q-ml-sm"
+                    flat
+                    @click="openAdvanceSearch"
+                  >
+                    Advance Search
+                  </q-btn>
+                </div>
               </div>
             </template>
+
             <template v-slot:body-cell-status="props">
               <q-td :props="props">
                 <span
@@ -63,14 +69,24 @@
             </template>
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
-                <q-btn
-                  round
-                  dense
-                  flat
-                  color="primary"
-                  icon="edit"
-                  @click="editProduct(props.row)"
-                />
+                <div class="flex justify-end">
+                  <q-btn
+                    round
+                    dense
+                    flat
+                    color="primary"
+                    icon="edit"
+                    @click="editProduct(props.row)"
+                  />
+                  <q-btn
+                    round
+                    dense
+                    flat
+                    color="danger"
+                    icon="delete"
+                    @click="deleteProduct(props.row)"
+                  />
+                </div>
               </q-td>
             </template>
           </q-table>
@@ -194,11 +210,56 @@ const columns = [
     label: "Action",
     align: "right",
     field: "action",
+    format: (val, row) => {
+      return [
+        {
+          icon: "edit",
+          label: "Edit",
+          color: "primary",
+          size: "sm",
+          onClick: () => editProduct(row),
+        },
+        {
+          icon: "delete",
+          label: "Delete",
+          color: "negative",
+          size: "sm",
+          onClick: () => deleteProduct(row),
+        },
+      ];
+    },
   },
 ];
 
 const editProduct = (product) => {
   console.log("Edit product:", product);
+};
+const deleteProduct = async (product) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not found.");
+      return;
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.delete(
+      `http://192.168.1.244:8000/api/vendor/deleteProduct/${product.id}`,
+      config
+    );
+    if (response.data.success) {
+      // Hapus produk dari daftar setelah berhasil dihapus
+      products.value = products.value.filter((p) => p.id !== product.id);
+      console.log("Product deleted successfully:", product);
+    } else {
+      console.error("Failed to delete product:", response.data.message);
+    }
+  } catch (error) {
+    console.error("Failed to delete product:", error);
+  }
 };
 
 const openAdvanceSearch = () => {

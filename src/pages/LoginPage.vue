@@ -82,7 +82,7 @@ export default defineComponent({
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(user));
           console.log(localStorage); // Redirect to the dashboard
-          router.push("/addproduct");
+          router.push("/listcatalogue");
         } else {
           console.error("Error during login:", response.data.message);
           // Handle login error, show message, etc.

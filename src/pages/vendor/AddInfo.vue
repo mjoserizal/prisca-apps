@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormBasic />
+    <addProductForm />
   </div>
 </template>
 <script>
@@ -8,8 +8,8 @@ import { defineComponent, defineAsyncComponent } from "vue";
 
 export default defineComponent({
   components: {
-    FormBasic: defineAsyncComponent(() =>
-      import("src/components/addproductform/FormBasic.vue")
+    addProductForm: defineAsyncComponent(() =>
+      import("src/components/addproductform/addProductForm.vue")
     ),
   },
 });

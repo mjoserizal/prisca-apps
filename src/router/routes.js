@@ -38,6 +38,11 @@ const routes = [
         component: () => import("src/pages/vendor/AddInfo.vue"),
         name: "addInfo",
       },
+      {
+        path: "/input",
+        component: () => import("src/pages/vendor/FormParent.vue"),
+        name: "inpt",
+      },
 
       {
         path: "/listcatalogue",
