@@ -14,8 +14,8 @@
           >
             <div class="text-center">
               <img
-                v-if="products.images['large-product-image']"
-                :src="products.images['large-product-image']"
+                v-if="previewImages['large-product-image']"
+                :src="previewImages['large-product-image']"
                 alt="Preview"
                 class="h-auto w-auto object-cover mb-4"
               />
@@ -50,9 +50,7 @@
                     type="file"
                     id="large-product-image"
                     name="large-product-image"
-                    @update:model-value="
-                      (val) => onImageChange('large-product-image', val)
-                    "
+                    @change="onImageChange('large-product-image', $event)"
                     class="sr-only"
                   />
                 </label>
@@ -79,8 +77,8 @@
               >
                 <div class="text-center">
                   <img
-                    v-if="products.images['product-image1']"
-                    :src="products.images['product-image1']"
+                    v-if="previewImages['product-image1']"
+                    :src="previewImages['product-image1']"
                     alt="Preview"
                     class="h-auto w-auto object-cover mb-4"
                   />
@@ -115,9 +113,7 @@
                         type="file"
                         id="product-image1"
                         name="product-image1"
-                        @update:model-value="
-                          (val) => onImageChange('product-image1', val)
-                        "
+                        @change="onImageChange('product-image1', $event)"
                         class="sr-only"
                       />
                     </label>
@@ -129,6 +125,7 @@
               </div>
             </div>
           </div>
+          <!-- Repeat for Image 2 and Image 3 -->
           <!-- Repeat for Image 2 and Image 3 -->
           <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
@@ -143,8 +140,8 @@
               >
                 <div class="text-center">
                   <img
-                    v-if="products.images['product-image2']"
-                    :src="products.images['product-image2']"
+                    v-if="previewImages['product-image2']"
+                    :src="previewImages['product-image2']"
                     alt="Preview"
                     class="h-auto w-auto object-cover mb-4"
                   />
@@ -179,9 +176,7 @@
                         type="file"
                         id="product-image2"
                         name="product-image2"
-                        @update:model-value="
-                          (val) => onImageChange('product-image2', val)
-                        "
+                        @change="onImageChange('product-image2', $event)"
                         class="sr-only"
                       />
                     </label>
@@ -206,8 +201,8 @@
               >
                 <div class="text-center">
                   <img
-                    v-if="products.images['product-image3']"
-                    :src="products.images['product-image3']"
+                    v-if="previewImages['product-image3']"
+                    :src="previewImages['product-image3']"
                     alt="Preview"
                     class="h-auto w-auto object-cover mb-4"
                   />
@@ -242,9 +237,7 @@
                         type="file"
                         id="product-image3"
                         name="product-image3"
-                        @update:model-value="
-                          (val) => onImageChange('product-image3', val)
-                        "
+                        @change="onImageChange('product-image3', $event)"
                         class="sr-only"
                       />
                     </label>
@@ -788,7 +781,7 @@
         <!-- Input Warranty -->
         <div class="relative mb-6">
           <input
-            type="text"
+            type="number"
             id="warranty"
             name="warranty"
             v-model="products.other.warranty"
@@ -803,7 +796,7 @@
         <!-- Input Maintenance -->
         <div class="relative mb-6">
           <input
-            type="text"
+            type="number"
             id="maintenance"
             name="maintenance"
             v-model="products.other.maintenance"
@@ -928,6 +921,7 @@ export default {
         category: "",
         brand: "",
         product_category_name: "",
+        staus: "",
         images: {
           "large-product-image": "",
           "product-image1": "",
@@ -981,6 +975,12 @@ export default {
       categories: [],
       etalases: [],
       currencies: [],
+      previewImages: {
+        "large-product-image": "",
+        "product-image1": "",
+        "product-image2": "",
+        "product-image3": "",
+      },
     };
   },
 
@@ -1021,6 +1021,17 @@ export default {
       // Simpan nama file saja
       this.products.images[field] = file.name;
       console.log(`${field}:`, file.name); // Tambahkan console log di sini
+
+      // Buat file reader
+      const reader = new FileReader();
+
+      // Ketika file selesai dibaca, set URL data sebagai preview gambar
+      reader.onload = (e) => {
+        this.previewImages[field] = e.target.result;
+      };
+
+      // Baca file sebagai URL data
+      reader.readAsDataURL(file);
     },
 
     onVideoChange(event) {
@@ -1120,6 +1131,10 @@ export default {
         formData.append("maintenance", this.products.other.maintenance);
         formData.append("sku", this.products.other.sku);
         formData.append("tags", this.products.other.tags);
+        formData.append(
+          "status",
+          this.products.other.makeActive ? "active" : "inactive"
+        );
 
         // formData.append("tags", this.products.other.tags.join(", ")); // Menggunakan join untuk menggabungkan array tags menjadi string
         // formData.append("makeActive", this.products.other.makeActive);
@@ -1165,7 +1180,7 @@ export default {
 
 <style>
 form {
-  padding: 2rem; /* Ubah sesuai kebutuhan */
-  border-radius: 0.5rem; /* Ubah sesuai kebutuhan */
+  padding: 0.25rem; /* Ubah sesuai kebutuhan */
+  border-radius: 1rem; /* Ubah sesuai kebutuhan */
 }
 </style>

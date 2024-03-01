@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitProduct">
+  <form @submit.prevent="updateProduct">
     <div class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row">
       <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
         <div class="mb-4">
@@ -14,10 +14,13 @@
           >
             <div class="text-center">
               <img
-                v-if="products.images['large-product-image']"
-                :src="products.images['large-product-image']"
-                alt="Preview"
-                class="h-auto w-auto object-cover mb-4"
+                v-if="editedProduct.images['large-product-image']"
+                :src="
+                  'data:image/jpeg;base64,' +
+                  editedProduct.images['large-product-image']
+                "
+                alt="Large Product Image"
+                class="mx-auto h-40"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -79,10 +82,13 @@
               >
                 <div class="text-center">
                   <img
-                    v-if="products.images['product-image1']"
-                    :src="products.images['product-image1']"
-                    alt="Preview"
-                    class="h-auto w-auto object-cover mb-4"
+                    v-if="editedProduct.images['product-image1']"
+                    :src="
+                      'data:image/jpeg;base64,' +
+                      editedProduct.images['product-image1']
+                    "
+                    alt="Large Product Image"
+                    class="mx-auto h-40"
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -143,11 +149,15 @@
               >
                 <div class="text-center">
                   <img
-                    v-if="products.images['product-image2']"
-                    :src="products.images['product-image2']"
-                    alt="Preview"
-                    class="h-auto w-auto object-cover mb-4"
+                    v-if="editedProduct.images['product-image2']"
+                    :src="
+                      'data:image/jpeg;base64,' +
+                      editedProduct.images['product-image2']
+                    "
+                    alt="Large Product Image"
+                    class="mx-auto h-40"
                   />
+
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -206,10 +216,13 @@
               >
                 <div class="text-center">
                   <img
-                    v-if="products.images['product-image3']"
-                    :src="products.images['product-image3']"
-                    alt="Preview"
-                    class="h-auto w-auto object-cover mb-4"
+                    v-if="editedProduct.images['product-image3']"
+                    :src="
+                      'data:image/jpeg;base64,' +
+                      editedProduct.images['product-image3']
+                    "
+                    alt="Large Product Image"
+                    class="mx-auto h-40"
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -271,7 +284,7 @@
             type="text"
             id="product-name"
             name="product-name"
-            v-model="products.name"
+            v-model="editedProduct.name"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -286,11 +299,16 @@
           <select
             id="product-group"
             name="product-group"
-            v-model="products.group"
+            v-model="editedProduct.group"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
             <option value="">Select Group</option>
-            <option v-for="group in groups" :key="group.id" :value="group.id">
+            <option
+              v-for="group in groups"
+              :key="group.id"
+              :value="group.id"
+              :selected="group.id === editedProduct.group"
+            >
               {{ group.name }}
             </option>
           </select>
@@ -306,7 +324,7 @@
           <select
             id="product-category"
             name="product-category"
-            v-model="products.category"
+            v-model="editedProduct.category"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
             <option value="">Select Category</option>
@@ -331,7 +349,7 @@
             type="text"
             id="brand"
             name="brand"
-            v-model="products.brand"
+            v-model="editedProduct.brand"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -347,7 +365,7 @@
             type="text"
             id="product-category-name"
             name="product-category-name"
-            v-model="products.product_category_name"
+            v-model="editedProduct.product_category_name"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -368,7 +386,7 @@
           <textarea
             id="product-specification"
             name="product-specification"
-            v-model="products.detail.productSpecification"
+            v-model="editedProduct.detail.productSpecification"
             rows="5"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           ></textarea>
@@ -385,7 +403,7 @@
             type="text"
             id="feature"
             name="feature"
-            v-model="products.detail.feature"
+            v-model="editedProduct.detail.feature"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -400,7 +418,7 @@
             type="text"
             id="satuan"
             name="satuan"
-            v-model="products.detail.satuan"
+            v-model="editedProduct.detail.satuan"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -412,7 +430,7 @@
           <div class="flex items-center">
             <q-radio
               size="lg"
-              v-model="products.detail.condition"
+              v-model="editedProduct.detail.condition"
               val="new"
               class="mr-1"
               color="primary"
@@ -422,7 +440,7 @@
             <label class="mr-4">New</label>
             <q-radio
               size="lg"
-              v-model="products.detail.condition"
+              v-model="editedProduct.detail.condition"
               val="used"
               class="mr-1"
               color="primary"
@@ -444,7 +462,7 @@
           <textarea
             id="technical-spec"
             name="technical-spec"
-            v-model="products.detail.technicalSpecification"
+            v-model="editedProduct.detail.technicalSpecification"
             rows="5"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           ></textarea>
@@ -460,7 +478,7 @@
             type="text"
             id="part-number"
             name="part-number"
-            v-model="products.detail.partNumber"
+            v-model="editedProduct.detail.partNumber"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -499,7 +517,7 @@
             type="text"
             id="price"
             name="price"
-            v-model="products.commercial_info.commercialInfo.price"
+            v-model="editedProduct.commercial_info.commercialInfo.price"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -514,7 +532,7 @@
             type="text"
             id="discount"
             name="discount"
-            v-model="products.commercial_info.commercialInfo.discount"
+            v-model="editedProduct.commercial_info.commercialInfo.discount"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -529,7 +547,7 @@
             type="date"
             id="price-expiration-date"
             name="price-expiration-date"
-            v-model="products.commercial_info.commercialInfo.price_exp"
+            v-model="editedProduct.commercial_info.commercialInfo.price_exp"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -543,10 +561,12 @@
           <select
             id="etalase"
             name="etalase"
-            v-model="products.commercial_info.commercialInfo.etalase_id"
+            v-model="editedProduct.commercial_info.commercialInfo.etalase_id"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
-            <option value="">Select Etalase</option>
+            <option value="" disabled selected>
+              {{ editedProduct.commercial_info.commercialInfo.etalase }}
+            </option>
             <option
               v-for="etalase in etalases"
               :key="etalase.id"
@@ -565,7 +585,9 @@
             class="relative inline-block mr-2 align-middle select-none transition duration-200 ease-in"
           >
             <q-toggle
-              v-model="products.commercial_info.commercialInfo.grosirToggle"
+              v-model="
+                editedProduct.commercial_info.commercialInfo.grosirToggle
+              "
               color="primary"
               label="Grosir"
               :before="false"
@@ -573,7 +595,7 @@
           </div>
         </div>
         <div
-          v-if="products.commercial_info.commercialInfo.grosirToggle"
+          v-if="editedProduct.commercial_info.commercialInfo.grosirToggle"
           class="mb-4 flex"
         >
           <div class="flex-1 mr-2">
@@ -586,7 +608,7 @@
               type="number"
               id="grosir-qty"
               name="grosir-qty"
-              v-model="products.commercial_info.commercialInfo.grosir.qty"
+              v-model="editedProduct.commercial_info.commercialInfo.grosir.qty"
               min="0"
               class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
@@ -601,7 +623,9 @@
               type="text"
               id="grosir-price"
               name="grosir-price"
-              v-model="products.commercial_info.commercialInfo.grosir.price"
+              v-model="
+                editedProduct.commercial_info.commercialInfo.grosir.price
+              "
               class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
@@ -616,7 +640,7 @@
             class="relative inline-block mr-2 align-middle select-none transition duration-200 ease-in"
           >
             <q-toggle
-              v-model="products.commercial_info.commercialInfo.preOrder"
+              v-model="editedProduct.commercial_info.commercialInfo.preOrder"
               color="primary"
               :before="false"
               label="Pre-Order"
@@ -625,7 +649,7 @@
         </div>
         <!-- Input Pre-order Days -->
         <div
-          v-if="products.commercial_info.commercialInfo.preOrder"
+          v-if="editedProduct.commercial_info.commercialInfo.preOrder"
           class="mb-4"
         >
           <label
@@ -637,7 +661,7 @@
             type="number"
             id="pre-order-days"
             name="pre-order-days"
-            v-model="products.commercial_info.commercialInfo.pre_order"
+            v-model="editedProduct.commercial_info.commercialInfo.pre_order"
             min="0"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
@@ -656,7 +680,7 @@
           <select
             id="currency"
             name="currency"
-            v-model="products.commercial_info.commercialInfo.currency_id"
+            v-model="editedProduct.commercial_info.commercialInfo.currency_id"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
             <option value="">Select Currency</option>
@@ -680,7 +704,7 @@
             type="text"
             id="payment-terms"
             name="payment-terms"
-            v-model="products.commercial_info.commercialInfo.payment_terms"
+            v-model="editedProduct.commercial_info.commercialInfo.payment_terms"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -698,12 +722,12 @@
                 >Minimum:</label
               >
               <input
-                placeholder="0"
                 type="number"
                 id="min-purchase-quantity"
                 name="min-purchase-quantity"
                 v-model="
-                  products.commercial_info.commercialInfo.purchase_q_t_y.min
+                  editedProduct.commercial_info.commercialInfo.purchase_q_t_y
+                    .min
                 "
                 class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
@@ -716,12 +740,12 @@
                 >Maximum:</label
               >
               <input
-                placeholder="0"
                 type="number"
                 id="max-purchase-quantity"
                 name="max-purchase-quantity"
                 v-model="
-                  products.commercial_info.commercialInfo.purchase_q_t_y.max
+                  editedProduct.commercial_info.commercialInfo.purchase_q_t_y
+                    .max
                 "
                 class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
@@ -740,7 +764,7 @@
             type="number"
             id="stock"
             name="stock"
-            v-model="products.commercial_info.commercialInfo.stock"
+            v-model="editedProduct.commercial_info.commercialInfo.stock"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -754,7 +778,9 @@
             class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
           >
             <q-toggle
-              v-model="products.commercial_info.commercialInfo.enablecontract"
+              v-model="
+                editedProduct.commercial_info.commercialInfo.enablecontract
+              "
               color="primary"
               label="Contract"
               :before="false"
@@ -776,7 +802,7 @@
             type="text"
             id="incoterm"
             name="incoterm"
-            v-model="products.other.incomterm"
+            v-model="editedProduct.other.incomterm"
             class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
           <label
@@ -791,7 +817,7 @@
             type="text"
             id="warranty"
             name="warranty"
-            v-model="products.other.warranty"
+            v-model="editedProduct.other.warranty"
             class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
           <label
@@ -806,7 +832,7 @@
             type="text"
             id="maintenance"
             name="maintenance"
-            v-model="products.other.maintenance"
+            v-model="editedProduct.other.maintenance"
             class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
           <label
@@ -824,7 +850,7 @@
             class="relative inline-block mr-2 align-middle select-none transition duration-200 ease-in"
           >
             <q-toggle
-              v-model="products.other.makeActive"
+              v-model="editedProduct.other.makeActive"
               color="primary"
               label="Make Active in Catalogue"
               :before="false"
@@ -842,7 +868,7 @@
             type="text"
             id="sku"
             name="sku"
-            v-model="products.other.sku"
+            v-model="editedProduct.other.sku"
             class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
           <label
@@ -858,7 +884,7 @@
             type="text"
             id="tags"
             name="tags"
-            v-model="products.other.tags"
+            v-model="editedProduct.other.tags"
             class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
           <label
@@ -919,15 +945,17 @@
 import axios from "axios";
 
 export default {
-  name: "addProductForm",
+  name: "EditProduct",
   data() {
     return {
-      products: {
+      productId: this.$route.params.id,
+      editedProduct: {
         name: "",
         group: "",
         category: "",
         brand: "",
         product_category_name: "",
+        status: "",
         images: {
           "large-product-image": "",
           "product-image1": "",
@@ -985,9 +1013,94 @@ export default {
   },
 
   created() {
+    this.fetchProduct();
     this.fetchDropdownData();
   },
+
   methods: {
+    async fetchProduct() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const response = await axios.get(
+          `http://192.168.1.244:8000/api/vendor/show/product/${this.productId}`,
+          config
+        );
+        if (response.data.success) {
+          const productData = response.data.product;
+          this.editedProduct = {
+            name: productData.name || "",
+            group: productData.group || "",
+            category: productData.category || "",
+            brand: productData.brand || "",
+            product_category_name: productData.product_category_name || "",
+            status: productData.status || "",
+            images: { ...productData.images[0] } || {},
+            detail: { ...productData.detail } || {},
+            commercial_info: {
+              commercialInfo: {
+                grosirToggle:
+                  productData.commercial_info.commercialInfo?.grosirToggle ||
+                  false,
+                enablecontract:
+                  productData.commercial_info.commercialInfo?.enablecontract ||
+                  false,
+                preOrder:
+                  productData.commercial_info.commercialInfo?.preOrder || false,
+                price: productData.commercial_info.commercialInfo?.price || "",
+                currency_id:
+                  productData.commercial_info.commercialInfo?.currency || "",
+                etalase_id:
+                  productData.commercial_info.commercialInfo?.etalase || "",
+                payment_terms:
+                  productData.commercial_info.commercialInfo?.payment_terms ||
+                  "",
+                discount:
+                  productData.commercial_info.commercialInfo?.discount || "",
+                price_exp:
+                  productData.commercial_info.commercialInfo?.price_exp || "",
+                stock: productData.commercial_info.commercialInfo?.stock || "",
+                pre_order:
+                  productData.commercial_info.commercialInfo?.pre_order || "",
+                contract:
+                  productData.commercial_info.commercialInfo?.contract || "",
+                purchase_q_t_y: {
+                  min:
+                    productData.commercial_info.commercialInfo?.purchase_q_t_y
+                      ?.min || "",
+                  max:
+                    productData.commercial_info.commercialInfo?.purchase_q_t_y
+                      ?.max || "",
+                },
+                grosir: {
+                  qty:
+                    productData.commercial_info.commercialInfo?.grosir?.qty ||
+                    "",
+                  price:
+                    productData.commercial_info.commercialInfo?.grosir?.price ||
+                    "",
+                },
+              },
+            },
+
+            other: { ...productData.other } || {},
+          };
+        } else {
+          console.error("Failed to fetch product:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Failed to fetch product:", error);
+      }
+    },
+
     async fetchDropdownData() {
       try {
         const token = localStorage.getItem("token");
@@ -1004,7 +1117,6 @@ export default {
           "http://192.168.1.244:8000/api/vendor/show/drop",
           config
         );
-        console.log(response.data);
         this.groups = response.data.data.groups;
         this.categories = response.data.data.categories;
         this.etalases = response.data.data.etalases;
@@ -1014,149 +1126,110 @@ export default {
       }
     },
 
-    onImageChange(field, event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      // Simpan nama file saja
-      this.products.images[field] = file.name;
-      console.log(`${field}:`, file.name); // Tambahkan console log di sini
-    },
-
-    onVideoChange(event) {
-      const videoFile = event.target.files[0];
-      if (videoFile) {
-        this.products.detail.video = videoFile.name;
-        console.log("Video:", videoFile.name); // Tambahkan console log di sini
-      }
-    },
-
-    async submitProduct() {
+    async updateProduct() {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
           console.error("Token not found.");
           return;
         }
-
-        const formData = new FormData();
-        formData.append("name", this.products.name);
-        formData.append("group_id", this.products.group);
-        formData.append("category_id", this.products.category);
-        formData.append("brand", this.products.brand);
-        formData.append(
-          "product_category_name",
-          this.products.product_category_name
-        );
-        formData.append(
-          "productSpecification",
-          this.products.detail.productSpecification
-        );
-        formData.append(
-          "technicalSpecification",
-          this.products.detail.technicalSpecification
-        );
-        formData.append("feature", this.products.detail.feature);
-        formData.append("partNumber", this.products.detail.partNumber);
-        formData.append("satuan", this.products.detail.satuan);
-        formData.append("condition", this.products.detail.condition);
-        formData.append(
-          "price",
-          this.products.commercial_info.commercialInfo.price
-        );
-        formData.append(
-          "currency_id",
-          this.products.commercial_info.commercialInfo.currency_id
-        );
-        formData.append(
-          "etalase_id",
-          this.products.commercial_info.commercialInfo.etalase_id
-        );
-        formData.append(
-          "payment_terms",
-          this.products.commercial_info.commercialInfo.payment_terms
-        );
-        formData.append(
-          "discount",
-          this.products.commercial_info.commercialInfo.discount
-        );
-        formData.append(
-          "price_exp",
-          this.products.commercial_info.commercialInfo.price_exp
-        );
-        formData.append(
-          "stock",
-          this.products.commercial_info.commercialInfo.stock
-        );
-        formData.append(
-          "pre_order",
-          this.products.commercial_info.commercialInfo.pre_order
-        );
-        formData.append(
-          "contract",
-          this.products.commercial_info.commercialInfo.enablecontract
-            ? "yes"
-            : "no"
-        );
-        formData.append(
-          "min",
-          this.products.commercial_info.commercialInfo.purchase_q_t_y.min
-        );
-        formData.append(
-          "max",
-          this.products.commercial_info.commercialInfo.purchase_q_t_y.max
-        );
-        formData.append(
-          "qty",
-          this.products.commercial_info.commercialInfo.grosir.qty
-        );
-        formData.append(
-          "grosir_price",
-          this.products.commercial_info.commercialInfo.grosir.price
-        );
-
-        formData.append("incomterm", this.products.other.incomterm);
-        formData.append("warranty", this.products.other.warranty);
-        formData.append("maintenance", this.products.other.maintenance);
-        formData.append("sku", this.products.other.sku);
-        formData.append("tags", this.products.other.tags);
-
-        // formData.append("tags", this.products.other.tags.join(", ")); // Menggunakan join untuk menggabungkan array tags menjadi string
-        // formData.append("makeActive", this.products.other.makeActive);
-
-        // Tambahkan file gambar ke FormData
-        for (let key in this.products.images) {
-          const file = document.querySelector(`input[name=${key}]`).files[0];
-          if (file) {
-            formData.append("image[]", file);
-            console.log(`${key}:`, file.name); // Tambahkan console log di sini
-          }
-        }
-
-        // Tambahkan file video ke FormData
-        const videoFile = document.querySelector("input[name=video]").files[0];
-        if (videoFile) {
-          formData.append("video", videoFile);
-          console.log("Video:", videoFile.name); // Tambahkan console log di sini
-        }
-        // Tambahkan console log untuk menampilkan data yang akan disubmit
-        for (let pair of formData.entries()) {
-          console.log(pair[0] + ": " + pair[1]);
-        }
         const config = {
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         };
-        const response = await axios.post(
-          "http://192.168.1.244:8000/api/vendor/addProduct",
-          formData,
+
+        const images = [];
+        for (let i = 0; i < 4; i++) {
+          const key = `product-image${i + 1}`;
+          if (this.editedProduct.images[key]) {
+            images.push({
+              image: this.editedProduct.images[key],
+            });
+          }
+        }
+
+        const data = {
+          name: this.editedProduct.name,
+          group_id: this.editedProduct.group,
+          category_id: this.editedProduct.category,
+          brand: this.editedProduct.brand,
+          product_category_name: this.editedProduct.product_category_name,
+          status: this.editedProduct.other.makeActive ? "active" : "inactive",
+          images: images,
+
+          productSpecification: this.editedProduct.detail.productSpecification,
+          technicalSpecification:
+            this.editedProduct.detail.technicalSpecification,
+          feature: this.editedProduct.detail.feature,
+          partNumber: this.editedProduct.detail.partNumber,
+          video: this.editedProduct.detail.video,
+          satuan: this.editedProduct.detail.satuan,
+          condition: this.editedProduct.detail.condition,
+
+          price: this.editedProduct.commercial_info.commercialInfo.price,
+          currency_id:
+            this.editedProduct.commercial_info.commercialInfo.currency_id,
+          etalase_id:
+            this.editedProduct.commercial_info.commercialInfo.etalase_id,
+          payment_terms:
+            this.editedProduct.commercial_info.commercialInfo.payment_terms,
+          discount: this.editedProduct.commercial_info.commercialInfo.discount,
+          price_exp:
+            this.editedProduct.commercial_info.commercialInfo.price_exp,
+          stock: this.editedProduct.commercial_info.commercialInfo.stock,
+          pre_order:
+            this.editedProduct.commercial_info.commercialInfo.pre_order,
+          contract: this.editedProduct.commercial_info.commercialInfo.contract
+            ? "yes"
+            : "no",
+          min: this.editedProduct.commercial_info.commercialInfo.purchase_q_t_y
+            .min,
+          max: this.editedProduct.commercial_info.commercialInfo.purchase_q_t_y
+            .max,
+          qty: this.editedProduct.commercial_info.commercialInfo.grosir.qty,
+          grosir_price:
+            this.editedProduct.commercial_info.commercialInfo.grosir.price,
+
+          incomterm: this.editedProduct.other.incomterm,
+          warranty: this.editedProduct.other.warranty,
+          maintenance: this.editedProduct.other.maintenance,
+          sku: this.editedProduct.other.sku,
+          tags: this.editedProduct.other.tags,
+        };
+
+        const response = await axios.put(
+          `http://192.168.1.244:8000/api/vendor/updateProduct/${this.productId}`,
+          data,
           config
         );
-        console.log("Product submitted successfully:", response.data);
+
+        if (response.data.success) {
+          console.log("Product updated successfully.");
+        } else {
+          console.error("Failed to update product:", response.data.message);
+        }
       } catch (error) {
-        console.error("Failed to submit product:", error);
+        console.error("Failed to update product:", error);
+      }
+    },
+
+    onImageChange(field, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.editedProduct.images[field] = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+
+    onVideoChange(event) {
+      const videoFile = event.target.files[0];
+      if (videoFile) {
+        this.editedProduct.detail.video = videoFile.name;
+        console.log("Video:", videoFile.name);
       }
     },
   },
@@ -1165,7 +1238,7 @@ export default {
 
 <style>
 form {
-  padding: 2rem; /* Ubah sesuai kebutuhan */
+  padding: 0.5rem; /* Ubah sesuai kebutuhan */
   border-radius: 0.5rem; /* Ubah sesuai kebutuhan */
 }
 </style>

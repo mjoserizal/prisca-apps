@@ -1,8 +1,8 @@
 <template>
   <div class="w-full">
-    <div class="p-4">
+    <div class="pt-4">
       <q-card
-        class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+        class="shadow-md overflow-hidden border-b border-gray-200 sm:rounded-lg"
         bordered
       >
         <q-card-section>
@@ -18,42 +18,42 @@
             row-key="id"
             :filter="filter"
           >
-            <template v-slot:top-right>
-              <div class="flex items-start justify-between w-full">
-                <div>
-                  <q-btn
-                    label="Add Product"
-                    color="primary"
-                    class="q-mr-md"
-                    to="/addinfo"
-                    exact
-                  />
-                </div>
+            <template v-slot:top>
+              <q-toolbar class="q-gutter-md" style="flex-wrap: wrap">
+                <q-btn
+                  label="Add Product"
+                  color="primary"
+                  class="q-mb-md"
+                  to="/addinfo"
+                  exact
+                />
 
-                <div class="flex items-center">
-                  <q-input
-                    v-model="filter"
-                    filled
-                    borderless
-                    dense
-                    debounce="300"
-                    placeholder="Search"
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="search" />
-                    </template>
-                  </q-input>
+                <q-space />
 
-                  <q-btn
-                    icon="settings"
-                    class="q-ml-sm"
-                    flat
-                    @click="openAdvanceSearch"
-                  >
-                    Advance Search
-                  </q-btn>
-                </div>
-              </div>
+                <q-input
+                  v-model="filter"
+                  filled
+                  borderless
+                  dense
+                  debounce="300"
+                  placeholder="Search"
+                  class="q-mb-md"
+                  style="flex-grow: 1; max-width: 200px"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="search" />
+                  </template>
+                </q-input>
+
+                <q-btn
+                  icon="settings"
+                  flat
+                  @click="openAdvanceSearch"
+                  class="q-mb-md"
+                >
+                  Advance Search
+                </q-btn>
+              </q-toolbar>
             </template>
 
             <template v-slot:body-cell-status="props">
@@ -164,7 +164,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import { useRoute, useRouter } from "vue-router";
 
+const router = useRouter();
 const products = ref([]);
 const filter = ref("");
 const show_filter = ref(false);
@@ -233,7 +235,9 @@ const columns = [
 
 const editProduct = (product) => {
   console.log("Edit product:", product);
+  router.push({ name: "editProduct", params: { id: product.id } });
 };
+
 const deleteProduct = async (product) => {
   try {
     const token = localStorage.getItem("token");
@@ -295,7 +299,7 @@ onMounted(async () => {
         category: product.category,
         brand: product.brand,
         price: product.commercial_info.commercialInfo.price,
-        status: product.detail.condition === "new" ? "Active" : "Inactive",
+        status: product.status,
       }));
     } else {
       console.error("Failed to fetch products:", response.data.message);

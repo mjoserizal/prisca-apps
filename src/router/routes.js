@@ -14,10 +14,17 @@ const routes = [
         name: "vendorProduct",
       },
       {
-        path: "/edit/:id",
+        path: "/vendordetail",
+        component: () => import("pages/vendor/VendorDetail.vue"),
+        name: "vendorDetail",
+      },
+      {
+        path: "/editproduct/:id",
         component: () => import("pages/vendor/EditProduct.vue"),
         name: "editProduct",
+        props: true,
       },
+
       {
         path: "/catalogue",
         component: () => import("pages/CataloguePage.vue"),
