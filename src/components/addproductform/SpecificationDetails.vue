@@ -1,9 +1,6 @@
 <!-- Bagian kedua dengan input -->
 <template>
-  <form
-    @submit.prevent="submitProduct"
-    class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row m-6"
-  >
+  <div class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row mt-6">
     <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
       <!-- Input Product Specification -->
       <div class="mb-4" style="max-height: 200px; overflow-y: auto">
@@ -15,7 +12,7 @@
         <textarea
           id="product-specification"
           name="product-specification"
-          v-model="product.productSpecification"
+          v-model="products.detail.productSpecification"
           rows="5"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         ></textarea>
@@ -32,7 +29,7 @@
           type="text"
           id="feature"
           name="feature"
-          v-model="product.feature"
+          v-model="products.detail.feature"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -45,7 +42,7 @@
           type="text"
           id="satuan"
           name="satuan"
-          v-model="product.satuan"
+          v-model="products.detail.satuan"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -57,7 +54,7 @@
         <div class="flex items-center">
           <q-radio
             size="lg"
-            v-model="product.condition"
+            v-model="products.detail.condition"
             val="new"
             class="mr-1"
             color="primary"
@@ -67,7 +64,7 @@
           <label class="mr-4">New</label>
           <q-radio
             size="lg"
-            v-model="product.condition"
+            v-model="products.detail.condition"
             val="used"
             class="mr-1"
             color="primary"
@@ -89,7 +86,7 @@
         <textarea
           id="technical-spec"
           name="technical-spec"
-          v-model="product.technicalSpec"
+          v-model="products.detail.technicalSpecification"
           rows="5"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         ></textarea>
@@ -105,7 +102,7 @@
           type="text"
           id="part-number"
           name="part-number"
-          v-model="product.partNumber"
+          v-model="products.detail.partNumber"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -124,47 +121,9 @@
         />
       </div>
     </div>
-  </form>
+  </div>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      product: {
-        // Define your product properties here
-        productSpecification: "",
-        feature: "",
-        satuan: "",
-        condition: {
-          new: false,
-          used: false,
-        },
-        technicalSpec: "",
-        partNumber: "",
-        video: null,
-      },
-    };
-  },
-  methods: {
-    onVideoChange(event) {
-      // Update the video property when a new video is selected
-      this.product.video = event.target.files[0];
-    },
-
-    getData() {
-      return {
-        productSpecification: this.products.detail.productSpecification,
-        technicalSpec: this.products.detail.technicalSpecification,
-        features: this.products.detail.feature,
-        satuan: this.products.detail.satuan,
-        partNumber: this.products.detail.partNumber,
-        condition: this.products.detail.condition,
-        video: thsi.products.detail.video,
-      };
-    },
-  },
-};
-</script>
+<script></script>
 
 <style scoped>
 form {

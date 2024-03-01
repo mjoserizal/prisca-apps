@@ -1,10 +1,6 @@
-<!-- Bagian kedua dengan input -->
 <template>
-  <form
-    @submit.prevent="submitProduct"
-    class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row m-2"
-  >
-    <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
+  <form @submit.prevent="updateVendorData">
+    <div class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row">
       <!-- Input Feature -->
       <div class="mb-4">
         <label for="name" class="block mb-2 text-sm font-medium text-gray-600"
@@ -14,160 +10,244 @@
           type="text"
           id="name"
           name="name"
-          v-model="detail.name"
+          v-model="vendorDetail.name"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
 
       <!-- Input Technical Spec -->
       <div class="mb-4">
-        <label
-          for="technical-spec"
-          class="block mb-2 text-sm font-medium text-gray-600"
+        <label for="alamat" class="block mb-2 text-sm font-medium text-gray-600"
           >Alamat Perusahaan:</label
         >
         <textarea
           id="alamat"
           name="alamat"
-          v-model="detail.alamatPerusahaan"
-          rows="5"
+          v-model="vendorDetail.master.alamat"
+          rows="4"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         ></textarea>
       </div>
 
-      <!-- Input Satuan -->
-      <!-- <div class="mb-4">
-        <label for="satuan" class="block mb-2 text-sm font-medium text-gray-600"
-          >Satuan:</label
+      <!-- Input Part Number -->
+      <div class="mb-4">
+        <label for="telp" class="block mb-2 text-sm font-medium text-gray-600"
+          >Nomor Telepon Perusahaan:</label
         >
         <input
           type="text"
-          id="satuan"
-          name="satuan"
-          v-model="detail.satuan"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
-      </div> -->
-      <!-- Input Kondisi -->
-      <div class="mb-4">
-        <label class="block mb-2 text-sm font-medium text-gray-600"
-          >Condition:</label
-        >
-        <div class="flex items-center">
-          <q-radio
-            size="lg"
-            v-model="detail.condition"
-            val="new"
-            class="mr-1"
-            color="primary"
-            unchecked-icon="radio_button_unchecked"
-            checked-icon="radio_button_checked"
-          />
-          <label class="mr-4">New</label>
-          <q-radio
-            size="lg"
-            v-model="detail.condition"
-            val="used"
-            class="mr-1"
-            color="primary"
-            unchecked-icon="radio_button_unchecked"
-            checked-icon="radio_button_checked"
-          />
-          <label>Used</label>
-        </div>
-      </div>
-    </div>
-    <div class="flex-1 pl-0 md:pl-4">
-      <!-- Input Part Number -->
-      <div class="mb-4">
-        <label
-          for="part-number"
-          class="block mb-2 text-sm font-medium text-gray-600"
-          >Nomoer Telepon Perusahaan:</label
-        >
-        <input
-          type="Number"
-          id="part-number"
-          name="part-number"
-          v-model="detail.partNumber"
+          id="telp"
+          name="telp"
+          v-model="vendorDetail.telp"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
+
       <div class="mb-4">
-        <label
-          for="part-number"
-          class="block mb-2 text-sm font-medium text-gray-600"
+        <label for="email" class="block mb-2 text-sm font-medium text-gray-600"
           >Email Perusahaan:</label
         >
         <input
           type="text"
-          id="part-number"
-          name="part-number"
-          v-model="detail.partNumber"
+          id="email"
+          name="email"
+          v-model="vendorDetail.email"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
-      <!-- Input Video -->
+
       <div class="mb-4">
-        <label for="video" class="block mb-2 text-sm font-medium text-gray-600"
-          >Video:</label
+        <label
+          for="website"
+          class="block mb-2 text-sm font-medium text-gray-600"
+          >Website Perusahaan:</label
         >
         <input
-          type="file"
-          id="video"
-          name="video"
-          accept="video/*"
-          @change="onVideoChange"
+          type="text"
+          id="website"
+          name="website"
+          v-model="vendorDetail.master.website"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
     </div>
+    <div
+      class="bg-white mt-6 mb-6 p-6 rounded-md shadow-md flex flex-col md:flex-row"
+    >
+      <!-- Input Bidang Usaha -->
+      <div class="mb-4">
+        <label
+          for="bidang_usaha"
+          class="block mb-2 text-sm font-medium text-gray-600"
+          >Bidang Usaha:</label
+        >
+        <input
+          type="text"
+          id="bidang_usaha"
+          name="bidang_usaha"
+          v-model="vendorDetail.master.bidang_usaha"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Input Tahun Berdiri -->
+      <div class="mb-4">
+        <label
+          for="tanggal_berdiri"
+          class="block mb-2 text-sm font-medium text-gray-600"
+          >Tahun Berdiri:</label
+        >
+        <input
+          type="date"
+          id="tanggal_berdiri"
+          name="tanggal_berdiri"
+          v-model="vendorDetail.master.tanggal_berdiri"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Input NPWP -->
+      <div class="mb-4">
+        <label for="npwp" class="block mb-2 text-sm font-medium text-gray-600"
+          >NPWP:</label
+        >
+        <input
+          type="text"
+          id="npwp"
+          name="npwp"
+          v-model="vendorDetail.master.npwp"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+      </div>
+      <div class="mb-4">
+        <label for="npwp" class="block mb-2 text-sm font-medium text-gray-600"
+          >SIUP:</label
+        >
+        <input
+          type="text"
+          id="siup"
+          name="siup"
+          v-model="vendorDetail.master.siup"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Input SIUP -->
+      <!-- <div class="mb-4">
+        <label for="siup" class="block mb-2 text-sm font-medium text-gray-600"
+          >SIUP:</label
+        >
+        <input
+          type="file"
+          id="siup"
+          name="siup"
+          accept=".pdf,.doc,.docx"
+          @change="onFileChange"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+      </div> -->
+    </div>
+    <button
+      type="submit"
+      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    >
+      Update
+    </button>
   </form>
 </template>
+
 <script>
+import axios from "axios";
+
 export default {
   name: "VendorDetail",
   data() {
     return {
-      detail: {
-        // Define your detail properties here
-        alamatPerusahaan: "",
+      vendorDetail: {
         name: "",
-        satuan: "",
-        condition: {
-          new: false,
-          used: false,
+        telp: "",
+        email: "",
+        master: {
+          alamat: "",
+          website: "",
+          bidang_usaha: "",
+          tanggal_berdiri: "",
+          npwp: "",
+          siup: null,
         },
-        technicalSpec: "",
-        partNumber: "",
-        video: null,
       },
+      token: localStorage.getItem("token"), // Mengambil token dari local storage
     };
   },
+
   methods: {
-    onVideoChange(event) {
-      // Update the video property when a new video is selected
-      this.detail.video = event.target.files[0];
+    async fetchVendorData() {
+      try {
+        const response = await axios.get(
+          "http://192.168.1.244:8000/api/vendor/show/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          this.vendorDetail = response.data.user;
+        } else {
+          console.error("Failed to fetch vendor data:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching vendor data:", error);
+      }
     },
 
-    getData() {
-      return {
-        alamatPerusahaan: this.details.detail.alamatPerusahaan,
-        technicalSpec: this.details.detail.technicalSpecification,
-        names: this.details.detail.name,
-        satuan: this.details.detail.satuan,
-        partNumber: this.details.detail.partNumber,
-        condition: this.details.detail.condition,
-        video: thsi.details.detail.video,
-      };
+    async updateVendorData() {
+      try {
+        const requestData = {
+          name: this.vendorDetail.name,
+          telp: this.vendorDetail.telp,
+          email: this.vendorDetail.email,
+          vendor_alamat: this.vendorDetail.master.alamat,
+          vendor_website: this.vendorDetail.master.website,
+          vendor_bidang_usaha: this.vendorDetail.master.bidang_usaha,
+          vendor_tanggal_berdiri: this.vendorDetail.master.tanggal_berdiri,
+          vendor_npwp: this.vendorDetail.master.npwp,
+          siup: this.vendorDetail.master.siup,
+        };
+
+        const response = await axios.put(
+          "http://192.168.1.244:8000/api/vendor/update/profile",
+          requestData,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          console.log("Vendor data updated successfully");
+        } else {
+          console.error("Failed to update vendor data:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error updating vendor data:", error);
+      }
     },
+  },
+
+  mounted() {
+    // Memanggil fetchVendorData saat komponen dimount
+    this.fetchVendorData();
   },
 };
 </script>
 
 <style scoped>
 form {
-  padding: 1rem; /* Ubah sesuai kebutuhan */
-  border-radius: 0.5rem; /* Ubah sesuai kebutuhan */
+  padding-top: 1rem; /* Ubah sesuai kebutuhan */
+  border-radius: 1rem; /* Ubah sesuai kebutuhan */
 }
 </style>

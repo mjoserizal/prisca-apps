@@ -1,8 +1,5 @@
 <template>
-  <form
-    @submit.prevent="submitProduct"
-    class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row m-6"
-  >
+  <div class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row">
     <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
       <div class="mb-4">
         <label
@@ -16,8 +13,8 @@
         >
           <div class="text-center">
             <img
-              v-if="images['large-product-image']"
-              :src="images['large-product-image']"
+              v-if="previewImages['large-product-image']"
+              :src="previewImages['large-product-image']"
               alt="Preview"
               class="h-auto w-auto object-cover mb-4"
             />
@@ -79,8 +76,8 @@
             >
               <div class="text-center">
                 <img
-                  v-if="images['product-image1']"
-                  :src="images['product-image1']"
+                  v-if="previewImages['product-image1']"
+                  :src="previewImages['product-image1']"
                   alt="Preview"
                   class="h-auto w-auto object-cover mb-4"
                 />
@@ -128,6 +125,7 @@
           </div>
         </div>
         <!-- Repeat for Image 2 and Image 3 -->
+        <!-- Repeat for Image 2 and Image 3 -->
         <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
           <div class="mb-4">
             <label
@@ -141,8 +139,8 @@
             >
               <div class="text-center">
                 <img
-                  v-if="images['product-image2']"
-                  :src="images['product-image2']"
+                  v-if="previewImages['product-image2']"
+                  :src="previewImages['product-image2']"
                   alt="Preview"
                   class="h-auto w-auto object-cover mb-4"
                 />
@@ -202,8 +200,8 @@
             >
               <div class="text-center">
                 <img
-                  v-if="images['product-image3']"
-                  :src="images['product-image3']"
+                  v-if="previewImages['product-image3']"
+                  :src="previewImages['product-image3']"
                   alt="Preview"
                   class="h-auto w-auto object-cover mb-4"
                 />
@@ -265,7 +263,7 @@
           type="text"
           id="product-name"
           name="product-name"
-          v-model="product.name"
+          v-model="products.name"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -280,7 +278,7 @@
         <select
           id="product-group"
           name="product-group"
-          v-model="product.group"
+          v-model="products.group"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
           <option value="">Select Group</option>
@@ -300,7 +298,7 @@
         <select
           id="product-category"
           name="product-category"
-          v-model="product.category"
+          v-model="products.category"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
           <option value="">Select Category</option>
@@ -323,7 +321,7 @@
           type="text"
           id="brand"
           name="brand"
-          v-model="product.brand"
+          v-model="products.brand"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -339,89 +337,15 @@
           type="text"
           id="product-category-name"
           name="product-category-name"
-          v-model="product.categoryName"
+          v-model="products.product_category_name"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
     </div>
-  </form>
+  </div>
 </template>
 
-<script>
-import axios from "axios";
-
-export default {
-  name: "BasicInformation",
-  data() {
-    return {
-      product: {
-        name: "",
-        group: "",
-        category: "",
-        brand: "",
-        product_category_name: "",
-      },
-      groups: [],
-      categories: [],
-      images: {
-        "large-product-image": "",
-        "product-image1": "",
-        "product-image2": "",
-        "product-image3": "",
-      },
-    };
-  },
-  created() {
-    this.fetchDropdownData();
-  },
-  methods: {
-    async fetchDropdownData() {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("Token not found.");
-          return;
-        }
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        const response = await axios.get(
-          "http://192.168.1.244:8000/api/vendor/show/drop",
-          config
-        );
-        console.log(response.data);
-        this.groups = response.data.data.groups;
-        this.categories = response.data.data.categories;
-      } catch (error) {
-        console.error("Failed to fetch dropdown data:", error);
-      }
-    },
-
-    onImageChange(refName, event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        Object.assign(this.images, { [refName]: e.target.result });
-      };
-      reader.readAsDataURL(file);
-    },
-    getData() {
-      return {
-        name: this.products.name,
-        group: this.products.group,
-        category: this.products.category,
-        brand: this.products.brand,
-        product_category_name: this.products.product_category_name,
-        images: this.product.images,
-      };
-    },
-  },
-};
-</script>
+<script></script>
 
 <style>
 form {

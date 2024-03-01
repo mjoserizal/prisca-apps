@@ -1,8 +1,5 @@
 <template>
-  <form
-    @submit.prevent="submitProduct"
-    class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row m-6"
-  >
+  <div class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row mt-6">
     <!-- Bagian kiri -->
     <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
       <!-- Input Price -->
@@ -14,7 +11,7 @@
           type="text"
           id="price"
           name="price"
-          v-model="commercialInfo.price"
+          v-model="products.commercial_info.commercialInfo.price"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -29,7 +26,7 @@
           type="text"
           id="discount"
           name="discount"
-          v-model="commercialInfo.discount"
+          v-model="products.commercial_info.commercialInfo.discount"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -44,7 +41,7 @@
           type="date"
           id="price-expiration-date"
           name="price-expiration-date"
-          v-model="commercialInfo.priceExpirationDate"
+          v-model="products.commercial_info.commercialInfo.price_exp"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -58,7 +55,7 @@
         <select
           id="etalase"
           name="etalase"
-          v-model="commercialInfo.etalase"
+          v-model="products.commercial_info.commercialInfo.etalase_id"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
           <option value="">Select Etalase</option>
@@ -80,14 +77,17 @@
           class="relative inline-block mr-2 align-middle select-none transition duration-200 ease-in"
         >
           <q-toggle
-            v-model="commercialInfo.grosirToggle"
+            v-model="products.commercial_info.commercialInfo.grosirToggle"
             color="primary"
             label="Grosir"
             :before="false"
           />
         </div>
       </div>
-      <div v-if="commercialInfo.grosirToggle" class="mb-4 flex">
+      <div
+        v-if="products.commercial_info.commercialInfo.grosirToggle"
+        class="mb-4 flex"
+      >
         <div class="flex-1 mr-2">
           <label
             for="grosir-qty"
@@ -98,7 +98,7 @@
             type="number"
             id="grosir-qty"
             name="grosir-qty"
-            v-model="commercialInfo.grosirQty"
+            v-model="products.commercial_info.commercialInfo.grosir.qty"
             min="0"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
@@ -113,7 +113,7 @@
             type="text"
             id="grosir-price"
             name="grosir-price"
-            v-model="commercialInfo.grosirPrice"
+            v-model="products.commercial_info.commercialInfo.grosir.price"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -128,7 +128,7 @@
           class="relative inline-block mr-2 align-middle select-none transition duration-200 ease-in"
         >
           <q-toggle
-            v-model="commercialInfo.preOrder"
+            v-model="products.commercial_info.commercialInfo.preOrder"
             color="primary"
             :before="false"
             label="Pre-Order"
@@ -136,7 +136,7 @@
         </div>
       </div>
       <!-- Input Pre-order Days -->
-      <div v-if="commercialInfo.preOrder" class="mb-4">
+      <div v-if="products.commercial_info.commercialInfo.preOrder" class="mb-4">
         <label
           for="pre-order-days"
           class="block mb-2 text-sm font-medium text-gray-600"
@@ -146,7 +146,7 @@
           type="number"
           id="pre-order-days"
           name="pre-order-days"
-          v-model="commercialInfo.preOrderDays"
+          v-model="products.commercial_info.commercialInfo.pre_order"
           min="0"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
@@ -165,7 +165,7 @@
         <select
           id="currency"
           name="currency"
-          v-model="commercialInfo.currency"
+          v-model="products.commercial_info.commercialInfo.currency_id"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
           <option value="">Select Currency</option>
@@ -189,7 +189,7 @@
           type="text"
           id="payment-terms"
           name="payment-terms"
-          v-model="commercialInfo.paymentTerms"
+          v-model="products.commercial_info.commercialInfo.payment_terms"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -211,9 +211,9 @@
               type="number"
               id="min-purchase-quantity"
               name="min-purchase-quantity"
-              v-model="commercialInfo.minPurchaseQuantity"
-              min="0"
-              max="100"
+              v-model="
+                products.commercial_info.commercialInfo.purchase_q_t_y.min
+              "
               class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
@@ -229,9 +229,9 @@
               type="number"
               id="max-purchase-quantity"
               name="max-purchase-quantity"
-              v-model="commercialInfo.maxPurchaseQuantity"
-              min="0"
-              max="100"
+              v-model="
+                products.commercial_info.commercialInfo.purchase_q_t_y.max
+              "
               class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
@@ -247,7 +247,7 @@
           type="number"
           id="stock"
           name="stock"
-          v-model="commercialInfo.stock"
+          v-model="products.commercial_info.commercialInfo.stock"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -261,7 +261,7 @@
           class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in"
         >
           <q-toggle
-            v-model="commercialInfo.enablecontract"
+            v-model="products.commercial_info.commercialInfo.enablecontract"
             color="primary"
             label="Contract"
             :before="false"
@@ -270,85 +270,9 @@
         </div>
       </div>
     </div>
-  </form>
+  </div>
 </template>
-<script>
-import axios from "axios";
-
-export default {
-  name: "commercialInfo",
-  data() {
-    return {
-      commercialInfo: {
-        price: "",
-        discount: "",
-        priceExpirationDate: "",
-        etalase: "",
-        grosirToggle: false,
-        grosirQty: 0,
-        grosirPrice: "",
-        preOrder: false,
-        preOrderDays: 0,
-        currency: "",
-        paymentTerms: "",
-        minPurchaseQuantity: 0,
-        maxPurchaseQuantity: 0,
-        stock: 0,
-        enablecontract: false,
-      },
-      etalases: [],
-      currencies: [],
-    };
-  },
-  created() {
-    this.fetchDropdownData();
-  },
-  methods: {
-    async fetchDropdownData() {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("Token not found.");
-          return;
-        }
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        const response = await axios.get(
-          "http://192.168.1.244:8000/api/vendor/show/drop",
-          config
-        );
-        console.log(response.data);
-        this.etalases = response.data.data.etalases;
-        this.currencies = response.data.data.currencies;
-      } catch (error) {
-        console.error("Failed to fetch dropdown data:", error);
-      }
-    },
-  },
-  getData() {
-    return {
-      price: this.commercial_info.commercialInfo.price,
-      discount: this.commercial_info.commercialInfo.discount,
-      priceExpirationDate: this.commercial_info.commercialInfo.price_exp,
-      etalase: this.commercial_info.commercialInfo.etalase_id,
-      grosirQty: this.commercial_info.commercialInfo.grosir.qty,
-      grosirPrice: this.commercial_info.commercialInfo.grosir.price,
-      preOrderDays: this.commercial_info.commercialInfo.pre_order,
-      currency: this.commercial_info.commercialInfo.currency_id,
-      paymentTerms: this.commercial_info.commercialInfo.paymentTerms,
-      minPurchaseQuantity:
-        this.commercial_info.commercialInfo.minPurchaseQuantity,
-      maxPurchaseQuantity:
-        this.commercial_info.commercialInfo.maxPurchaseQuantity,
-      stock: this.commercial_info.commercialInfo.stock,
-      enablecontract: this.commercial_info.commercialInfo.enablecontract,
-    };
-  },
-};
-</script>
+<script></script>
 
 <style>
 form {

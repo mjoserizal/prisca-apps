@@ -1180,7 +1180,7 @@ export default {
 
 <style>
 form {
-  padding: 0.25rem; /* Ubah sesuai kebutuhan */
-  border-radius: 1rem; /* Ubah sesuai kebutuhan */
+  padding-top: 2rem;
+  border-radius: 1rem;
 }
 </style>
