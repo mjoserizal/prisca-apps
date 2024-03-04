@@ -138,7 +138,81 @@
   </div>
 </template>
 
-<script></script>
+<script>
+export default {
+  name: "OthersInfo",
+  data() {
+    return {
+      products: {
+        name: "",
+        group: "",
+        category: "",
+        brand: "",
+        product_category_name: "",
+        staus: "",
+        images: {
+          "large-product-image": "",
+          "product-image1": "",
+          "product-image2": "",
+          "product-image3": "",
+        },
+        detail: {
+          productSpecification: "",
+          technicalSpecification: "",
+          feature: "",
+          partNumber: "",
+          satuan: "",
+          video: "",
+          condition: "",
+        },
+        commercial_info: {
+          commercialInfo: {
+            grosirToggle: false,
+            enablecontract: false,
+            preOrder: false,
+            price: "",
+            currency_id: "",
+            etalase_id: "",
+            payment_terms: "",
+            discount: "",
+            price_exp: "",
+            stock: "",
+            pre_order: "",
+            contract: "",
+            purchase_q_t_y: {
+              min: "",
+              max: "",
+            },
+            grosir: {
+              qty: "",
+              price: "",
+            },
+          },
+        },
+        other: {
+          incomterm: "",
+          warranty: "",
+          maintenance: "",
+          sku: "",
+          tags: "",
+          makeActive: false,
+        },
+      },
+
+      groups: [],
+      categories: [],
+      etalases: [],
+      currencies: [],
+      previewImages: {
+        "large-product-image": "",
+        "product-image1": "",
+        "product-image2": "",
+        "product-image3": "",
+      },
+    };
+  },
+};
+</script>
 
 <style>
 form {

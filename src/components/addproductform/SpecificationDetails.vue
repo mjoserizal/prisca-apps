@@ -3,7 +3,7 @@
   <div class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row mt-6">
     <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
       <!-- Input Product Specification -->
-      <div class="mb-4" style="max-height: 200px; overflow-y: auto">
+      <div class="mb-4">
         <label
           for="product-specification"
           class="block mb-2 text-sm font-medium text-gray-600"
@@ -123,7 +123,81 @@
     </div>
   </div>
 </template>
-<script></script>
+<script>
+export default {
+  name: "SpecificationDetails",
+  data() {
+    return {
+      products: {
+        name: "",
+        group: "",
+        category: "",
+        brand: "",
+        product_category_name: "",
+        staus: "",
+        images: {
+          "large-product-image": "",
+          "product-image1": "",
+          "product-image2": "",
+          "product-image3": "",
+        },
+        detail: {
+          productSpecification: "",
+          technicalSpecification: "",
+          feature: "",
+          partNumber: "",
+          satuan: "",
+          video: "",
+          condition: "",
+        },
+        commercial_info: {
+          commercialInfo: {
+            grosirToggle: false,
+            enablecontract: false,
+            preOrder: false,
+            price: "",
+            currency_id: "",
+            etalase_id: "",
+            payment_terms: "",
+            discount: "",
+            price_exp: "",
+            stock: "",
+            pre_order: "",
+            contract: "",
+            purchase_q_t_y: {
+              min: "",
+              max: "",
+            },
+            grosir: {
+              qty: "",
+              price: "",
+            },
+          },
+        },
+        other: {
+          incomterm: "",
+          warranty: "",
+          maintenance: "",
+          sku: "",
+          tags: "",
+          makeActive: false,
+        },
+      },
+
+      groups: [],
+      categories: [],
+      etalases: [],
+      currencies: [],
+      previewImages: {
+        "large-product-image": "",
+        "product-image1": "",
+        "product-image2": "",
+        "product-image3": "",
+      },
+    };
+  },
+};
+</script>
 
 <style scoped>
 form {

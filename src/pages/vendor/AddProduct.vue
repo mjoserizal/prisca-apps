@@ -3,8 +3,13 @@
     <BasicInformation ref="basicInfo" />
     <SpecificationDetails ref="specInfo" />
     <CommercialInfo ref="commercialInfo" />
-    <!-- <OthersInfo ref="othersInfo" /> -->
-    <button class="btn-primary" @click="submitProduct">Submit</button>
+    <OthersInfo ref="othersInfo" />
+    <button
+      type="submit"
+      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    >
+      Submit
+    </button>
   </div>
 </template>
 
@@ -23,9 +28,9 @@ export default defineComponent({
     CommercialInfo: defineAsyncComponent(() =>
       import("src/components/addproductform/CommercialInfo.vue")
     ),
-    // OthersInfo: defineAsyncComponent(() =>
-    //   import("src/components/addproductform/OthersInfo.vue")
-    // ),
+    OthersInfo: defineAsyncComponent(() =>
+      import("src/components/addproductform/OthersInfo.vue")
+    ),
   },
 
   name: "addProductForm",
@@ -294,4 +299,9 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+form {
+  padding: 2rem;
+  border-radius: 1rem;
+}
+</style>

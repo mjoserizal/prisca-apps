@@ -31,6 +31,11 @@ const routes = [
         name: "catalogue",
       },
       {
+        path: "/quotation",
+        component: () => import("pages/vendor/QuotationPage.vue"),
+        name: "quotation",
+      },
+      {
         path: "/product",
         component: () => import("src/pages/vendor/ProductCatalogues.vue"),
         name: "product",
@@ -63,7 +68,7 @@ const routes = [
       },
       {
         path: "/detail/:id",
-        component: () => import("pages/DetailPage.vue"),
+        component: () => import("pages/vendor/ProductDetail.vue"),
         name: "detail",
         props: true,
       },
@@ -75,7 +80,10 @@ const routes = [
     ],
   },
   { path: "/login", component: () => import("pages/LoginPage.vue") },
-  { path: "/register", component: () => import("pages/RegisterVendor.vue") },
+  {
+    path: "/register-vendor",
+    component: () => import("pages/RegisterVendor.vue"),
+  },
 ];
 
 export default routes;

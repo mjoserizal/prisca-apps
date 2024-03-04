@@ -9,6 +9,7 @@
           @click="toggleLeftDrawer"
           aria-label="Menu"
           icon="menu"
+          content-class="drawer-content"
         />
 
         <q-btn flat no-caps no-wrap class="q-ml-xs" v-if="$q.screen.gt.xs">
@@ -177,6 +178,7 @@ export default {
 </script>
 
 <style lang="sass">
+
 .q-page-container
   padding-top: 1.5rem
   padding-bottom: 1.5rem

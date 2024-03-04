@@ -4,37 +4,66 @@
       <q-page class="flex bg-image flex-center">
         <q-card
           v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }"
+          class="custom-card"
         >
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">Login Prisca-Apps</div>
+              <q-img
+                src="/public/images/prisca logo.png"
+                style="width: 103px; height: 103px; margin: 0 auto"
+              />
             </div>
           </q-card-section>
           <q-card-section>
             <q-form class="q-gutter-md">
+              <q-input filled v-model="email" label="Email" lazy-rules />
               <q-input
-                filled
-                v-model="email"
-                label="Email"
-                lazy-rules
-                :rules="emailRules"
-              />
-              <q-input
-                type="password"
                 filled
                 v-model="password"
+                :type="showPassword ? 'text' : 'password'"
                 label="Password"
                 lazy-rules
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="showPassword ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="togglePassword"
+                  />
+                </template>
+              </q-input>
 
-              <div>
+              <div class="text-red-9" v-if="errorMessage">
+                {{ errorMessage }}
+              </div>
+
+              <div class="text-center">
                 <q-btn
                   label="Login"
                   @click="login"
                   type="button"
                   color="primary"
-                  :loading="loading"
+                  class="q-ma-xs q-ma-sm"
+                  size="lg"
+                  style="
+                    width: 100%;
+                    min-width: 200px;
+                    max-width: 550px;
+                    margin: auto;
+                  "
                 />
+              </div>
+              <div class="text-center">
+                <p>
+                  Register as
+                  <span class="register-link" @click="goToRegisterVendor"
+                    >Vendor</span
+                  >
+                  /
+                  <span class="register-link" @click="goToRegisterBuyer"
+                    >Buyer</span
+                  >
+                </p>
               </div>
             </q-form>
           </q-card-section>
@@ -56,6 +85,8 @@ export default defineComponent({
     const router = useRouter();
     const email = ref("");
     const password = ref("");
+    const errorMessage = ref("");
+    const showPassword = ref(false);
 
     const login = async () => {
       try {
@@ -72,31 +103,42 @@ export default defineComponent({
           }
         );
 
-        // Check if response is successful (status code 200) and if success is true
-        if (response.status === 200 && response.data.success) {
-          // Assuming the token is returned in the response
+        if (response.status === 200) {
           const token = response.data.token;
-          const user = response.data.user;
-
-          // Store the token in local storage
           localStorage.setItem("token", token);
-          localStorage.setItem("user", JSON.stringify(user));
-          console.log(localStorage); // Redirect to the dashboard
-          router.push("/listcatalogue");
+
+          console.log("Token:", token);
         } else {
-          console.error("Error during login:", response.data.message);
-          // Handle login error, show message, etc.
+          console.error("Error during login:", response.statusText);
+          errorMessage.value = "Invalid email or password";
         }
       } catch (error) {
         console.error("Error during login:", error);
-        // Handle login error, show message, etc.
+        errorMessage.value = "Invalid email or password";
       }
+    };
+
+    const togglePassword = () => {
+      showPassword.value = !showPassword.value;
+    };
+
+    const goToRegisterVendor = () => {
+      router.push("/register-vendor");
+    };
+
+    const goToRegisterBuyer = () => {
+      router.push("/register-buyer");
     };
 
     return {
       email,
       password,
+      errorMessage,
+      showPassword,
       login,
+      togglePassword,
+      goToRegisterBuyer,
+      goToRegisterVendor,
     };
   },
 });
@@ -104,6 +146,16 @@ export default defineComponent({
 
 <style>
 .bg-image {
-  background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);
+  background-image: linear-gradient(135deg, #365486 0%, #365486 100%);
+}
+.text-red-9 {
+  color: red;
+}
+.register-link {
+  color: blue;
+  cursor: pointer;
+}
+.custom-card {
+  background-color: #f9f5f6;
 }
 </style>

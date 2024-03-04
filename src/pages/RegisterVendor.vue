@@ -4,51 +4,76 @@
       <q-page class="flex bg-image flex-center">
         <q-card
           v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }"
+          class="custom-card"
         >
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">Register Prisca-Apps</div>
+              <q-img
+                src="/public/images/prisca logo.png"
+                style="width: 103px; height: 103px; margin: 0 auto"
+              />
             </div>
           </q-card-section>
           <q-card-section>
             <q-form class="q-gutter-md">
               <q-input filled v-model="name" label="Name" lazy-rules />
+              <q-input filled v-model="email" label="Email" lazy-rules />
               <q-input
-                filled
-                v-model="email"
-                label="Email"
-                lazy-rules
-                :rules="emailRules"
-              />
-              <q-input
-                type="password"
                 filled
                 v-model="password"
+                :type="showPassword ? 'text' : 'password'"
                 label="Password"
                 lazy-rules
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="showPassword ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="togglePassword"
+                  />
+                </template>
+              </q-input>
               <q-input
-                type="password"
                 filled
                 v-model="passwordConfirmation"
+                :type="showPassword ? 'text' : 'password'"
                 label="Password Confirmation"
                 lazy-rules
-                :rules="[
-                  () =>
-                    passwordConfirmation === password ||
-                    'Passwords do not match',
-                ]"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="showPassword ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="togglePassword"
+                  />
+                </template>
+              </q-input>
               <q-input filled v-model="telp" label="Phone Number" lazy-rules />
 
-              <div>
+              <div class="text-red-9" v-if="errorMessage">
+                {{ errorMessage }}
+              </div>
+
+              <div class="text-center">
                 <q-btn
                   label="Register"
                   @click="register"
                   type="button"
                   color="primary"
-                  :loading="loading"
+                  class="q-ma-xs q-ma-sm"
+                  size="lg"
+                  style="
+                    width: 100%;
+                    min-width: 200px;
+                    max-width: 550px;
+                    margin: auto;
+                  "
                 />
+              </div>
+              <div class="text-center">
+                <p>
+                  <span class="register-link" @click="goToLogin">Login</span>
+                </p>
               </div>
             </q-form>
           </q-card-section>
@@ -62,6 +87,7 @@
 import { defineComponent, ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
 
 export default defineComponent({
   name: "RegisterPage",
@@ -73,16 +99,11 @@ export default defineComponent({
     const password = ref("");
     const passwordConfirmation = ref("");
     const telp = ref("");
-    const loading = ref(false);
-
-    const emailRules = [
-      (v) => !!v || "Email is required",
-      (v) => /.+@.+\..+/.test(v) || "Email must be valid",
-    ];
+    const errorMessage = ref("");
+    const showPassword = ref(false);
 
     const register = async () => {
       try {
-        loading.value = true;
         const response = await axios.post(
           "http://192.168.1.244:8000/api/register",
           {
@@ -101,21 +122,35 @@ export default defineComponent({
         );
 
         if (response.status === 201 && response.data.success) {
-          router.push("/login");
+          Swal.fire({
+            icon: "success",
+            title: "Registration successful",
+            text: "You have been registered successfully!",
+          }).then(() => {
+            router.push("/login");
+          });
         } else {
           console.error(
             "Error during registration:",
             response.data.message || "Unknown error"
           );
+          errorMessage.value = response.data.message || "Registration failed";
         }
       } catch (error) {
         console.error(
           "Error during registration:",
           error.response ? error.response.data.message : "Unknown error"
         );
-      } finally {
-        loading.value = false;
+        errorMessage.value = "Registration failed";
       }
+    };
+
+    const togglePassword = () => {
+      showPassword.value = !showPassword.value;
+    };
+
+    const goToLogin = () => {
+      router.push("/login");
     };
 
     return {
@@ -124,9 +159,11 @@ export default defineComponent({
       password,
       passwordConfirmation,
       telp,
-      loading,
-      emailRules,
+      errorMessage,
+      showPassword,
       register,
+      togglePassword,
+      goToLogin,
     };
   },
 });
@@ -134,6 +171,16 @@ export default defineComponent({
 
 <style>
 .bg-image {
-  background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);
+  background-image: linear-gradient(135deg, #365486 0%, #365486 100%);
+}
+.text-red-9 {
+  color: red;
+}
+.register-link {
+  color: blue;
+  cursor: pointer;
+}
+.custom-card {
+  background-color: #f9f5f6;
 }
 </style>

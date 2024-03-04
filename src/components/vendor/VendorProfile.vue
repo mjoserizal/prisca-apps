@@ -1,7 +1,10 @@
 <template>
-  <form @submit.prevent="updateVendorData">
-    <div class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row">
-      <!-- Input Feature -->
+  <form
+    @submit.prevent="updateVendorData"
+    class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row"
+  >
+    <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
+      <!-- Input Nama Perusahaan -->
       <div class="mb-4">
         <label for="name" class="block mb-2 text-sm font-medium text-gray-600"
           >Nama Perusahaan:</label
@@ -15,7 +18,7 @@
         />
       </div>
 
-      <!-- Input Technical Spec -->
+      <!-- Input Alamat Perusahaan -->
       <div class="mb-4">
         <label for="alamat" class="block mb-2 text-sm font-medium text-gray-600"
           >Alamat Perusahaan:</label
@@ -29,7 +32,7 @@
         ></textarea>
       </div>
 
-      <!-- Input Part Number -->
+      <!-- Input Nomor Telepon Perusahaan -->
       <div class="mb-4">
         <label for="telp" class="block mb-2 text-sm font-medium text-gray-600"
           >Nomor Telepon Perusahaan:</label
@@ -43,6 +46,7 @@
         />
       </div>
 
+      <!-- Input Email Perusahaan -->
       <div class="mb-4">
         <label for="email" class="block mb-2 text-sm font-medium text-gray-600"
           >Email Perusahaan:</label
@@ -56,6 +60,7 @@
         />
       </div>
 
+      <!-- Input Website Perusahaan -->
       <div class="mb-4">
         <label
           for="website"
@@ -71,9 +76,9 @@
         />
       </div>
     </div>
-    <div
-      class="bg-white mt-6 mb-6 p-6 rounded-md shadow-md flex flex-col md:flex-row"
-    >
+
+    <!-- Bagian kanan dengan input dropdown -->
+    <div class="flex-1 pl-0 md:pl-4">
       <!-- Input Bidang Usaha -->
       <div class="mb-4">
         <label
@@ -119,21 +124,9 @@
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
-      <div class="mb-4">
-        <label for="npwp" class="block mb-2 text-sm font-medium text-gray-600"
-          >SIUP:</label
-        >
-        <input
-          type="text"
-          id="siup"
-          name="siup"
-          v-model="vendorDetail.master.siup"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
-      </div>
 
       <!-- Input SIUP -->
-      <!-- <div class="mb-4">
+      <div class="mb-4">
         <label for="siup" class="block mb-2 text-sm font-medium text-gray-600"
           >SIUP:</label
         >
@@ -142,17 +135,19 @@
           id="siup"
           name="siup"
           accept=".pdf,.doc,.docx"
-          @change="onFileChange"
+          @change="handleFileUpload"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
-      </div> -->
+        <div class="flex justify-end mt-4">
+          <button
+            type="submit"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
     </div>
-    <button
-      type="submit"
-      class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-    >
-      Update
-    </button>
   </form>
 </template>
 
@@ -173,7 +168,7 @@ export default {
           bidang_usaha: "",
           tanggal_berdiri: "",
           npwp: "",
-          siup: null,
+          siup: "",
         },
       },
       token: localStorage.getItem("token"), // Mengambil token dari local storage
@@ -202,27 +197,37 @@ export default {
       }
     },
 
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      // Lakukan sesuatu dengan file yang diunggah, misalnya mengirimkannya ke server
+    },
+
     async updateVendorData() {
       try {
-        const requestData = {
-          name: this.vendorDetail.name,
-          telp: this.vendorDetail.telp,
-          email: this.vendorDetail.email,
-          vendor_alamat: this.vendorDetail.master.alamat,
-          vendor_website: this.vendorDetail.master.website,
-          vendor_bidang_usaha: this.vendorDetail.master.bidang_usaha,
-          vendor_tanggal_berdiri: this.vendorDetail.master.tanggal_berdiri,
-          vendor_npwp: this.vendorDetail.master.npwp,
-          siup: this.vendorDetail.master.siup,
-        };
+        const formData = new FormData();
+        formData.append("name", this.vendorDetail.name);
+        formData.append("telp", this.vendorDetail.telp);
+        formData.append("email", this.vendorDetail.email);
+        formData.append("vendor_alamat", this.vendorDetail.master.alamat);
+        formData.append("vendor_website", this.vendorDetail.master.website);
+        formData.append(
+          "vendor_bidang_usaha",
+          this.vendorDetail.master.bidang_usaha
+        );
+        formData.append(
+          "vendor_tanggal_berdiri",
+          this.vendorDetail.master.tanggal_berdiri
+        );
+        formData.append("vendor_npwp", this.vendorDetail.master.npwp);
+        formData.append("siup", this.vendorDetail.master.siup);
 
-        const response = await axios.put(
+        const response = await axios.post(
           "http://192.168.1.244:8000/api/vendor/update/profile",
-          requestData,
+          formData,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
             },
           }
         );
@@ -247,7 +252,7 @@ export default {
 
 <style scoped>
 form {
-  padding-top: 1rem; /* Ubah sesuai kebutuhan */
+  padding: 2rem; /* Ubah sesuai kebutuhan */
   border-radius: 1rem; /* Ubah sesuai kebutuhan */
 }
 </style>
