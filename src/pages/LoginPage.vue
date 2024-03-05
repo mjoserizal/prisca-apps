@@ -100,6 +100,7 @@ export default {
           localStorage.setItem("token", token);
           localStorage.setItem("userLevel", userLevel);
 
+<<<<<<< Updated upstream
           if (userLevel === "Departemen") {
             router.push("/dashboard-departemen");
           } else if (userLevel === "Divisi") {
@@ -107,6 +108,15 @@ export default {
           } else if (userLevel === "Company") {
             router.push("/dashboard-company");
           }
+=======
+          console.log("Token:", token);
+
+          // Set header Authorization with the obtained token
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+          // Redirect user to another page after successful login
+          router.push("/listcatalogue");
+>>>>>>> Stashed changes
         } else {
           console.error("Error during login:", response.statusText);
           errorMessage.value = "Invalid email or password";
