@@ -87,7 +87,7 @@ export default {
     const login = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.1.45:8000/api/login",
+          "http://192.168.1.244:8000/api/login",
           {
             email: email.value,
             password: password.value,
@@ -100,7 +100,6 @@ export default {
           localStorage.setItem("token", token);
           localStorage.setItem("userLevel", userLevel);
 
-<<<<<<< Updated upstream
           if (userLevel === "Departemen") {
             router.push("/dashboard-departemen");
           } else if (userLevel === "Divisi") {
@@ -108,15 +107,6 @@ export default {
           } else if (userLevel === "Company") {
             router.push("/dashboard-company");
           }
-=======
-          console.log("Token:", token);
-
-          // Set header Authorization with the obtained token
-          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-          // Redirect user to another page after successful login
-          router.push("/listcatalogue");
->>>>>>> Stashed changes
         } else {
           console.error("Error during login:", response.statusText);
           errorMessage.value = "Invalid email or password";
