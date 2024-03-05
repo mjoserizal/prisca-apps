@@ -32,11 +32,9 @@
                   />
                 </template>
               </q-input>
-
               <div class="text-red-9" v-if="errorMessage">
                 {{ errorMessage }}
               </div>
-
               <div class="text-center">
                 <q-btn
                   label="Login"
@@ -56,7 +54,7 @@
               <div class="text-center">
                 <p>
                   Register as
-                  <span class="register-link" @click="goToRegisterVendor"
+                  <span class="register-link" @click="goToRegisterBuyer"
                     >Vendor</span
                   >
                   /
@@ -74,13 +72,11 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
-import axios from "axios";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-
-export default defineComponent({
+import axios from "axios";
+export default {
   name: "LoginPage",
-
   setup() {
     const router = useRouter();
     const email = ref("");
@@ -91,23 +87,26 @@ export default defineComponent({
     const login = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.1.244:8000/api/login",
+          "http://192.168.1.45:8000/api/login",
           {
             email: email.value,
             password: password.value,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
           }
         );
 
         if (response.status === 200) {
           const token = response.data.token;
+          const userLevel = response.data.user.level;
           localStorage.setItem("token", token);
+          localStorage.setItem("userLevel", userLevel);
 
-          console.log("Token:", token);
+          if (userLevel === "Departemen") {
+            router.push("/dashboard-departemen");
+          } else if (userLevel === "Divisi") {
+            router.push("/dashboard-divisi");
+          } else if (userLevel === "Company") {
+            router.push("/dashboard-company");
+          }
         } else {
           console.error("Error during login:", response.statusText);
           errorMessage.value = "Invalid email or password";
@@ -122,10 +121,6 @@ export default defineComponent({
       showPassword.value = !showPassword.value;
     };
 
-    const goToRegisterVendor = () => {
-      router.push("/register-vendor");
-    };
-
     const goToRegisterBuyer = () => {
       router.push("/register-buyer");
     };
@@ -138,23 +133,25 @@ export default defineComponent({
       login,
       togglePassword,
       goToRegisterBuyer,
-      goToRegisterVendor,
     };
   },
-});
+};
 </script>
 
 <style>
 .bg-image {
   background-image: linear-gradient(135deg, #365486 0%, #365486 100%);
 }
+
 .text-red-9 {
   color: red;
 }
+
 .register-link {
   color: blue;
   cursor: pointer;
 }
+
 .custom-card {
   background-color: #f9f5f6;
 }

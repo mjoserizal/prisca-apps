@@ -216,7 +216,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          `http://192.168.1.244:8000/api/vendor/show/product/${props.id}`,
+          `http://192.168.1.45:8000/api/vendor/show/product/${props.id}`,
           config
         );
 
@@ -277,7 +277,7 @@ export default defineComponent({
           };
 
           const response = await axios.post(
-            "http://192.168.1.244:8000/api/buyer/addToCart",
+            "http://192.168.1.45:8000/api/buyer/addToCart",
             data,
             config
           );

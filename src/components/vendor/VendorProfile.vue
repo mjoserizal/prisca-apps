@@ -179,7 +179,7 @@ export default {
     async fetchVendorData() {
       try {
         const response = await axios.get(
-          "http://192.168.1.244:8000/api/vendor/show/profile",
+          "http://192.168.1.45:8000/api/vendor/show/profile",
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -222,7 +222,7 @@ export default {
         formData.append("siup", this.vendorDetail.master.siup);
 
         const response = await axios.post(
-          "http://192.168.1.244:8000/api/vendor/update/profile",
+          "http://192.168.1.45:8000/api/vendor/update/profile",
           formData,
           {
             headers: {

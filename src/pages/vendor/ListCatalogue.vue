@@ -251,7 +251,7 @@ const deleteProduct = async (product) => {
       },
     };
     const response = await axios.delete(
-      `http://192.168.1.244:8000/api/vendor/deleteProduct/${product.id}`,
+      `http://192.168.1.45:8000/api/vendor/deleteProduct/${product.id}`,
       config
     );
     if (response.data.success) {
@@ -288,7 +288,7 @@ onMounted(async () => {
       },
     };
     const response = await axios.get(
-      "http://192.168.1.244:8000/api/vendor/show/productByUserId",
+      "http://192.168.1.45:8000/api/vendor/show/productByUserId",
       config
     );
     if (response.data.success) {

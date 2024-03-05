@@ -123,7 +123,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          "http://192.168.1.244:8000/api/vendor/show/productByUserId",
+          "http://192.168.1.45:8000/api/vendor/show/productByUserId",
           config
         );
 

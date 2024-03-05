@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <form @submit.prevent="submitProduct">
     <BasicInformation ref="basicInfo" />
     <SpecificationDetails ref="specInfo" />
     <CommercialInfo ref="commercialInfo" />
@@ -10,7 +10,7 @@
     >
       Submit
     </button>
-  </div>
+  </form>
 </template>
 
 <script>
@@ -122,7 +122,7 @@ export default defineComponent({
           },
         };
         const response = await axios.get(
-          "http://192.168.1.244:8000/api/vendor/show/drop",
+          "http://192.168.1.45:8000/api/vendor/show/drop",
           config
         );
         console.log(response.data);
@@ -286,7 +286,7 @@ export default defineComponent({
           },
         };
         const response = await axios.post(
-          "http://192.168.1.244:8000/api/vendor/addProduct",
+          "http://192.168.1.45:8000/api/vendor/addProduct",
           formData,
           config
         );

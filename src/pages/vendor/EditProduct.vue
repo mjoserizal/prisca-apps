@@ -1031,7 +1031,7 @@ export default {
           },
         };
         const response = await axios.get(
-          `http://192.168.1.244:8000/api/vendor/show/product/${this.productId}`,
+          `http://192.168.1.45:8000/api/vendor/show/product/${this.productId}`,
           config
         );
         if (response.data.success) {
@@ -1114,7 +1114,7 @@ export default {
           },
         };
         const response = await axios.get(
-          "http://192.168.1.244:8000/api/vendor/show/drop",
+          "http://192.168.1.45:8000/api/vendor/show/drop",
           config
         );
         this.groups = response.data.data.groups;
@@ -1198,8 +1198,8 @@ export default {
           tags: this.editedProduct.other.tags,
         };
 
-        const response = await axios.put(
-          `http://192.168.1.244:8000/api/vendor/updateProduct/${this.productId}`,
+        const response = await axios.post(
+          `http://192.168.1.45:8000/api/vendor/updateProduct/${this.productId}`,
           data,
           config
         );
