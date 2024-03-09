@@ -75,10 +75,10 @@ const routes = [
       },
     ],
   },
-  { path: "/login", component: () => import("pages/LoginPage.vue") },
+  { path: "/login", component: () => import("src/pages/auth/LoginPage.vue") },
   {
     path: "/register-vendor",
-    component: () => import("pages/RegisterVendor.vue"),
+    component: () => import("src/pages/auth/RegisterVendor.vue"),
   },
 ];
 

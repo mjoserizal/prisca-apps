@@ -15,7 +15,7 @@
             </div>
           </q-card-section>
           <q-card-section>
-            <q-form class="q-gutter-md">
+            <q-form @keyup.enter="loginIfValid" class="q-gutter-md">
               <q-input filled v-model="email" label="Email" lazy-rules />
               <q-input
                 filled
@@ -54,7 +54,7 @@
               <div class="text-center">
                 <p>
                   Register as
-                  <span class="register-link" @click="goToRegisterBuyer"
+                  <span class="register-link" @click="goToRegisterVendor"
                     >Vendor</span
                   >
                   /
@@ -87,7 +87,7 @@ export default {
     const login = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.1.244:8000/api/login",
+          `${process.env.VUE_APP_API_BASE_URL}/login`,
           {
             email: email.value,
             password: password.value,
@@ -97,8 +97,11 @@ export default {
         if (response.status === 200) {
           const token = response.data.token;
           const userLevel = response.data.user.level;
+          const userRole = response.data.user.role.name;
+
           localStorage.setItem("token", token);
           localStorage.setItem("userLevel", userLevel);
+          localStorage.setItem("userRole", userRole);
 
           if (userLevel === "Departemen") {
             router.push("/dashboard-departemen");
@@ -106,6 +109,8 @@ export default {
             router.push("/dashboard-divisi");
           } else if (userLevel === "Company") {
             router.push("/dashboard-company");
+          } else if (userRole === "vendor") {
+            router.push("/listcatalogue");
           }
         } else {
           console.error("Error during login:", response.statusText);
@@ -117,12 +122,20 @@ export default {
       }
     };
 
+    const loginIfValid = () => {
+      if (email.value && password.value) {
+        login();
+      }
+    };
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
     };
 
     const goToRegisterBuyer = () => {
       router.push("/register-buyer");
+    };
+    const goToRegisterVendor = () => {
+      router.push("/register-vendor");
     };
 
     return {
@@ -133,6 +146,8 @@ export default {
       login,
       togglePassword,
       goToRegisterBuyer,
+      goToRegisterVendor,
+      loginIfValid,
     };
   },
 };

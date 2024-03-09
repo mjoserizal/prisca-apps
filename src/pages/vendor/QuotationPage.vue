@@ -1,71 +1,69 @@
 <template>
   <q-page>
-    <q-card class="q-pa-md">
-      <q-card-section class="text-h6">Quotation Details</q-card-section>
-      <q-card-section>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Quotation ID:</q-item-label>
-          </q-item-section>
-          <q-item-section>{{ quotationId }}</q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Supplier Name:</q-item-label>
-          </q-item-section>
-          <q-item-section>{{ supplierName }}</q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Date:</q-item-label>
-          </q-item-section>
-          <q-item-section>{{ date }}</q-item-section>
-        </q-item>
-      </q-card-section>
+    <q-card-section class="text-h6">Quotation Details</q-card-section>
+    <q-card-section>
+      <q-item>
+        <q-item-section>
+          <q-item-label>Quotation ID:</q-item-label>
+        </q-item-section>
+        <q-item-section>{{ quotationId }}</q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section>
+          <q-item-label>Supplier Name:</q-item-label>
+        </q-item-section>
+        <q-item-section>{{ supplierName }}</q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section>
+          <q-item-label>Date:</q-item-label>
+        </q-item-section>
+        <q-item-section>{{ date }}</q-item-section>
+      </q-item>
+    </q-card-section>
 
-      <q-card-section class="text-h6">Item Details</q-card-section>
-      <q-card-section>
-        <q-table
-          class="shadow-md"
-          flat
-          bordered
-          :rows="items"
-          :columns="columns"
-          row-key="id"
-        />
-      </q-card-section>
+    <q-card-section class="text-h6">Item Details</q-card-section>
+    <q-card-section>
+      <q-table
+        class="shadow-md"
+        flat
+        bordered
+        :rows="items"
+        :columns="columns"
+        row-key="id"
+      />
+    </q-card-section>
 
-      <q-card-section class="text-h6">Quotation Summary</q-card-section>
-      <q-card-section>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Total Quoted Price:</q-item-label>
-          </q-item-section>
-          <q-item-section>{{ totalQuotedPrice }}</q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Validity Period:</q-item-label>
-          </q-item-section>
-          <q-item-section>{{ validityPeriod }}</q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Delivery Terms:</q-item-label>
-          </q-item-section>
-          <q-item-section>{{ deliveryTerms }}</q-item-section>
-        </q-item>
-        <q-item>
-          <q-item-section>
-            <q-item-label>Payment Terms:</q-item-label>
-          </q-item-section>
-          <q-item-section>{{ paymentTerms }}</q-item-section>
-        </q-item>
-      </q-card-section>
+    <q-card-section class="text-h6">Quotation Summary</q-card-section>
+    <q-card-section>
+      <q-item>
+        <q-item-section>
+          <q-item-label>Total Quoted Price:</q-item-label>
+        </q-item-section>
+        <q-item-section>{{ totalQuotedPrice }}</q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section>
+          <q-item-label>Validity Period:</q-item-label>
+        </q-item-section>
+        <q-item-section>{{ validityPeriod }}</q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section>
+          <q-item-label>Delivery Terms:</q-item-label>
+        </q-item-section>
+        <q-item-section>{{ deliveryTerms }}</q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section>
+          <q-item-label>Payment Terms:</q-item-label>
+        </q-item-section>
+        <q-item-section>{{ paymentTerms }}</q-item-section>
+      </q-item>
+    </q-card-section>
 
-      <q-card-section class="text-h6">Notes</q-card-section>
-      <q-card-section>{{ notes }}</q-card-section>
-    </q-card>
+    <q-card-section class="text-h6">Notes</q-card-section>
+    <q-card-section>{{ notes }}</q-card-section>
   </q-page>
 </template>
 
