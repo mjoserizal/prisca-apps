@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <VendorProfile />
-  </div>
+  <VendorProfile />
 </template>
 <script>
 import { defineComponent, defineAsyncComponent } from "vue";

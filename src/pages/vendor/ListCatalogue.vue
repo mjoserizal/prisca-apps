@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="pt-4">
+    <div class="p-6">
       <q-card
         class="shadow-md overflow-hidden border-b border-gray-200 sm:rounded-lg"
         bordered
@@ -177,6 +177,14 @@ const statusOptions = [
   { label: "Inactive", value: "Inactive" },
 ];
 
+const searchParams = ref({
+  productGroup: "",
+  category: "",
+  status: "",
+  minPrice: null,
+  maxPrice: null,
+});
+
 const columns = [
   {
     name: "name",
@@ -251,7 +259,7 @@ const deleteProduct = async (product) => {
       },
     };
     const response = await axios.delete(
-      `http://192.168.1.45:8000/api/vendor/deleteProduct/${product.id}`,
+      `http://192.168.1.25:8000/api/vendor/deleteProduct/${product.id}`,
       config
     );
     if (response.data.success) {
@@ -270,9 +278,43 @@ const openAdvanceSearch = () => {
   show_advance_search.value = true;
 };
 
-const onSubmitAdvanceSearch = () => {
+const onSubmitAdvanceSearch = async () => {
   // Handle advance search submission
-  console.log("Advance search submitted");
+  show_advance_search.value = false; // Close the advance search dialog
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not found.");
+      return;
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(
+      "http://192.168.1.25:8000/api/vendor/show/productByUserId",
+      {
+        ...config,
+        params: searchParams.value, // Pass search parameters as query parameters
+      }
+    );
+    if (response.data.success) {
+      products.value = response.data.products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        group: product.group,
+        category: product.category,
+        brand: product.brand,
+        price: product.commercial_info.commercialInfo.price,
+        status: product.status,
+      }));
+    } else {
+      console.error("Failed to fetch products:", response.data.message);
+    }
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+  }
 };
 
 onMounted(async () => {
@@ -288,7 +330,7 @@ onMounted(async () => {
       },
     };
     const response = await axios.get(
-      "http://192.168.1.45:8000/api/vendor/show/productByUserId",
+      "http://192.168.1.25:8000/api/vendor/show/productByUserId",
       config
     );
     if (response.data.success) {

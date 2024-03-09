@@ -1001,7 +1001,7 @@ export default {
           },
         };
         const response = await axios.get(
-          "http://192.168.1.45:8000/api/vendor/show/drop",
+          "http://192.168.1.25:8000/api/vendor/show/drop",
           config
         );
         console.log(response.data);
@@ -1165,7 +1165,7 @@ export default {
           },
         };
         const response = await axios.post(
-          "http://192.168.1.45:8000/api/vendor/addProduct",
+          "http://192.168.1.25:8000/api/vendor/addProduct",
           formData,
           config
         );
@@ -1180,7 +1180,7 @@ export default {
 
 <style>
 form {
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 1rem;
 }
 </style>

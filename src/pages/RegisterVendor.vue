@@ -105,7 +105,7 @@ export default defineComponent({
     const register = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.1.244:8000/api/register",
+          "http://192.168.1.33:8000/api/vendorRegister",
           {
             name: name.value,
             email: email.value,

@@ -608,7 +608,7 @@
               type="number"
               id="grosir-qty"
               name="grosir-qty"
-              v-model="editedProduct.commercial_info.commercialInfo.grosir.qty"
+              v-model="editedProduct.commercial_info.grosir.qty"
               min="0"
               class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
@@ -623,9 +623,7 @@
               type="text"
               id="grosir-price"
               name="grosir-price"
-              v-model="
-                editedProduct.commercial_info.commercialInfo.grosir.price
-              "
+              v-model="editedProduct.commercial_info.grosir.price"
               class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
@@ -689,10 +687,11 @@
               :key="currency.id"
               :value="currency.id"
             >
-              {{ currency.name }} ( {{ currency.symbol }})
+              {{ currency.name }} ({{ currency.symbol }})
             </option>
           </select>
         </div>
+
         <!-- Input Payment Terms -->
         <div class="mb-4">
           <label
@@ -725,10 +724,7 @@
                 type="number"
                 id="min-purchase-quantity"
                 name="min-purchase-quantity"
-                v-model="
-                  editedProduct.commercial_info.commercialInfo.purchase_q_t_y
-                    .min
-                "
+                v-model="editedProduct.commercial_info.purchaseQty.min"
                 class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -743,10 +739,7 @@
                 type="number"
                 id="max-purchase-quantity"
                 name="max-purchase-quantity"
-                v-model="
-                  editedProduct.commercial_info.commercialInfo.purchase_q_t_y
-                    .max
-                "
+                v-model="editedProduct.commercial_info.purchaseQty.max"
                 class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -985,14 +978,14 @@ export default {
             stock: "",
             pre_order: "",
             contract: "",
-            purchase_q_t_y: {
-              min: "",
-              max: "",
-            },
-            grosir: {
-              qty: "",
-              price: "",
-            },
+          },
+          purchaseQty: {
+            min: "",
+            max: "",
+          },
+          grosir: {
+            qty: "",
+            price: "",
           },
         },
         other: {
@@ -1025,74 +1018,20 @@ export default {
           console.error("Token not found.");
           return;
         }
+
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         };
+
         const response = await axios.get(
-          `http://192.168.1.45:8000/api/vendor/show/product/${this.productId}`,
+          `http://192.168.1.25:8000/api/vendor/show/product/${this.productId}`,
           config
         );
-        if (response.data.success) {
-          const productData = response.data.product;
-          this.editedProduct = {
-            name: productData.name || "",
-            group: productData.group || "",
-            category: productData.category || "",
-            brand: productData.brand || "",
-            product_category_name: productData.product_category_name || "",
-            status: productData.status || "",
-            images: { ...productData.images[0] } || {},
-            detail: { ...productData.detail } || {},
-            commercial_info: {
-              commercialInfo: {
-                grosirToggle:
-                  productData.commercial_info.commercialInfo?.grosirToggle ||
-                  false,
-                enablecontract:
-                  productData.commercial_info.commercialInfo?.enablecontract ||
-                  false,
-                preOrder:
-                  productData.commercial_info.commercialInfo?.preOrder || false,
-                price: productData.commercial_info.commercialInfo?.price || "",
-                currency_id:
-                  productData.commercial_info.commercialInfo?.currency || "",
-                etalase_id:
-                  productData.commercial_info.commercialInfo?.etalase || "",
-                payment_terms:
-                  productData.commercial_info.commercialInfo?.payment_terms ||
-                  "",
-                discount:
-                  productData.commercial_info.commercialInfo?.discount || "",
-                price_exp:
-                  productData.commercial_info.commercialInfo?.price_exp || "",
-                stock: productData.commercial_info.commercialInfo?.stock || "",
-                pre_order:
-                  productData.commercial_info.commercialInfo?.pre_order || "",
-                contract:
-                  productData.commercial_info.commercialInfo?.contract || "",
-                purchase_q_t_y: {
-                  min:
-                    productData.commercial_info.commercialInfo?.purchase_q_t_y
-                      ?.min || "",
-                  max:
-                    productData.commercial_info.commercialInfo?.purchase_q_t_y
-                      ?.max || "",
-                },
-                grosir: {
-                  qty:
-                    productData.commercial_info.commercialInfo?.grosir?.qty ||
-                    "",
-                  price:
-                    productData.commercial_info.commercialInfo?.grosir?.price ||
-                    "",
-                },
-              },
-            },
 
-            other: { ...productData.other } || {},
-          };
+        if (response.data.success) {
+          this.editedProduct = response.data.product || {};
         } else {
           console.error("Failed to fetch product:", response.data.message);
         }
@@ -1114,7 +1053,7 @@ export default {
           },
         };
         const response = await axios.get(
-          "http://192.168.1.45:8000/api/vendor/show/drop",
+          "http://192.168.1.25:8000/api/vendor/show/drop",
           config
         );
         this.groups = response.data.data.groups;
@@ -1133,74 +1072,110 @@ export default {
           console.error("Token not found.");
           return;
         }
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
 
-        const images = [];
+        const formData = new FormData();
+
+        // Mengirim data gambar
         for (let i = 0; i < 4; i++) {
           const key = `product-image${i + 1}`;
           if (this.editedProduct.images[key]) {
-            images.push({
-              image: this.editedProduct.images[key],
-            });
+            formData.append(`images[${i}]`, this.editedProduct.images[key]);
           }
         }
 
-        const data = {
-          name: this.editedProduct.name,
-          group_id: this.editedProduct.group,
-          category_id: this.editedProduct.category,
-          brand: this.editedProduct.brand,
-          product_category_name: this.editedProduct.product_category_name,
-          status: this.editedProduct.other.makeActive ? "active" : "inactive",
-          images: images,
-
-          productSpecification: this.editedProduct.detail.productSpecification,
-          technicalSpecification:
-            this.editedProduct.detail.technicalSpecification,
-          feature: this.editedProduct.detail.feature,
-          partNumber: this.editedProduct.detail.partNumber,
-          video: this.editedProduct.detail.video,
-          satuan: this.editedProduct.detail.satuan,
-          condition: this.editedProduct.detail.condition,
-
-          price: this.editedProduct.commercial_info.commercialInfo.price,
-          currency_id:
-            this.editedProduct.commercial_info.commercialInfo.currency_id,
-          etalase_id:
-            this.editedProduct.commercial_info.commercialInfo.etalase_id,
-          payment_terms:
-            this.editedProduct.commercial_info.commercialInfo.payment_terms,
-          discount: this.editedProduct.commercial_info.commercialInfo.discount,
-          price_exp:
-            this.editedProduct.commercial_info.commercialInfo.price_exp,
-          stock: this.editedProduct.commercial_info.commercialInfo.stock,
-          pre_order:
-            this.editedProduct.commercial_info.commercialInfo.pre_order,
-          contract: this.editedProduct.commercial_info.commercialInfo.contract
+        // Mengirim data lainnya
+        formData.append("name", this.editedProduct.name);
+        formData.append("group_id", this.editedProduct.group);
+        formData.append("category_id", this.editedProduct.category);
+        formData.append("brand", this.editedProduct.brand);
+        formData.append(
+          "product_category_name",
+          this.editedProduct.product_category_name
+        );
+        formData.append(
+          "status",
+          this.editedProduct.other.makeActive ? "active" : "inactive"
+        );
+        formData.append(
+          "productSpecification",
+          this.editedProduct.detail.productSpecification
+        );
+        formData.append(
+          "technicalSpecification",
+          this.editedProduct.detail.technicalSpecification
+        );
+        formData.append("feature", this.editedProduct.detail.feature);
+        formData.append("partNumber", this.editedProduct.detail.partNumber);
+        formData.append("video", this.editedProduct.detail.video);
+        formData.append("satuan", this.editedProduct.detail.satuan);
+        formData.append("condition", this.editedProduct.detail.condition);
+        formData.append(
+          "price",
+          this.editedProduct.commercial_info.commercialInfo.price
+        );
+        formData.append(
+          "currency_id",
+          this.editedProduct.commercial_info.commercialInfo.currency_id
+        );
+        formData.append(
+          "etalase_id",
+          this.editedProduct.commercial_info.commercialInfo.etalase_id
+        );
+        formData.append(
+          "payment_terms",
+          this.editedProduct.commercial_info.commercialInfo.payment_terms
+        );
+        formData.append(
+          "discount",
+          this.editedProduct.commercial_info.commercialInfo.discount
+        );
+        formData.append(
+          "price_exp",
+          this.editedProduct.commercial_info.commercialInfo.price_exp
+        );
+        formData.append(
+          "stock",
+          this.editedProduct.commercial_info.commercialInfo.stock
+        );
+        formData.append(
+          "pre_order",
+          this.editedProduct.commercial_info.commercialInfo.pre_order
+        );
+        formData.append(
+          "contract",
+          this.editedProduct.commercial_info.commercialInfo.contract
             ? "yes"
-            : "no",
-          min: this.editedProduct.commercial_info.commercialInfo.purchase_q_t_y
-            .min,
-          max: this.editedProduct.commercial_info.commercialInfo.purchase_q_t_y
-            .max,
-          qty: this.editedProduct.commercial_info.commercialInfo.grosir.qty,
-          grosir_price:
-            this.editedProduct.commercial_info.commercialInfo.grosir.price,
+            : "no"
+        );
+        formData.append(
+          "min",
+          this.editedProduct.commercial_info.purchaseQty.min
+        );
+        formData.append(
+          "max",
+          this.editedProduct.commercial_info.purchaseQty.max
+        );
+        formData.append("qty", this.editedProduct.commercial_info.grosir.qty);
+        formData.append(
+          "grosir_price",
+          this.editedProduct.commercial_info.grosir.price
+        );
+        formData.append("incomterm", this.editedProduct.other.incomterm);
+        formData.append("warranty", this.editedProduct.other.warranty);
+        formData.append("maintenance", this.editedProduct.other.maintenance);
+        formData.append("sku", this.editedProduct.other.sku);
+        formData.append("tags", this.editedProduct.other.tags);
 
-          incomterm: this.editedProduct.other.incomterm,
-          warranty: this.editedProduct.other.warranty,
-          maintenance: this.editedProduct.other.maintenance,
-          sku: this.editedProduct.other.sku,
-          tags: this.editedProduct.other.tags,
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data", // Set header content type to multipart/form-data
+          },
         };
 
         const response = await axios.post(
-          `http://192.168.1.45:8000/api/vendor/updateProduct/${this.productId}`,
-          data,
+          `http://192.168.1.25:8000/api/vendor/updateProduct/${this.productId}`,
+          formData,
           config
         );
 
@@ -1238,7 +1213,7 @@ export default {
 
 <style>
 form {
-  padding: 0.5rem; /* Ubah sesuai kebutuhan */
+  padding: 1.5rem; /* Ubah sesuai kebutuhan */
   border-radius: 0.5rem; /* Ubah sesuai kebutuhan */
 }
 </style>

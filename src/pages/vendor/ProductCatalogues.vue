@@ -123,7 +123,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          "http://192.168.1.45:8000/api/vendor/show/productByUserId",
+          "http://192.168.1.25:8000/api/vendor/show/productByUserId",
           config
         );
 
@@ -399,7 +399,7 @@ export default defineComponent({
   background-color: #f8f8ff;
   border-radius: 8px;
   overflow: hidden;
-  margin: 20px;
+  margin: 1.5rem;
   border: 1px solid #ddd;
 }
 .my-card {

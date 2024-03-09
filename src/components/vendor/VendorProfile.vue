@@ -1,7 +1,8 @@
 <template>
+  <div></div>
   <form
     @submit.prevent="updateVendorData"
-    class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row"
+    class="bg-white rounded-md shadow-md flex flex-col md:flex-row p-6 m-6"
   >
     <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
       <!-- Input Nama Perusahaan -->
@@ -179,7 +180,7 @@ export default {
     async fetchVendorData() {
       try {
         const response = await axios.get(
-          "http://192.168.1.45:8000/api/vendor/show/profile",
+          "http://192.168.1.25:8000/api/vendor/show/profile",
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -199,7 +200,7 @@ export default {
 
     handleFileUpload(event) {
       const file = event.target.files[0];
-      // Lakukan sesuatu dengan file yang diunggah, misalnya mengirimkannya ke server
+      this.vendorDetail.master.siup = file;
     },
 
     async updateVendorData() {
@@ -222,7 +223,7 @@ export default {
         formData.append("siup", this.vendorDetail.master.siup);
 
         const response = await axios.post(
-          "http://192.168.1.45:8000/api/vendor/update/profile",
+          "http://192.168.1.25:8000/api/vendor/update/profile",
           formData,
           {
             headers: {
@@ -250,9 +251,4 @@ export default {
 };
 </script>
 
-<style scoped>
-form {
-  padding: 2rem; /* Ubah sesuai kebutuhan */
-  border-radius: 1rem; /* Ubah sesuai kebutuhan */
-}
-</style>
+<style scoped></style>

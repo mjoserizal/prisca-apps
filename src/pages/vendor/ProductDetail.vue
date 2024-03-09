@@ -156,10 +156,10 @@
     <q-card-actions class="q-gutter-md justify-between">
       <div class="row justify-start">
         <router-link to="/product">
-          <q-btn flat color="deep-orange">Kembali</q-btn>
+          <q-btn flat color="deep-orange" class="m-4">Kembali</q-btn>
         </router-link>
       </div>
-      <div class="row justify-end">
+      <div class="row justify-end m-4">
         <q-btn
           @click="editProduct(product)"
           color="deep-orange"
@@ -216,7 +216,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          `http://192.168.1.45:8000/api/vendor/show/product/${props.id}`,
+          `http://192.168.1.25:8000/api/vendor/show/product/${props.id}`,
           config
         );
 
@@ -277,7 +277,7 @@ export default defineComponent({
           };
 
           const response = await axios.post(
-            "http://192.168.1.45:8000/api/buyer/addToCart",
+            "http://192.168.1.25:8000/api/buyer/addToCart",
             data,
             config
           );
@@ -332,7 +332,7 @@ export default defineComponent({
 .my-card {
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 20px;
+  margin: 1.5rem;
 }
 
 .product-details-section {
