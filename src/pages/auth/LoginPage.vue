@@ -75,6 +75,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+
 export default {
   name: "LoginPage",
   setup() {
@@ -83,16 +84,15 @@ export default {
     const password = ref("");
     const errorMessage = ref("");
     const showPassword = ref(false);
+    const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
+    console.log(process.env.VUE_APP_API_BASE_URL);
     const login = async () => {
       try {
-        const response = await axios.post(
-          `${process.env.VUE_APP_API_BASE_URL}/login`,
-          {
-            email: email.value,
-            password: password.value,
-          }
-        );
+        const response = await axios.post(`${apiBaseUrl}login`, {
+          email: email.value,
+          password: password.value,
+        });
 
         if (response.status === 200) {
           const token = response.data.token;

@@ -101,11 +101,12 @@ export default defineComponent({
     const telp = ref("");
     const errorMessage = ref("");
     const showPassword = ref(false);
+    const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
     const register = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.1.33:8000/api/vendorRegister",
+          `${apiBaseUrl}vendorRegister`,
           {
             name: name.value,
             email: email.value,

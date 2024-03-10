@@ -372,6 +372,7 @@ export default {
 </script>
 
 <style lang="sass">
+
 .YL
   &__toolbar-input-container
     min-width: 100px

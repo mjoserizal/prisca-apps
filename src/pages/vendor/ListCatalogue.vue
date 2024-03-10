@@ -84,6 +84,7 @@
                     flat
                     color="danger"
                     icon="delete"
+                    text-color="red"
                     @click="deleteProduct(props.row)"
                   />
                 </div>
@@ -166,6 +167,8 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL; // Mengambil base URL dari environment variable
+
 const router = useRouter();
 const products = ref([]);
 const filter = ref("");
@@ -232,7 +235,7 @@ const columns = [
         {
           icon: "delete",
           label: "Delete",
-          color: "negative",
+          color: "danger",
           size: "sm",
           onClick: () => deleteProduct(row),
         },
@@ -259,7 +262,7 @@ const deleteProduct = async (product) => {
       },
     };
     const response = await axios.delete(
-      `http://192.168.1.25:8000/api/vendor/deleteProduct/${product.id}`,
+      `http://192.168.1.48:8000/api/vendor/deleteProduct/${product.id}`,
       config
     );
     if (response.data.success) {
@@ -293,7 +296,7 @@ const onSubmitAdvanceSearch = async () => {
       },
     };
     const response = await axios.get(
-      "http://192.168.1.25:8000/api/vendor/show/productByUserId",
+      `${apiBaseUrl}vendor/show/productByUserId`,
       {
         ...config,
         params: searchParams.value, // Pass search parameters as query parameters
@@ -330,7 +333,7 @@ onMounted(async () => {
       },
     };
     const response = await axios.get(
-      "http://192.168.1.25:8000/api/vendor/show/productByUserId",
+      "http://192.168.1.48:8000/api/vendor/show/productByUserId",
       config
     );
     if (response.data.success) {

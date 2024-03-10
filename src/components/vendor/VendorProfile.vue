@@ -154,6 +154,7 @@
 
 <script>
 import axios from "axios";
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
 export default {
   name: "VendorDetail",
@@ -179,14 +180,11 @@ export default {
   methods: {
     async fetchVendorData() {
       try {
-        const response = await axios.get(
-          "http://192.168.1.25:8000/api/vendor/show/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiBaseUrl}vendor/show/profile`, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        });
 
         if (response.status === 200) {
           this.vendorDetail = response.data.user;
@@ -223,7 +221,7 @@ export default {
         formData.append("siup", this.vendorDetail.master.siup);
 
         const response = await axios.post(
-          "http://192.168.1.25:8000/api/vendor/update/profile",
+          `${apiBaseUrl}vendor/update/profile`,
           formData,
           {
             headers: {

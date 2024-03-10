@@ -12,6 +12,7 @@ const { configure } = require("quasar/wrappers");
 const path = require("path");
 
 module.exports = configure(function (/* ctx */) {
+  require("dotenv").config();
   return {
     eslint: {
       // fix: true,
@@ -54,6 +55,11 @@ module.exports = configure(function (/* ctx */) {
         node: "node20",
       },
 
+      // publicPath: process.env.VUE_APP_API_BASE_URL,
+
+      env: {
+        VUE_APP_API_BASE_URL: process.env.VUE_APP_API_BASE_URL,
+      },
       vueRouterMode: "history", // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
@@ -63,7 +69,7 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,

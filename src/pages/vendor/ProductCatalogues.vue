@@ -98,6 +98,7 @@ export default defineComponent({
     const defaultCategoryValue = ref("");
     const defaultVendorValue = ref("");
     const comparedProducts = ref([]);
+    const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
     const editProduct = (product) => {
       console.log("Edit product:", product);
@@ -123,7 +124,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          "http://192.168.1.25:8000/api/vendor/show/productByUserId",
+          `${apiBaseUrl}vendor/show/productByUserId`,
           config
         );
 

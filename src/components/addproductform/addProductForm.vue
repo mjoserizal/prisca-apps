@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="submitProduct">
+    <!-- Basic Information -->
     <div class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row">
       <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
         <div class="mb-4">
@@ -19,26 +20,9 @@
                 alt="Preview"
                 class="h-auto w-auto object-cover mb-4"
               />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="mx-auto h-12 w-12 text-gray-400"
-              >
-                <path
-                  d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"
-                />
-                <line x1="16" x2="22" y1="5" y2="5" />
-                <line x1="19" x2="19" y1="2" y2="8" />
-                <circle cx="9" cy="9" r="2" />
-                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-              </svg>
+              <i
+                class="fa-regular fa-image mx-auto text-4xl text-gray-400 hover:text-indigo-500"
+              ></i>
 
               <div class="mt-4 flex text-sm leading-6 text-gray-600">
                 <label
@@ -82,27 +66,9 @@
                     alt="Preview"
                     class="h-auto w-auto object-cover mb-4"
                   />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="mx-auto h-12 w-12 text-gray-400"
-                  >
-                    <path
-                      d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"
-                    />
-                    <line x1="16" x2="22" y1="5" y2="5" />
-                    <line x1="19" x2="19" y1="2" y2="8" />
-                    <circle cx="9" cy="9" r="2" />
-                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                  </svg>
-
+                  <i
+                    class="fa-regular fa-image mx-auto text-4xl text-gray-400 hover:text-indigo-500"
+                  ></i>
                   <div class="mt-4 flex text-sm leading-6 text-gray-600">
                     <label
                       for="product-image1"
@@ -125,8 +91,7 @@
               </div>
             </div>
           </div>
-          <!-- Repeat for Image 2 and Image 3 -->
-          <!-- Repeat for Image 2 and Image 3 -->
+
           <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
               <label
@@ -145,26 +110,9 @@
                     alt="Preview"
                     class="h-auto w-auto object-cover mb-4"
                   />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="mx-auto h-12 w-12 text-gray-400"
-                  >
-                    <path
-                      d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"
-                    />
-                    <line x1="16" x2="22" y1="5" y2="5" />
-                    <line x1="19" x2="19" y1="2" y2="8" />
-                    <circle cx="9" cy="9" r="2" />
-                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                  </svg>
+                  <i
+                    class="fa-regular fa-image mx-auto text-4xl text-gray-400 hover:text-indigo-500"
+                  ></i>
 
                   <div class="mt-4 flex text-sm leading-6 text-gray-600">
                     <label
@@ -206,26 +154,9 @@
                     alt="Preview"
                     class="h-auto w-auto object-cover mb-4"
                   />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="mx-auto h-12 w-12 text-gray-400"
-                  >
-                    <path
-                      d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"
-                    />
-                    <line x1="16" x2="22" y1="5" y2="5" />
-                    <line x1="19" x2="19" y1="2" y2="8" />
-                    <circle cx="9" cy="9" r="2" />
-                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                  </svg>
+                  <i
+                    class="fa-regular fa-image mx-auto text-4xl text-gray-400 hover:text-indigo-500"
+                  ></i>
 
                   <div class="mt-4 flex text-sm leading-6 text-gray-600">
                     <label
@@ -346,13 +277,13 @@
         </div>
       </div>
     </div>
-
+    <!-- Specification Detail -->
     <div
       class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row mt-6"
     >
       <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
         <!-- Input Product Specification -->
-        <div class="mb-4" style="max-height: 200px; overflow-y: auto">
+        <div class="mb-4">
           <label
             for="product-specification"
             class="block mb-2 text-sm font-medium text-gray-600"
@@ -475,7 +406,7 @@
         </div>
       </div>
     </div>
-
+    <!-- Commercial Information -->
     <div
       class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row mt-6"
     >
@@ -757,150 +688,117 @@
         </div>
       </div>
     </div>
-
+    <!-- Others Information -->
     <div
-      class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row mt-6"
+      class="bg-white p-6 rounded-md shadow-md mt-6 flex flex-col md:flex-row"
     >
-      <!-- Bagian kiri -->
       <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
-        <!-- Input Incoterm -->
-        <div class="relative mb-6">
-          <input
-            type="text"
-            id="incoterm"
-            name="incoterm"
-            v-model="products.other.incomterm"
-            class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-          <label
-            for="incoterm"
-            class="absolute top-0 left-2 -mt-2 text-balance text-gray-800 bg-white px-1"
-            >Incoterm</label
-          >
-        </div>
-        <!-- Input Warranty -->
-        <div class="relative mb-6">
-          <input
-            type="number"
-            id="warranty"
-            name="warranty"
-            v-model="products.other.warranty"
-            class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-          <label
-            for="warranty"
-            class="absolute top-0 left-2 -mt-2 text-balance text-gray-800 bg-white px-1"
-            >Warranty</label
-          >
-        </div>
-        <!-- Input Maintenance -->
-        <div class="relative mb-6">
-          <input
-            type="number"
-            id="maintenance"
-            name="maintenance"
-            v-model="products.other.maintenance"
-            class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-          <label
-            for="maintenance"
-            class="absolute top-0 left-2 -mt-2 text-balance text-gray-800 bg-white px-1"
-            >Maintenance</label
-          >
-        </div>
-        <!-- Input Make Active in Catalogue (Switch) -->
-        <div class="flex items-center mb-6">
-          <label class="mr-2 text-sm font-medium text-gray-600"
-            >Make Active in Catalogue</label
-          >
-          <div
-            class="relative inline-block mr-2 align-middle select-none transition duration-200 ease-in"
-          >
-            <q-toggle
-              v-model="products.other.makeActive"
-              color="primary"
-              label="Make Active in Catalogue"
-              :before="false"
-              label-position="left"
+        <!-- Bagian kiri -->
+        <div>
+          <!-- Input Incoterm -->
+          <div class="relative mb-4">
+            <label
+              for="incoterm"
+              class="block mb-2 text-sm font-medium text-gray-600"
+              >Incoterm</label
+            >
+            <input
+              type="text"
+              id="incoterm"
+              name="incoterm"
+              v-model="products.other.incomterm"
+              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
+          </div>
+          <!-- Input Warranty -->
+          <div class="relative mb-4">
+            <label
+              for="warranty"
+              class="block mb-2 text-sm font-medium text-gray-600"
+              >Warranty</label
+            >
+            <input
+              type="number"
+              id="warranty"
+              name="warranty"
+              v-model="products.other.warranty"
+              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <!-- Input Maintenance -->
+          <div class="relative mb-4">
+            <label
+              for="maintenance"
+              class="block mb-2 text-sm font-medium text-gray-600"
+              >Maintenance</label
+            >
+            <input
+              type="number"
+              id="maintenance"
+              name="maintenance"
+              v-model="products.other.maintenance"
+              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <!-- Input Make Active in Catalogue (Switch) -->
+          <div class="flex items-center mb-4">
+            <label class="mr-2 text-sm font-medium text-gray-600"
+              >Make Active in Catalogue</label
+            >
+            <div
+              class="relative inline-block mr-2 align-middle select-none transition duration-200 ease-in"
+            >
+              <q-toggle
+                v-model="products.other.makeActive"
+                color="primary"
+                label="Make Active in Catalogue"
+                :before="false"
+                label-position="left"
+              />
+            </div>
           </div>
         </div>
       </div>
-
-      <!-- Bagian kanan -->
       <div class="flex-1 pl-0 md:pl-4">
-        <!-- Input SKU -->
-        <div class="relative mb-6">
-          <input
-            type="text"
-            id="sku"
-            name="sku"
-            v-model="products.other.sku"
-            class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-          <label
-            for="sku"
-            class="absolute top-0 left-2 -mt-2 text-balance text-gray-800 bg-white px-1"
-            >SKU</label
-          >
-        </div>
-
-        <!-- Input Tags -->
-        <div class="relative mb-6">
-          <input
-            type="text"
-            id="tags"
-            name="tags"
-            v-model="products.other.tags"
-            class="block w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-          <label
-            for="sku"
-            class="absolute top-0 left-2 -mt-2 text-balance text-gray-800 bg-white px-1"
-            >Tags</label
-          >
-        </div>
-        <!-- <div class="relative">
-          <input
-            type="text"
-            v-model="tags"
-            @keyup.enter="addTag"
-            class="w-full py-2 px-3 border border-gray-400 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          />
-          <label
-            for="tags"
-            class="absolute top-0 left-2 -mt-2 text-balance text-gray-800 bg-white px-1"
-          >
-            Tags:
-          </label>
-
-          <div class="mt-2">
-            <q-btn
-              v-if="tags.trim()"
-              @click="addTag"
-              class="absolute top-1/3 right-2 px-3 py-1 bg-indigo-500 text-white rounded-md focus:outline-none hover:bg-indigo-600"
-              label="Add"
+        <!-- Bagian kanan -->
+        <div>
+          <!-- Input SKU -->
+          <div class="relative mb-4">
+            <label
+              for="sku"
+              class="block mb-2 text-sm font-medium text-gray-600"
+              >SKU</label
+            >
+            <input
+              type="text"
+              id="sku"
+              name="sku"
+              v-model="products.other.sku"
+              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-            <div class="mt-2">
-              <q-chip
-                v-for="(tag, index) in tags"
-                :key="index"
-                removable
-                @remove="removeTag(index)"
-                color="primary"
-                text-color="white"
-              >
-                {{ tag }}
-              </q-chip>
-            </div>
           </div>
-        </div> -->
+          <!-- Input Tags -->
+          <div class="relative mb-4">
+            <label
+              for="tags"
+              class="block mb-2 text-sm font-medium text-gray-600"
+              >Tags</label
+            >
+            <input
+              type="text"
+              id="tags"
+              name="tags"
+              v-model="products.other.tags"
+              class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <div class="flex justify-end mt-4">
       <button
         type="submit"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        class="inline-flex items-center px-7 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
       >
         Submit
       </button>
@@ -910,6 +808,7 @@
 
 <script>
 import axios from "axios";
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL; // Mengambil base URL dari environment variable
 
 export default {
   name: "addProductForm",
@@ -1001,7 +900,7 @@ export default {
           },
         };
         const response = await axios.get(
-          "http://192.168.1.25:8000/api/vendor/show/drop",
+          `${apiBaseUrl}vendor/show/drop`,
           config
         );
         console.log(response.data);
@@ -1165,7 +1064,7 @@ export default {
           },
         };
         const response = await axios.post(
-          "http://192.168.1.25:8000/api/vendor/addProduct",
+          `${apiBaseUrl}vendor/addProduct`,
           formData,
           config
         );

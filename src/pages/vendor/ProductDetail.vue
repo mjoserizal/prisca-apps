@@ -199,6 +199,7 @@ export default defineComponent({
 
     const vuexStore = useStore(store);
     const router = useRouter();
+    const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
     const getProductDetails = async () => {
       try {
@@ -216,7 +217,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          `http://192.168.1.25:8000/api/vendor/show/product/${props.id}`,
+          `${apiBaseUrl}vendor/show/product/${props.id}`,
           config
         );
 
@@ -277,7 +278,7 @@ export default defineComponent({
           };
 
           const response = await axios.post(
-            "http://192.168.1.25:8000/api/buyer/addToCart",
+            `${apiBaseUrl}buyer/addToCart`,
             data,
             config
           );
