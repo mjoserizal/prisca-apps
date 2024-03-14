@@ -5,7 +5,7 @@
       <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
         <div class="mb-4">
           <label
-            for="large-product-image"
+            for="preview-large-product-image"
             class="block mb-2 text-sm font-medium text-gray-600"
           >
             Large Product Image:
@@ -29,14 +29,14 @@
 
               <div class="mt-4 flex text-sm leading-6 text-gray-600">
                 <label
-                  for="large-product-image"
+                  for="preview-large-product-image"
                   class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                 >
                   <span>Upload Large Image</span>
                   <input
                     type="file"
-                    id="large-product-image"
-                    name="large-product-image"
+                    id="preview-large-product-image"
+                    name="preview-large-product-image"
                     @update:model-value="
                       (val) => onImageChange('preview-large-product-image', val)
                     "
@@ -79,14 +79,14 @@
                   ></i>
                   <div class="mt-4 flex text-sm leading-6 text-gray-600">
                     <label
-                      for="product-image1"
+                      for="preview-product-image1"
                       class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                     >
                       <span>Upload Image 1</span>
                       <input
                         type="file"
-                        id="product-image1"
-                        name="product-image1"
+                        id="preview-product-image1"
+                        name="preview-product-image1"
                         @update:model-value="
                           (val) => onImageChange('preview-product-image1', val)
                         "
@@ -105,7 +105,7 @@
           <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
               <label
-                for="product-image2"
+                for="preview-product-image2"
                 class="block mb-2 text-sm font-medium text-gray-600"
               >
                 Upload Image 2:
@@ -130,14 +130,14 @@
 
                   <div class="mt-4 flex text-sm leading-6 text-gray-600">
                     <label
-                      for="product-image2"
+                      for="preview-product-image2"
                       class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                     >
                       <span>Upload Image 2</span>
                       <input
                         type="file"
-                        id="product-image2"
-                        name="product-image2"
+                        id="preview-product-image2"
+                        name="preview-product-image2"
                         @update:model-value="
                           (val) => onImageChange('preview-product-image2', val)
                         "
@@ -155,7 +155,7 @@
           <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
               <label
-                for="product-image3"
+                for="preview-product-image3"
                 class="block mb-2 text-sm font-medium text-gray-600"
               >
                 Upload Image 3:
@@ -178,14 +178,14 @@
                   ></i>
                   <div class="mt-4 flex text-sm leading-6 text-gray-600">
                     <label
-                      for="product-image3"
+                      for="preview-product-image3"
                       class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                     >
                       <span>Upload Image 3</span>
                       <input
                         type="file"
-                        id="product-image3"
-                        name="product-image3"
+                        id="preview-product-image3"
+                        name="preview-product-image3"
                         @update:model-value="
                           (val) => onImageChange('preview-product-image3', val)
                         "
@@ -781,6 +781,7 @@
                 label="Make Active in Catalogue"
                 :before="false"
                 label-position="left"
+                :value="editedProduct.other.makeActive ? 'true' : undefined"
               />
             </div>
           </div>
@@ -821,20 +822,23 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-end mt-4">
-        <button
-          type="submit"
-          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Submit
-        </button>
-      </div>
+    </div>
+    <div class="flex justify-end mt-4">
+      <button
+        type="submit"
+        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        @click.prevent="validateForm"
+      >
+        Submit
+      </button>
     </div>
   </form>
 </template>
 
 <script>
+import { Notify } from "quasar";
 import axios from "axios";
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL; // Mengambil base URL dari environment variable
 
 export default {
   name: "EditProduct",
@@ -865,9 +869,9 @@ export default {
         },
         commercial_info: {
           commercialInfo: {
-            grosirToggle: false,
-            enablecontract: false,
-            preOrder: false,
+            grosirToggle: "",
+            enablecontract: "",
+            preOrder: "",
             price: "",
             currency_id: "",
             etalase_id: "",
@@ -893,7 +897,7 @@ export default {
           maintenance: "",
           sku: "",
           tags: "",
-          makeActive: false,
+          makeActive: "",
         },
       },
 
@@ -901,6 +905,12 @@ export default {
       categories: [],
       etalases: [],
       currencies: [],
+      previewImages: {
+        "large-product-image": "",
+        "product-image1": "",
+        "product-image2": "",
+        "product-image3": "",
+      },
     };
   },
 
@@ -925,7 +935,7 @@ export default {
         };
 
         const response = await axios.get(
-          `http://192.168.1.48:8000/api/vendor/show/product/${this.productId}`,
+          `${apiBaseUrl}vendor/show/product/${this.productId}`,
           config
         );
 
@@ -962,7 +972,7 @@ export default {
           },
         };
         const response = await axios.get(
-          "http://192.168.1.48:8000/api/vendor/show/drop",
+          `${apiBaseUrl}vendor/show/drop`,
           config
         );
         this.groups = response.data.data.groups;
@@ -972,6 +982,69 @@ export default {
       } catch (error) {
         console.error("Failed to fetch dropdown data:", error);
       }
+    },
+
+    onImageChange(field, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Simpan file langsung ke editedProduct.images
+      this.editedProduct.images[field] = file;
+
+      // Buat file reader
+      const reader = new FileReader();
+
+      // Ketika file selesai dibaca, tidak perlu melakukan apa pun karena Anda sudah menyimpan file ke editedProduct.images
+      reader.onload = (e) => {};
+
+      // Baca file sebagai URL data
+      reader.readAsDataURL(file);
+    },
+
+    onVideoChange(event) {
+      const videoFile = event.target.files[0];
+      if (videoFile) {
+        this.editedProduct.detail.video = videoFile.name;
+        console.log("Video:", videoFile.name);
+      }
+    },
+
+    validateForm() {
+      let isValid = true;
+
+      // Validasi nama produk, grup, dan kategori
+      if (
+        !this.editedProduct.group ||
+        !this.editedProduct.category ||
+        !this.editedProduct.commercial_info.commercialInfo.currency_id ||
+        !this.editedProduct.commercial_info.commercialInfo.etalase_id
+      ) {
+        let errorMessage = "";
+
+        if (!this.editedProduct.group) {
+          errorMessage += "Grup produk harus diisi. ";
+        }
+
+        if (!this.editedProduct.category) {
+          errorMessage += "Kategori produk harus diisi. ";
+        }
+        if (!this.editedProduct.commercial_info.commercialInfo.currency_id) {
+          errorMessage += "Currency produk harus diisi. ";
+        }
+        if (!this.editedProduct.commercial_info.commercialInfo.etalase_id) {
+          errorMessage += "Etalase produk harus diisi. ";
+        }
+
+        this.$q.notify({
+          type: "warning",
+          position: "top",
+          message: errorMessage,
+        });
+
+        isValid = false;
+      }
+
+      return isValid;
     },
 
     async updateProduct() {
@@ -984,14 +1057,21 @@ export default {
 
         const formData = new FormData();
 
-        // Mengirim data gambar
-        for (let i = 0; i < 4; i++) {
-          const key = `product-image${i + 1}`;
-          if (this.editedProduct.images[key]) {
-            formData.append(`images[${i}]`, this.editedProduct.images[key]);
+        // Tambahkan file gambar ke FormData
+        for (let key in this.editedProduct.images) {
+          const file = document.querySelector(`input[name=${key}]`).files[0];
+          if (file) {
+            formData.append("image[]", file);
+            console.log(`${key}:`, file.name); // Tambahkan console log di sini
           }
         }
 
+        // Tambahkan file video ke FormData
+        const videoFile = document.querySelector("input[name=video]").files[0];
+        if (videoFile) {
+          formData.append("video", videoFile);
+          console.log("Video:", videoFile.name); // Tambahkan console log di sini
+        }
         // Mengirim data lainnya
         formData.append("name", this.editedProduct.name);
         formData.append("group_id", this.editedProduct.group);
@@ -1015,7 +1095,6 @@ export default {
         );
         formData.append("feature", this.editedProduct.detail.feature);
         formData.append("partNumber", this.editedProduct.detail.partNumber);
-        formData.append("video", this.editedProduct.detail.video);
         formData.append("satuan", this.editedProduct.detail.satuan);
         formData.append("condition", this.editedProduct.detail.condition);
         formData.append(
@@ -1083,7 +1162,7 @@ export default {
         };
 
         const response = await axios.post(
-          `http://192.168.1.48:8000/api/vendor/updateProduct/${this.productId}`,
+          `${apiBaseUrl}vendor/updateProduct/${this.productId}`,
           formData,
           config
         );
@@ -1095,32 +1174,6 @@ export default {
         }
       } catch (error) {
         console.error("Failed to update product:", error);
-      }
-    },
-
-    onImageChange(field, event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        // Update pratinjau gambar
-        this.$set(
-          this.editedProduct.images,
-          `preview-${field}`,
-          e.target.result
-        );
-        // Update data gambar
-        this.$set(this.editedProduct.images, field, file);
-      };
-      reader.readAsDataURL(file);
-    },
-
-    onVideoChange(event) {
-      const videoFile = event.target.files[0];
-      if (videoFile) {
-        this.editedProduct.detail.video = videoFile.name;
-        console.log("Video:", videoFile.name);
       }
     },
   },

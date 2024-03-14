@@ -97,7 +97,6 @@ export default defineComponent({
     const defaultBrandValue = ref("");
     const defaultCategoryValue = ref("");
     const defaultVendorValue = ref("");
-    const comparedProducts = ref([]);
     const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
     const editProduct = (product) => {
@@ -314,74 +313,11 @@ export default defineComponent({
       return uniqueCategories;
     };
 
-    const addToCompare = (product) => {
-      if (comparedProducts.value.length < 2) {
-        comparedProducts.value.push(product);
-        if (comparedProducts.value.length === 2) {
-          Swal.fire({
-            title: "Compare Products",
-            html: `
-        <p>You have selected 2 products for comparison:</p>
-        <ul>
-          <li>${comparedProducts.value[0].name}</li>
-          <li>${comparedProducts.value[1].name}</li>
-        </ul>
-      `,
-            icon: "info",
-            confirmButtonText: "Compare",
-            showCancelButton: true,
-            cancelButtonText: "Cancel",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              Swal.fire({
-                title: "Comparison Result",
-                html: `
-                <div class="comparison-details" style="display: flex; flex-direction: row;">
-                <div class="product" style="padding: 10px;">
-                  <img src="data:image/png;base64,${comparedProducts.value[0].images[0].base64_image}" alt="${comparedProducts.value[0].name}" class="product-thumbnail" style="width: 400px; height: 200px;">
-                  <div class="product-details">
-                    <p class="product-title">${comparedProducts.value[0].name}</p>
-                    <p class="product-price">Price: Rp.${comparedProducts.value[0].price}</p>
-                    <p class="product-rating">Brand: ${comparedProducts.value[0].brand}</p>
-                  </div>
-                </div>
-                <div class="product" style="padding: 10px;">
-                  <img src="data:image/png;base64,${comparedProducts.value[1].images[0].base64_image}" alt="${comparedProducts.value[1].name}" class="product-thumbnail" style="width: 400px; height: 200px;">
-                  <div class="product-details">
-                    <p class="product-title">${comparedProducts.value[1].name}</p>
-                    <p class="product-price">Price: Rp.${comparedProducts.value[1].price}</p>
-                    <p class="product-rating">Brand: ${comparedProducts.value[1].brand}</p>
-                  </div>
-                </div>
-              </div>
-          `,
-                icon: "info",
-                confirmButtonText: "OK",
-                showCloseButton: true,
-                customClass: {
-                  container: "comparison-container",
-                },
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  comparedProducts.value = [];
-                }
-              });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-              comparedProducts.value = [];
-            }
-          });
-        }
-      } else {
-        Swal.fire("Error", "You can only compare up to 2 products", "error");
-      }
-    };
-
     return {
       products,
       searchInput,
       filteredProducts,
       openFilterPanel,
-      addToCompare,
       formatToRupiah,
       minPriceFilter,
       maxPriceFilter,

@@ -799,6 +799,7 @@
       <button
         type="submit"
         class="inline-flex items-center px-7 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        @click.prevent="validateForm"
       >
         Submit
       </button>
@@ -807,6 +808,7 @@
 </template>
 
 <script>
+import { Notify } from "quasar";
 import axios from "axios";
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL; // Mengambil base URL dari environment variable
 
@@ -919,7 +921,7 @@ export default {
 
       // Simpan nama file saja
       this.products.images[field] = file.name;
-      console.log(`${field}:`, file.name); // Tambahkan console log di sini
+      console.log(`${field}:`, file.name);
 
       // Buat file reader
       const reader = new FileReader();
@@ -937,8 +939,51 @@ export default {
       const videoFile = event.target.files[0];
       if (videoFile) {
         this.products.detail.video = videoFile.name;
-        console.log("Video:", videoFile.name); // Tambahkan console log di sini
+        console.log("Video:", videoFile.name);
       }
+    },
+
+    validateForm() {
+      let isValid = true;
+
+      // Validasi nama produk, grup, dan kategori
+      if (
+        !this.products.name ||
+        !this.products.group ||
+        !this.products.category ||
+        !this.products.commercial_info.commercialInfo.currency_id ||
+        !this.products.commercial_info.commercialInfo.etalase_id
+      ) {
+        let errorMessage = "";
+
+        if (!this.products.name) {
+          errorMessage += "Nama produk harus diisi. ";
+        }
+
+        if (!this.products.group) {
+          errorMessage += "Grup produk harus diisi. ";
+        }
+
+        if (!this.products.category) {
+          errorMessage += "Kategori produk harus diisi. ";
+        }
+        if (!this.products.commercial_info.commercialInfo.currency_id) {
+          errorMessage += "Currency produk harus diisi. ";
+        }
+        if (!this.products.commercial_info.commercialInfo.etalase_id) {
+          errorMessage += "Etalase produk harus diisi. ";
+        }
+
+        this.$q.notify({
+          type: "warning",
+          position: "top",
+          message: errorMessage,
+        });
+
+        isValid = false;
+      }
+
+      return isValid;
     },
 
     async submitProduct() {
@@ -1036,7 +1081,6 @@ export default {
         );
 
         // formData.append("tags", this.products.other.tags.join(", ")); // Menggunakan join untuk menggabungkan array tags menjadi string
-        // formData.append("makeActive", this.products.other.makeActive);
 
         // Tambahkan file gambar ke FormData
         for (let key in this.products.images) {

@@ -1,9 +1,9 @@
-<!-- Bagian kedua dengan input -->
 <template>
+  <!-- Specification Detail -->
   <div class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row mt-6">
     <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
       <!-- Input Product Specification -->
-      <div class="mb-4" style="max-height: 200px; overflow-y: auto">
+      <div class="mb-4">
         <label
           for="product-specification"
           class="block mb-2 text-sm font-medium text-gray-600"

@@ -262,7 +262,7 @@ const deleteProduct = async (product) => {
       },
     };
     const response = await axios.delete(
-      `http://192.168.1.48:8000/api/vendor/deleteProduct/${product.id}`,
+      `${apiBaseUrl}vendor/deleteProduct/${product.id}`,
       config
     );
     if (response.data.success) {
@@ -333,7 +333,7 @@ onMounted(async () => {
       },
     };
     const response = await axios.get(
-      "http://192.168.1.48:8000/api/vendor/show/productByUserId",
+      `${apiBaseUrl}vendor/show/productByUserId`,
       config
     );
     if (response.data.success) {

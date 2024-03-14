@@ -1,4 +1,5 @@
 <template>
+  <!-- Commercial Information -->
   <div class="bg-white p-6 rounded-md shadow-md flex flex-col md:flex-row mt-6">
     <!-- Bagian kiri -->
     <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
