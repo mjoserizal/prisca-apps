@@ -17,6 +17,7 @@
             :columns="columns"
             row-key="id"
             :filter="filter"
+            :loading="loading"
           >
             <template v-slot:top>
               <q-toolbar class="q-gutter-md" style="flex-wrap: wrap">
@@ -60,13 +61,34 @@
               <q-td :props="props">
                 <span
                   :class="{
-                    'text-green-500': props.row.status === 'Active',
-                    'text-red-500': props.row.status === 'Inactive',
+                    'text-green-500': props.row.status === 'active',
+                    'text-red-500': props.row.status === 'inactive',
                   }"
-                  >{{ props.row.status }}</span
                 >
+                  <template v-if="props.row.status === 'active'">
+                    <q-icon
+                      name="fiber_manual_record"
+                      class="q-mr-xs"
+                      style="
+                        font-size: 8px;
+                        vertical-align: middle;
+                        color: green;
+                      "
+                    />
+                    Active
+                  </template>
+                  <template v-else>
+                    <q-icon
+                      name="fiber_manual_record"
+                      class="q-mr-xs"
+                      style="font-size: 8px; vertical-align: middle; color: red"
+                    />
+                    Inactive
+                  </template>
+                </span>
               </q-td>
             </template>
+
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
                 <div class="flex justify-end">
@@ -320,6 +342,8 @@ const onSubmitAdvanceSearch = async () => {
   }
 };
 
+const loading = ref(true); // Menambahkan properti loading untuk menentukan status skeleton loading
+
 onMounted(async () => {
   try {
     const token = localStorage.getItem("token");
@@ -346,10 +370,12 @@ onMounted(async () => {
         price: product.commercial_info.commercialInfo.price,
         status: product.status,
       }));
+      loading.value = false; // Setelah fetch data selesai, set loading ke false
     } else {
       console.error("Failed to fetch products:", response.data.message);
     }
   } catch (error) {
+    loading.value = false;
     console.error("Failed to fetch products:", error);
   }
 });
@@ -360,6 +386,7 @@ export default {
   name: "ListCatalogue",
 };
 </script>
+
 <style scoped>
 .q-table tbody tr:not(:last-child) {
   border-bottom: 1px solid #ddd;

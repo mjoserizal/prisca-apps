@@ -1,7 +1,7 @@
 const routes = [
   {
     path: "/",
-    component: () => import("components/HeaderSidebar.vue"),
+    component: () => import("components/HeaderSidebarVendor.vue"),
     children: [
       {
         path: "/dashboard",
@@ -15,9 +15,20 @@ const routes = [
         name: "vendorDetail",
       },
       {
+        path: "/vendor-profile",
+        component: () => import("pages/vendor/VendorProfile.vue"),
+        name: "vendorProfile",
+      },
+      {
         path: "/editproduct/:id",
         component: () => import("pages/vendor/EditProduct.vue"),
         name: "editProduct",
+        props: true,
+      },
+      {
+        path: "/quodetail/:id",
+        component: () => import("pages/vendor/QuotationDetail.vue"),
+        name: "quotationDetail",
         props: true,
       },
 

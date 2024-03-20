@@ -1,159 +1,148 @@
 <template>
-  <q-page>
-    <q-container>
-      <q-card class="rounded-md shadow-md m-6 p-4">
-        <q-card-section class="text-h6">Quotation Details</q-card-section>
-        <q-card-section class="flex flex-wrap">
-          <div class="w-full md:w-1/3">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Quotation ID:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ quotationId }}</q-item-section>
-            </q-item>
-          </div>
-          <div class="w-full md:w-1/3">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Supplier Name:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ supplierName }}</q-item-section>
-            </q-item>
-          </div>
-          <div class="w-full md:w-1/3">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Date:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ date }}</q-item-section>
-            </q-item>
-          </div>
-        </q-card-section>
-
-        <q-card-section class="text-h6">Item Details</q-card-section>
+  <div class="w-full">
+    <div class="p-6">
+      <q-card
+        class="shadow-md overflow-hidden border-b border-gray-200 sm:rounded-lg"
+        bordered
+      >
         <q-card-section>
+          <div class="text-h6 text-grey-8">Quotation List</div>
+        </q-card-section>
+        <q-separator></q-separator>
+        <q-card-section class="q-pa-none">
           <q-table
-            class="shadow-md"
-            flat
-            bordered
-            :rows="items"
+            square
+            class="no-shadow"
+            :rows="quotations"
             :columns="columns"
             row-key="id"
-          />
+            :filter="filter"
+            :loading="loading"
+          >
+            <!-- Tombol Detail -->
+            <template v-slot:body-cell-action="props">
+              <q-td :props="props">
+                <q-btn
+                  icon="info"
+                  color="primary"
+                  size="sm"
+                  @click="viewQuotation(props.row)"
+                >
+                  Detail
+                </q-btn>
+              </q-td>
+            </template>
+          </q-table>
         </q-card-section>
-
-        <q-card-section class="text-h6">Quotation Summary</q-card-section>
-        <q-card-section class="flex flex-wrap">
-          <div class="w-full md:w-1/4">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Total Quoted Price:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ totalQuotedPrice }}</q-item-section>
-            </q-item>
-          </div>
-          <div class="w-full md:w-1/4">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Validity Period:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ validityPeriod }}</q-item-section>
-            </q-item>
-          </div>
-          <div class="w-full md:w-1/4">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Delivery Terms:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ deliveryTerms }}</q-item-section>
-            </q-item>
-          </div>
-          <div class="w-full md:w-1/4">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Payment Terms:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ paymentTerms }}</q-item-section>
-            </q-item>
-          </div>
-        </q-card-section>
-
-        <q-card-section class="text-h6">Notes</q-card-section>
-        <q-card-section>{{ notes }}</q-card-section>
       </q-card>
-    </q-container>
-  </q-page>
+    </div>
+    <!-- Popup untuk Advance Search -->
+    <!-- Remaining code for Advance Search dialog remains the same -->
+  </div>
 </template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+
+const router = useRouter();
+const quotations = ref([]);
+const filter = ref("");
+const loading = ref(true);
+
+const columns = [
+  {
+    name: "code",
+    required: true,
+    label: "Quotation Code",
+    align: "left",
+    field: (row) => row.code,
+    sortable: true,
+  },
+  {
+    name: "company_name",
+    label: "Company Name",
+    align: "center",
+    field: "company_name",
+    sortable: true,
+  },
+  {
+    name: "date",
+    label: "Date",
+    align: "center",
+    field: "date",
+    sortable: true,
+  },
+  {
+    name: "action",
+    label: "Action",
+    align: "right",
+    slot: "action", // Menambahkan properti slot untuk tombol detail
+  },
+];
+
+const viewQuotation = (quotation) => {
+  console.log("View quotation detail:", quotation);
+  router.push({ name: "quotationDetail", params: { id: quotation.id } });
+};
+
+onMounted(async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not found.");
+      return;
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(
+      `${apiBaseUrl}vendor/show/quotation`,
+      config
+    );
+    if (response.data.message === "Success") {
+      if (Array.isArray(response.data.quotation)) {
+        quotations.value = response.data.quotation.map((q) => ({
+          id: q.id,
+          code: q.code,
+          company_name: q.company_name,
+          date: q.created_at,
+        }));
+      } else {
+        const q = response.data.quotation;
+        quotations.value = [
+          {
+            id: q.id,
+            code: q.code,
+            company_name: q.company_name,
+            date: q.created_at,
+          },
+        ];
+      }
+      loading.value = false;
+    } else {
+      console.error("Failed to fetch quotations:", response.data.message);
+    }
+  } catch (error) {
+    loading.value = false;
+    console.error("Failed to fetch quotations:", error);
+  }
+});
+</script>
 
 <script>
 export default {
-  data() {
-    return {
-      quotationId: "QUO-1234",
-      supplierName: "Supplier Company",
-      date: "2024-03-04",
-      items: [
-        {
-          id: 1,
-          description: "Item 1",
-          quantity: 5,
-          unitPrice: 10,
-          totalPrice: 50,
-        },
-        {
-          id: 2,
-          description: "Item 2",
-          quantity: 3,
-          unitPrice: 20,
-          totalPrice: 60,
-        },
-      ],
-      columns: [
-        {
-          name: "description",
-          label: "Item Description",
-          align: "left",
-          field: "description",
-          sortable: true,
-        },
-        {
-          name: "quantity",
-          label: "Quantity",
-          align: "center",
-          field: "quantity",
-          sortable: true,
-        },
-        {
-          name: "unitPrice",
-          label: "Unit Price",
-          align: "right",
-          field: "unitPrice",
-          sortable: true,
-        },
-        {
-          name: "totalPrice",
-          label: "Total Price",
-          align: "right",
-          field: "totalPrice",
-          sortable: true,
-        },
-      ],
-      totalQuotedPrice: 110,
-      validityPeriod: "30 days",
-      deliveryTerms: "Ex-Works",
-      paymentTerms: "Net 30 days",
-      notes: "Additional notes...",
-    };
-  },
+  name: "QuotationPage",
 };
 </script>
 
-<style>
-.q-card-section {
-  padding: 2rem;
-  margin: 2rem;
-}
-.q-item-label {
-  font-weight: bold;
+<style scoped>
+.q-table tbody tr:not(:last-child) {
+  border-bottom: 1px solid #ddd;
 }
 </style>

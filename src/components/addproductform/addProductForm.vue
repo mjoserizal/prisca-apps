@@ -982,7 +982,10 @@ export default {
 
         isValid = false;
       }
-
+      if (isValid) {
+        // Jika formulir valid, kirim formulir
+        this.submitProduct();
+      }
       return isValid;
     },
 
@@ -1079,7 +1082,6 @@ export default {
           "status",
           this.products.other.makeActive ? "active" : "inactive"
         );
-
         // formData.append("tags", this.products.other.tags.join(", ")); // Menggunakan join untuk menggabungkan array tags menjadi string
 
         // Tambahkan file gambar ke FormData
@@ -1108,7 +1110,7 @@ export default {
           },
         };
         const response = await axios.post(
-          `${apiBaseUrl}vendor/addProduct`,
+          `${apiBaseUrl}vendor/create/product`,
           formData,
           config
         );

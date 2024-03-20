@@ -1,6 +1,7 @@
 <template>
   <div class="container-box">
     <div class="container-box-1">
+      <!-- Breadcrumbs dan Search Input -->
       <div class="q-pa-md q-gutter-md row items-center justify-between">
         <div>
           <q-breadcrumbs>
@@ -26,7 +27,38 @@
           </q-btn>
         </div>
       </div>
+
+      <!-- Loading Skeleton -->
       <q-page
+        v-if="loadingProducts"
+        class="fit row wrap justify-start items-start content-start q-pa-md"
+      >
+        <q-col
+          class="col-6 col-sm-4 col-md-3 col-lg-2 q-mb-md"
+          style="padding: 6px"
+          v-for="n in skeletonCount"
+          :key="n"
+        >
+          <q-card class="my-card" flat bordered>
+            <q-skeleton height="150px" />
+            <q-card-section>
+              <q-skeleton height="18px" />
+              <q-skeleton height="12px" />
+              <q-skeleton height="12px" />
+              <q-skeleton height="12px" />
+            </q-card-section>
+            <q-card-actions>
+              <q-skeleton height="32px" width="50%" />
+              <q-space />
+              <q-skeleton height="32px" width="20%" />
+            </q-card-actions>
+          </q-card>
+        </q-col>
+      </q-page>
+
+      <!-- Actual Product Cards -->
+      <q-page
+        v-else
         class="fit row wrap justify-start items-start content-start q-pa-md"
       >
         <q-col
@@ -63,14 +95,13 @@
               <router-link :to="{ name: 'detail', params: { id: product.id } }">
                 <q-btn flat color="primary" label="Detail" />
               </router-link>
+              <q-space />
               <q-btn
                 flat
                 color="warning"
                 label="Edit"
                 @click="editProduct(product)"
               />
-
-              <q-space />
             </q-card-actions>
           </q-card>
         </q-col>
@@ -78,7 +109,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { defineComponent, ref, computed } from "vue";
 import axios from "axios";
@@ -98,6 +128,8 @@ export default defineComponent({
     const defaultCategoryValue = ref("");
     const defaultVendorValue = ref("");
     const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+    const loadingProducts = ref(true); // Loading state
+    const skeletonCount = ref(12); // Number of skeletons to display
 
     const editProduct = (product) => {
       console.log("Edit product:", product);
@@ -133,11 +165,13 @@ export default defineComponent({
 
         products.value = response.data.products;
         originalProducts.value = response.data.products;
+        loadingProducts.value = false; // Set loading state to false
       } catch (error) {
         if (error.response && error.response.status === 401) {
           router.push("/"); // Redirect to home if unauthorized
         } else {
           console.log("Error fetching data: ", error);
+          loadingProducts.value = false; // Set loading state to false
         }
       }
     };
@@ -149,7 +183,6 @@ export default defineComponent({
         product.name.toLowerCase().includes(searchInput.value.toLowerCase())
       );
     });
-
     const openFilterPanel = () => {
       const uniqueBrands = getUniqueBrands();
       const uniqueCategories = getUniqueCategories();
@@ -322,6 +355,8 @@ export default defineComponent({
       minPriceFilter,
       maxPriceFilter,
       editProduct,
+      loadingProducts,
+      skeletonCount,
     };
   },
 });

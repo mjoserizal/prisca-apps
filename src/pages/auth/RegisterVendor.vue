@@ -113,7 +113,6 @@ export default defineComponent({
             password: password.value,
             password_confirmation: passwordConfirmation.value,
             telp: telp.value,
-            role_id: "02f1171a-c20b-4873-837e-2e7b5d9418ea",
           },
           {
             headers: {

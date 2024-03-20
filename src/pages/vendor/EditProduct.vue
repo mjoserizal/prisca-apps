@@ -1043,7 +1043,10 @@ export default {
 
         isValid = false;
       }
-
+      if (isValid) {
+        // Jika formulir valid, kirim formulir
+        this.updateProduct();
+      }
       return isValid;
     },
 
