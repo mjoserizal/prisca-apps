@@ -45,6 +45,8 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import dayjs from "dayjs";
+import "dayjs/locale/id";
 
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
@@ -73,7 +75,11 @@ const columns = [
     name: "date",
     label: "Date",
     align: "center",
-    field: "date",
+    field: (row) => {
+      return dayjs(row.created_at, "DD-MM-YYYY")
+        .locale("id")
+        .format("DD MMMM YYYY");
+    },
     sortable: true,
   },
   {

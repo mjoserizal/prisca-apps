@@ -107,6 +107,7 @@ module.exports = configure(function (/* ctx */) {
     framework: {
       config: {},
       iconSet: "fontawesome-v5",
+
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
 

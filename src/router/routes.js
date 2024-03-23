@@ -31,6 +31,12 @@ const routes = [
         name: "quotationDetail",
         props: true,
       },
+      {
+        path: "/quofix/:id",
+        component: () => import("pages/vendor/QuotationFix.vue"),
+        name: "quotationFix",
+        props: true,
+      },
 
       {
         path: "/catalogue",

@@ -38,7 +38,7 @@
               <q-item-section>
                 <q-item-label>Date:</q-item-label>
               </q-item-section>
-              <q-item-section>{{ quotation.created_at }}</q-item-section>
+              <q-item-section>{{ quotation.updatet_at }}</q-item-section>
             </q-item>
           </div>
         </q-card-section>
@@ -104,7 +104,7 @@ import "dayjs/locale/id";
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
 export default {
-  name: "QuotationDetail",
+  name: "QuotationFix",
   data() {
     return {
       quotationId: null,
@@ -147,10 +147,10 @@ export default {
   },
   async mounted() {
     this.quotationId = this.$route.params.id;
-    await this.fetchQuotationDetail();
+    await this.fetchQuotationFix();
   },
   methods: {
-    async fetchQuotationDetail() {
+    async fetchQuotationFix() {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -165,7 +165,7 @@ export default {
         };
 
         const response = await axios.get(
-          `${apiBaseUrl}vendor/show/quotation/${this.quotationId}`,
+          `${apiBaseUrl}vendor/show/quotationFix/${this.quotationId}`,
           config
         );
 
@@ -180,71 +180,6 @@ export default {
       } catch (error) {
         console.error("Failed to fetch quotation detail:", error);
       }
-    },
-
-    editQuotation() {
-      this.editedProductPrices = this.quotation.line_items.map(
-        (item) => item.product_price
-      );
-      this.editDialog = true;
-    },
-    // Method to cancel editing
-    cancelEdit() {
-      this.editDialog = false;
-      this.editedProductPrices = [];
-    },
-    // Method to save the edited prices
-    saveEdit() {
-      if (
-        this.editedProductPrices.some(
-          (price) => price === null || price === undefined
-        )
-      ) {
-        console.error("Invalid edited prices.");
-        return;
-      }
-
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("Token not found.");
-        return;
-      }
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const payload = {
-        quotationItems: this.quotation.line_items.map((item, index) => ({
-          name: item.product_name,
-          quantity: item.quantity,
-          price: this.editedProductPrices[index],
-          amount: item.amount,
-        })),
-      };
-
-      axios
-        .post(
-          `${apiBaseUrl}vendor/create/quotation/${this.quotationId}`,
-          payload,
-          config
-        )
-        .then((response) => {
-          if (response.data.message === "create quotation successfully") {
-            console.log("Quotation updated successfully.");
-            // Redirect to the quotation fix page or handle as needed
-          } else {
-            console.error("Failed to update quotation:", response.data.message);
-          }
-        })
-        .catch((error) => {
-          console.error("Failed to update quotation:", error);
-        });
-
-      this.editDialog = false;
-      this.editedProductPrices = [];
     },
   },
 };
