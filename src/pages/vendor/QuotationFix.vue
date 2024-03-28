@@ -57,40 +57,13 @@
 
         <q-card-section class="text-h6 flex justify-end">
           <q-btn
-            label="Edit Quotation"
+            label="Send Quotation"
             color="primary"
-            @click="editQuotation"
+            @click="sendQuotation"
           />
         </q-card-section>
       </q-card>
     </q-container>
-
-    <!-- Edit Quotation Dialog -->
-    <q-dialog v-model="editDialog" persistent>
-      <q-card>
-        <q-card-section class="text-h6">Edit Product Prices</q-card-section>
-        <q-card-section>
-          <q-list>
-            <q-item v-for="(item, index) in quotation.line_items" :key="index">
-              <q-item-section>
-                <q-item-label>{{ item.name }}</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-input
-                  v-model="editedProductPrices[index]"
-                  outlined
-                  type="number"
-                />
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn label="Cancel" color="primary" @click="cancelEdit" />
-          <q-btn label="Save" color="primary" @click="saveEdit" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-page>
 </template>
 
@@ -179,6 +152,39 @@ export default {
         }
       } catch (error) {
         console.error("Failed to fetch quotation detail:", error);
+      }
+    },
+
+    sendQuotation() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        axios
+          .post(
+            `${apiBaseUrl}vendor/send/quotation/${this.quotationId}/pdf`,
+            null, // Tidak perlu payload
+            config // Sertakan konfigurasi dengan header otorisasi
+          )
+          .then((response) => {
+            // Handle success response
+            console.log(response.data);
+          })
+          .catch((error) => {
+            // Handle error response
+            console.error("Failed to send quotation:", error);
+          });
+      } catch (error) {
+        console.error("Failed to send quotation:", error);
       }
     },
   },

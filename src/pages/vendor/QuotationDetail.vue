@@ -56,11 +56,11 @@
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
-          <q-btn
-            label="Edit Quotation"
-            color="primary"
-            @click="editQuotation"
-          />
+          <q-btn label="Edit Quotation" color="primary" @click="editQuotation">
+            <q-tooltip anchor="bottom middle" self="top middle">
+              Edit Product Price for Line Items
+            </q-tooltip>
+          </q-btn>
         </q-card-section>
       </q-card>
     </q-container>
@@ -73,7 +73,13 @@
           <q-list>
             <q-item v-for="(item, index) in quotation.line_items" :key="index">
               <q-item-section>
-                <q-item-label>{{ item.name }}</q-item-label>
+                <q-item-label>
+                  {{ item.name }}
+                  <!-- Add item name here -->
+                  <span class="q-item-label__secondary text-black">{{
+                    item.product_name
+                  }}</span>
+                </q-item-label>
               </q-item-section>
               <q-item-section side>
                 <q-input
