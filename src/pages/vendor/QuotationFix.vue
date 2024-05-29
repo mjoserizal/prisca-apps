@@ -38,7 +38,7 @@
               <q-item-section>
                 <q-item-label>Date:</q-item-label>
               </q-item-section>
-              <q-item-section>{{ quotation.updatet_at }}</q-item-section>
+              <q-item-section>{{ quotation.updated_at }}</q-item-section>
             </q-item>
           </div>
         </q-card-section>
@@ -53,6 +53,11 @@
             :columns="columns"
             row-key="id"
           />
+        </q-card-section>
+
+        <!-- Total Price Section -->
+        <q-card-section class="text-h6 flex justify-end">
+          <div>Total Price: {{ formatCurrency(totalPrice) }}</div>
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
@@ -80,12 +85,9 @@ export default {
   name: "QuotationFix",
   data() {
     return {
+      tab: "fix",
       quotationId: null,
       quotation: null,
-      // New data properties for the dialog
-      editDialog: false,
-      editedProductPrices: [],
-
       columns: [
         {
           name: "product_name",
@@ -117,6 +119,15 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    totalPrice() {
+      return this.quotation
+        ? this.quotation.line_items.reduce((total, item) => {
+            return total + item.amount;
+          }, 0)
+        : 0;
+    },
   },
   async mounted() {
     this.quotationId = this.$route.params.id;
@@ -186,6 +197,12 @@ export default {
       } catch (error) {
         console.error("Failed to send quotation:", error);
       }
+    },
+    formatCurrency(value) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      }).format(value);
     },
   },
 };

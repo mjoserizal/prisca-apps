@@ -56,6 +56,10 @@
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
+          <div>Total Price: {{ formatToRupiah(totalPrice) }}</div>
+        </q-card-section>
+
+        <q-card-section class="text-h6 flex justify-end">
           <q-btn label="Edit Quotation" color="primary" @click="editQuotation">
             <q-tooltip anchor="bottom middle" self="top middle">
               Edit Product Price for Line Items
@@ -118,6 +122,7 @@ export default {
       // New data properties for the dialog
       editDialog: false,
       editedProductPrices: [],
+      totalPrice: 0,
 
       columns: [
         {
@@ -177,6 +182,7 @@ export default {
 
         if (response.data.message === "Success") {
           this.quotation = response.data.quotation;
+          this.calculateTotalPrice();
         } else {
           console.error(
             "Failed to fetch quotation detail:",
@@ -186,6 +192,20 @@ export default {
       } catch (error) {
         console.error("Failed to fetch quotation detail:", error);
       }
+    },
+
+    calculateTotalPrice() {
+      this.totalPrice = this.quotation.line_items.reduce(
+        (total, item) => total + item.amount,
+        0
+      );
+    },
+
+    formatToRupiah(value) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      }).format(value);
     },
 
     editQuotation() {

@@ -110,7 +110,7 @@ export default {
           } else if (userLevel === "Company") {
             router.push("/dashboard-company");
           } else if (userRole === "vendor") {
-            router.push("/listcatalogue");
+            router.push("/vendordetail");
           }
         } else {
           console.error("Error during login:", response.statusText);

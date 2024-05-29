@@ -1,5 +1,4 @@
 <template>
-  <div></div>
   <form
     @submit.prevent="updateVendorData"
     class="bg-white rounded-md shadow-md flex flex-col md:flex-row p-6 m-6"
@@ -28,7 +27,7 @@
           id="alamat"
           name="alamat"
           v-model="vendorDetail.master.alamat"
-          rows="4"
+          rows="6"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         ></textarea>
       </div>
@@ -43,20 +42,6 @@
           id="telp"
           name="telp"
           v-model="vendorDetail.telp"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
-      </div>
-
-      <!-- Input Email Perusahaan -->
-      <div class="mb-4">
-        <label for="email" class="block mb-2 text-sm font-medium text-gray-600"
-          >Email Perusahaan:</label
-        >
-        <input
-          type="text"
-          id="email"
-          name="email"
-          v-model="vendorDetail.email"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
@@ -80,6 +65,19 @@
 
     <!-- Bagian kanan dengan input dropdown -->
     <div class="flex-1 pl-0 md:pl-4">
+      <!-- Input Email Perusahaan -->
+      <div class="mb-4">
+        <label for="email" class="block mb-2 text-sm font-medium text-gray-600"
+          >Email Perusahaan:</label
+        >
+        <input
+          type="text"
+          id="email"
+          name="email"
+          v-model="vendorDetail.email"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+      </div>
       <!-- Input Bidang Usaha -->
       <div class="mb-4">
         <label
@@ -154,6 +152,7 @@
 
 <script>
 import axios from "axios";
+import Swal from "sweetalert2"; // Pastikan Anda telah mengimpor SweetAlert
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
 export default {
@@ -233,6 +232,14 @@ export default {
 
         if (response.status === 200) {
           console.log("Vendor data updated successfully");
+
+          // Tampilkan Swal success setelah berhasil memperbarui profil vendor
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Vendor profile has been updated successfully!",
+            confirmButtonText: "OK",
+          });
         } else {
           console.error("Failed to update vendor data:", response.data.message);
         }

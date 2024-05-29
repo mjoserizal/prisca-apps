@@ -810,6 +810,8 @@
 <script>
 import { Notify } from "quasar";
 import axios from "axios";
+import Swal from "sweetalert2"; // Pastikan Anda telah mengimpor SweetAlert
+
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL; // Mengambil base URL dari environment variable
 
 export default {
@@ -822,7 +824,7 @@ export default {
         category: "",
         brand: "",
         product_category_name: "",
-        staus: "",
+        status: "",
         images: {
           "large-product-image": "",
           "product-image1": "",
@@ -1115,6 +1117,14 @@ export default {
           config
         );
         console.log("Product submitted successfully:", response.data);
+
+        // Tampilkan Swal success setelah berhasil submit produk
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Product has been added successfully!",
+          confirmButtonText: "OK",
+        });
       } catch (error) {
         console.error("Failed to submit product:", error);
       }

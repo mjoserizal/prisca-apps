@@ -13,48 +13,51 @@
           <q-table
             square
             class="no-shadow"
-            :rows="products"
+            :rows="filteredProducts"
             :columns="columns"
             row-key="id"
-            :filter="filter"
-            :loading="loading"
+            :loading="loadingProducts"
           >
             <template v-slot:top>
               <q-toolbar class="q-gutter-md" style="flex-wrap: wrap">
-                <q-btn
-                  label="Add Product"
-                  color="primary"
-                  class="q-mb-md"
-                  to="/addinfo"
-                  exact
-                />
+                <div class="row items-center q-gutter-md">
+                  <q-btn
+                    label="Add Product"
+                    color="primary"
+                    class="q-mb-md"
+                    to="/addinfo"
+                    exact
+                  />
+                </div>
 
                 <q-space />
-
-                <q-input
-                  v-model="filter"
-                  filled
-                  borderless
-                  dense
-                  debounce="300"
-                  placeholder="Search"
-                  class="q-mb-md"
-                  style="flex-grow: 1; max-width: 200px"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="search" />
-                  </template>
-                </q-input>
-
-                <q-btn
-                  icon="settings"
-                  flat
-                  @click="openAdvanceSearch"
-                  class="q-mb-md"
-                >
-                  Advance Search
-                </q-btn>
+                <div class="row items-center q-gutter-md">
+                  <q-input
+                    outlined
+                    dense
+                    v-model="searchInput"
+                    placeholder="Search product..."
+                    class="search-input"
+                  />
+                  <q-btn
+                    color="indigo"
+                    @click="openFilterPanel"
+                    class="filter-button"
+                  >
+                    <i
+                      class="fa-solid fa-arrow-down-wide-short"
+                      style="padding-right: 10px"
+                    ></i>
+                    Filter
+                  </q-btn>
+                </div>
               </q-toolbar>
+            </template>
+
+            <template v-slot:body-cell-price="props">
+              <q-td :props="props">
+                {{ formatToRupiah(props.row.price) }}
+              </q-td>
             </template>
 
             <template v-slot:body-cell-status="props">
@@ -107,7 +110,7 @@
                     color="danger"
                     icon="delete"
                     text-color="red"
-                    @click="deleteProduct(props.row)"
+                    @click="confirmDeleteProduct(props.row)"
                   />
                 </div>
               </q-td>
@@ -116,99 +119,26 @@
         </q-card-section>
       </q-card>
     </div>
-    <!-- Popup untuk Advance Search -->
-    <q-dialog v-model="show_advance_search" persistent>
-      <q-card style="width: 600px">
-        <q-form @submit="onSubmitAdvanceSearch">
-          <q-card-section class="row items-center justify-between">
-            <q-space />
-            <q-btn
-              icon="close"
-              flat
-              round
-              dense
-              v-close-popup
-              class="text-grey-8"
-            />
-          </q-card-section>
-          <q-card-section class="q-gutter-md">
-            <div class="row">
-              <div class="col pr-4">
-                <q-select
-                  filled
-                  label="Product Group"
-                  lazy-rules
-                  :rules="[
-                    (val) => (val && val.length > 0) || 'Please type something',
-                  ]"
-                ></q-select>
-              </div>
-              <div class="col pr-4">
-                <q-select
-                  filled
-                  label="Category"
-                  lazy-rules
-                  :rules="[
-                    (val) => (val && val.length > 0) || 'Please type something',
-                  ]"
-                ></q-select>
-              </div>
-              <div class="col">
-                <q-select
-                  filled
-                  emit-value
-                  map-options
-                  label="Status"
-                  :options="statusOptions"
-                ></q-select>
-              </div>
-            </div>
-            <q-input filled label="Min Price" type="number"></q-input>
-            <q-input filled label="Max Price" type="number"></q-input>
-            <q-range
-              class="pr-4"
-              filled
-              label="Price Range"
-              v-model="priceRange"
-              :min="0"
-              :max="2000"
-              step="10"
-            ></q-range>
-          </q-card-section>
-          <q-card-actions align="right" class="text-primary">
-            <q-btn label="Search" type="submit" color="primary" />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
 
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL; // Mengambil base URL dari environment variable
-
 const router = useRouter();
-const products = ref([]);
-const filter = ref("");
-const show_filter = ref(false);
-const show_advance_search = ref(false);
-const priceRange = ref(500);
-const statusOptions = [
-  { label: "Active", value: "Active" },
-  { label: "Inactive", value: "Inactive" },
-];
 
-const searchParams = ref({
-  productGroup: "",
-  category: "",
-  status: "",
-  minPrice: null,
-  maxPrice: null,
-});
+const products = ref([]);
+const originalProducts = ref([]);
+const searchInput = ref("");
+const minPriceFilter = ref(100000); // Minimum price filter
+const maxPriceFilter = ref(2000000); // Maximum price filter
+const defaultBrandValue = ref("");
+const defaultCategoryValue = ref("");
+const loadingProducts = ref(true); // Loading state
 
 const columns = [
   {
@@ -227,7 +157,6 @@ const columns = [
     field: "group",
     sortable: true,
   },
-
   {
     name: "price",
     align: "center",
@@ -245,30 +174,28 @@ const columns = [
     label: "Action",
     align: "right",
     field: "action",
-    format: (val, row) => {
-      return [
-        {
-          icon: "edit",
-          label: "Edit",
-          color: "primary",
-          size: "sm",
-          onClick: () => editProduct(row),
-        },
-        {
-          icon: "delete",
-          label: "Delete",
-          color: "danger",
-          size: "sm",
-          onClick: () => deleteProduct(row),
-        },
-      ];
-    },
   },
 ];
 
 const editProduct = (product) => {
   console.log("Edit product:", product);
   router.push({ name: "editProduct", params: { id: product.id } });
+};
+
+const confirmDeleteProduct = (product) => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteProduct(product);
+    }
+  });
 };
 
 const deleteProduct = async (product) => {
@@ -290,55 +217,12 @@ const deleteProduct = async (product) => {
     if (response.data.success) {
       // Hapus produk dari daftar setelah berhasil dihapus
       products.value = products.value.filter((p) => p.id !== product.id);
-      console.log("Product deleted successfully:", product);
+      Swal.fire("Deleted!", "Your product has been deleted.", "success");
     } else {
       console.error("Failed to delete product:", response.data.message);
     }
   } catch (error) {
     console.error("Failed to delete product:", error);
-  }
-};
-
-const openAdvanceSearch = () => {
-  show_advance_search.value = true;
-};
-
-const onSubmitAdvanceSearch = async () => {
-  // Handle advance search submission
-  show_advance_search.value = false; // Close the advance search dialog
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      console.error("Token not found.");
-      return;
-    }
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await axios.get(
-      `${apiBaseUrl}vendor/show/productByUserId`,
-      {
-        ...config,
-        params: searchParams.value, // Pass search parameters as query parameters
-      }
-    );
-    if (response.data.success) {
-      products.value = response.data.products.map((product) => ({
-        id: product.id,
-        name: product.name,
-        group: product.group,
-        category: product.category,
-        brand: product.brand,
-        price: product.commercial_info.commercialInfo.price,
-        status: product.status,
-      }));
-    } else {
-      console.error("Failed to fetch products:", response.data.message);
-    }
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
   }
 };
 
@@ -367,28 +251,167 @@ onMounted(async () => {
         group: product.group,
         category: product.category,
         brand: product.brand,
-        price: product.commercial_info.commercialInfo.price,
+        price: parseFloat(product.commercial_info.commercialInfo.price),
         status: product.status,
       }));
-      loading.value = false; // Setelah fetch data selesai, set loading ke false
+      originalProducts.value = products.value;
+      loadingProducts.value = false; // Setelah fetch data selesai, set loading ke false
     } else {
+      loadingProducts.value = false; // Pastikan untuk set loading ke false jika request gagal
       console.error("Failed to fetch products:", response.data.message);
     }
   } catch (error) {
-    loading.value = false;
+    loadingProducts.value = false; // Set loading ke false jika terjadi error
     console.error("Failed to fetch products:", error);
   }
 });
-</script>
 
+const filteredProducts = computed(() => {
+  return products.value.filter((product) =>
+    product.name.toLowerCase().includes(searchInput.value.toLowerCase())
+  );
+});
+
+const formatToRupiah = (price) => {
+  if (isNaN(price)) {
+    return "Invalid Price";
+  }
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+  }).format(price);
+};
+
+const openFilterPanel = () => {
+  const uniqueBrands = getUniqueBrands();
+  const uniqueCategories = getUniqueCategories();
+  let brandFilter = defaultBrandValue.value;
+  let categoryFilter = defaultCategoryValue.value;
+
+  Swal.fire({
+    title: "Filter Options",
+    html: `
+      <label for="priceRange">Price Range: <span id="priceRangeValue">${formatToRupiah(
+        minPriceFilter.value
+      )} - ${formatToRupiah(maxPriceFilter.value)}</span></label>
+      <br><br>
+      <input type="number" id="minPriceFilter" name="minPriceFilter" min="100000" max="2000000" value="${
+        minPriceFilter.value
+      }">
+      <input type="number" id="maxPriceFilter" name="maxPriceFilter" min="100000" max="2000000" value="${
+        maxPriceFilter.value
+      }">
+      <br><br>
+      <select id="brandFilter" name="brandFilter">
+        <option value="">${
+          brandFilter ? "Show All Brands" : "Select Brand"
+        }</option>
+        ${uniqueBrands
+          .map((brand) => `<option value="${brand}">${brand}</option>`)
+          .join("")}
+      </select>
+      <br><br>
+      <select id="categoryFilter" name="categoryFilter">
+        <option value="">${
+          categoryFilter ? "Show All Categories" : "Select Category"
+        }</option>
+        ${uniqueCategories
+          .map((category) => `<option value="${category}">${category}</option>`)
+          .join("")}
+      </select>
+    `,
+    showCancelButton: true,
+    confirmButtonText: "Filter",
+    cancelButtonText: "Reset",
+    preConfirm: () => {
+      const minPrice = parseInt(
+        Swal.getPopup().querySelector("#minPriceFilter").value
+      );
+      const maxPrice = parseInt(
+        Swal.getPopup().querySelector("#maxPriceFilter").value
+      );
+      brandFilter = Swal.getPopup().querySelector("#brandFilter").value;
+      categoryFilter = Swal.getPopup().querySelector("#categoryFilter").value;
+      return { minPrice, maxPrice, brandFilter, categoryFilter };
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const { minPrice, maxPrice, brandFilter, categoryFilter } = result.value;
+      minPriceFilter.value = minPrice;
+      maxPriceFilter.value = maxPrice;
+      defaultBrandValue.value = brandFilter;
+      defaultCategoryValue.value = categoryFilter;
+      applyFilters();
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      // Reset filters to default values
+      minPriceFilter.value = 100000;
+      maxPriceFilter.value = 2000000;
+      defaultBrandValue.value = "";
+      defaultCategoryValue.value = "";
+      applyFilters();
+    }
+  });
+
+  const minPriceInput = Swal.getPopup().querySelector("#minPriceFilter");
+  const maxPriceInput = Swal.getPopup().querySelector("#maxPriceFilter");
+
+  minPriceInput.addEventListener("input", updatePriceRangeValue);
+  maxPriceInput.addEventListener("input", updatePriceRangeValue);
+};
+
+const applyFilters = () => {
+  const filtered = originalProducts.value.filter((product) => {
+    const priceInRange =
+      product.price >= minPriceFilter.value &&
+      product.price <= maxPriceFilter.value;
+    const brandMatch =
+      defaultBrandValue.value === "" ||
+      product.brand === defaultBrandValue.value;
+    const categoryMatch =
+      defaultCategoryValue.value === "" ||
+      product.category === defaultCategoryValue.value;
+    return priceInRange && brandMatch && categoryMatch;
+  });
+  products.value = filtered;
+};
+
+const getUniqueBrands = () => {
+  const brands = originalProducts.value.map((product) => product.brand);
+  return Array.from(new Set(brands));
+};
+
+const getUniqueCategories = () => {
+  const categories = originalProducts.value.map((product) => product.category);
+  return Array.from(new Set(categories));
+};
+
+const updatePriceRangeValue = () => {
+  const minPrice = parseInt(
+    Swal.getPopup().querySelector("#minPriceFilter").value
+  );
+  const maxPrice = parseInt(
+    Swal.getPopup().querySelector("#maxPriceFilter").value
+  );
+  const priceRangeValue = Swal.getPopup().querySelector("#priceRangeValue");
+  priceRangeValue.textContent = `${formatToRupiah(minPrice)} - ${formatToRupiah(
+    maxPrice
+  )}`;
+};
+</script>
 <script>
 export default {
   name: "ListCatalogue",
 };
 </script>
 
-<style scoped>
-.q-table tbody tr:not(:last-child) {
-  border-bottom: 1px solid #ddd;
+<style>
+.search-input {
+  margin-bottom: 10px;
+  max-width: 200px;
+}
+
+.filter-button {
+  margin-bottom: 10px;
+  white-space: nowrap;
 }
 </style>

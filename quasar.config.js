@@ -105,7 +105,9 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
-      config: {},
+      config: {
+        // dark: "auto", // Atur 'auto' untuk mengikuti preferensi pengguna, atau 'true' untuk selalu tema gelap
+      },
       iconSet: "fontawesome-v5",
 
       // iconSet: 'material-icons', // Quasar icon set
