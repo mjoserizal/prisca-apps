@@ -139,7 +139,50 @@ module.exports = configure(function (/* ctx */) {
       // extendSSRWebserverConf (esbuildConf) {},
       // extendPackageJson (json) {},
 
-      pwa: false,
+      pwa: {
+        workboxMode: "InjectManifest", // Change to 'InjectManifest' mode
+        injectPwaMetaTags: true,
+        useWorkbox: true, // This option is important for 'InjectManifest' mode
+        swSrc: "src-pwa/service-worker.js", // Path to your service worker file
+        swDest: "service-worker.js", // Output path for the service worker file
+        manifest: {
+          // Manifest options
+          name: "Your App Name",
+          short_name: "App Name",
+          description: "Your app description",
+          display: "standalone",
+          orientation: "portrait",
+          background_color: "#ffffff",
+          theme_color: "#027be3",
+          icons: [
+            {
+              src: "/public/images/prisca logo.png",
+              sizes: "128x128",
+              type: "image/png",
+            },
+            {
+              src: "/public/images/prisca logo.png",
+              sizes: "192x192",
+              type: "image/png",
+            },
+            {
+              src: "/public/images/prisca logo.png",
+              sizes: "256x256",
+              type: "image/png",
+            },
+            {
+              src: "/public/images/prisca logo.png",
+              sizes: "384x384",
+              type: "image/png",
+            },
+            {
+              src: "/public/images/prisca logo.png",
+              sizes: "512x512",
+              type: "image/png",
+            },
+          ],
+        },
+      },
 
       // manualStoreHydration: true,
       // manualPostHydrationTrigger: true,
@@ -195,6 +238,7 @@ module.exports = configure(function (/* ctx */) {
         // protocol: 'myapp://path',
         // Windows only
         // win32metadata: { ... }
+        icon: "src-electron/icons/prisca.icns",
       },
 
       builder: {

@@ -4,12 +4,8 @@
       <q-page class="flex bg-image flex-center">
         <q-card
           v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }"
+          class="custom-card"
         >
-          <q-card-section>
-            <!-- <q-avatar size="103px" class="absolute-center shadow-10">
-              <img src="src/assets/prisca logo.png" />
-            </q-avatar> -->
-          </q-card-section>
           <q-card-section>
             <div class="text-center q-pt-lg">
               <q-img
@@ -17,29 +13,55 @@
                 style="width: 103px; height: 103px; margin: 0 auto"
               />
             </div>
-            <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">Login to Prisca-Apps</div>
-            </div>
           </q-card-section>
           <q-card-section>
             <q-form class="q-gutter-md">
-              <q-input filled v-model="email" label="email" lazy-rules />
-
+              <q-input filled v-model="email" label="Email" lazy-rules />
               <q-input
-                type="password"
                 filled
                 v-model="password"
+                :type="showPassword ? 'text' : 'password'"
                 label="Password"
                 lazy-rules
-              />
-
-              <div>
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="showPassword ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="togglePassword"
+                  />
+                </template>
+              </q-input>
+              <div class="text-red-9" v-if="errorMessage">
+                {{ errorMessage }}
+              </div>
+              <div class="text-center">
                 <q-btn
                   label="Login"
                   @click="login"
                   type="button"
                   color="primary"
+                  class="q-ma-xs q-ma-sm"
+                  size="lg"
+                  style="
+                    width: 100%;
+                    min-width: 200px;
+                    max-width: 550px;
+                    margin: auto;
+                  "
                 />
+              </div>
+              <div class="text-center">
+                <p>
+                  Register as
+                  <span class="register-link" @click="goToRegisterBuyer"
+                    >Vendor</span
+                  >
+                  /
+                  <span class="register-link" @click="goToRegisterBuyer"
+                    >Buyer</span
+                  >
+                </p>
               </div>
             </q-form>
           </q-card-section>
@@ -50,87 +72,89 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
-import axios from "axios";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-
-export default defineComponent({
+import axios from "axios";
+export default {
   name: "LoginPage",
-
   setup() {
     const router = useRouter();
     const email = ref("");
     const password = ref("");
-
+    const errorMessage = ref("");
+    const showPassword = ref(false);
+    console.log(process.env.VUE_APP_API_URL);
+    const apiUrl = process.env.VUE_APP_API_URL;
     const login = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.1.244:8000/api/login",
+          "http://192.168.18.43:8000/api/login",
           {
             email: email.value,
             password: password.value,
           }
         );
 
-        // Check if response is successful (status code 200)
         if (response.status === 200) {
-          // Assuming the token is returned in the response
           const token = response.data.token;
-          const userRole = response.data.user.role.name;
-
-          // Store the token in local storage
+          const userLevel = response.data.user.role.name;
+          const userId = response.data.user.id;
           localStorage.setItem("token", token);
-
-          // Redirect based on user role
-          if (userRole === "company") {
-            router.push("/dashboard");
-          } else {
-            // Redirect to a different route based on other roles or handle accordingly
-            router.push("/other-route");
+          localStorage.setItem("userLevel", userLevel);
+          localStorage.setItem("userId", userId);
+          if (userLevel === "Departemen") {
+            router.push("/dashboard-Admin");
+          } else if (userLevel === "user_approval") {
+            router.push("/purchase-request-approval");
+          } else if (userLevel === "company") {
+            router.push("/dashboard-Admin");
           }
-
-          // Log the token to the console
-          console.log("Token:", token);
-          console.log("User Role:", userRole);
         } else {
           console.error("Error during login:", response.statusText);
-          // Handle login error, show message, etc.
+          errorMessage.value = "Invalid email or password";
         }
       } catch (error) {
         console.error("Error during login:", error);
-        // Handle login error, show message, etc.
+        errorMessage.value = "Invalid email or password";
       }
     };
 
-    const logout = () => {
-      axios
-        .post("http://192.168.1.244:8000/api/logout")
-        .then((response) => {
-          // Handle response jika diperlukan
-          console.log("Logout successful");
-          // Clear localStorage atau melakukan operasi lain setelah logout
-          localStorage.clear();
-          // Redirect ke halaman login atau halaman lainnya setelah logout
-          router.push("/login");
-        })
-        .catch((error) => {
-          // Handle error jika diperlukan
-          console.error("Logout failed:", error);
-        });
+    const togglePassword = () => {
+      showPassword.value = !showPassword.value;
+    };
+
+    const goToRegisterBuyer = () => {
+      router.push("/register-buyer");
     };
 
     return {
       email,
       password,
+      errorMessage,
+      showPassword,
       login,
-      logout,
+      togglePassword,
+      goToRegisterBuyer,
     };
   },
-});
+};
 </script>
 
 <style>
 .bg-image {
-  background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);
+  background-image: linear-gradient(135deg, #365486 0%, #365486 100%);
+}
+
+.text-red-9 {
+  color: red;
+}
+
+.register-link {
+  color: blue;
+  cursor: pointer;
+}
+
+.custom-card {
+  background-color: #f9f5f6;
 }
 </style>
