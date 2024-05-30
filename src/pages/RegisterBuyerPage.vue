@@ -16,6 +16,7 @@
           </q-card-section>
           <q-card-section>
             <q-form class="q-gutter-md">
+              <!-- Input fields -->
               <div class="q-row">
                 <div class="q-col-xs-6">
                   <q-input filled v-model="name" label="Name" lazy-rules />
@@ -46,15 +47,17 @@
                   <q-input
                     filled
                     v-model="password_confirmation"
-                    :type="showPassword ? 'text' : 'password'"
+                    :type="showConfirmPassword ? 'text' : 'password'"
                     label="Password Confirmation"
                     lazy-rules
                   >
                     <template v-slot:append>
                       <q-icon
-                        :name="showPassword ? 'visibility_off' : 'visibility'"
+                        :name="
+                          showConfirmPassword ? 'visibility_off' : 'visibility'
+                        "
                         class="cursor-pointer"
-                        @click="togglePassword"
+                        @click="toggleConfirmPassword"
                       />
                     </template>
                   </q-input>
@@ -62,12 +65,7 @@
               </div>
               <div class="q-row">
                 <div class="q-col-xs-6">
-                  <q-input
-                    filled
-                    v-model="company_code"
-                    label="Company Code"
-                    lazy-rules
-                  />
+                  <q-input filled v-model="telp" label="Telp" lazy-rules />
                 </div>
                 <div class="q-col-xs-6">
                   <q-input
@@ -75,60 +73,6 @@
                     v-model="company_name"
                     label="Company Name"
                     lazy-rules
-                  />
-                </div>
-              </div>
-              <div class="q-row">
-                <div class="q-col-xs-6">
-                  <q-input
-                    filled
-                    v-model="divisi_code"
-                    label="Divisi Code"
-                    lazy-rules
-                  />
-                </div>
-                <div class="q-col-xs-6">
-                  <q-input
-                    filled
-                    v-model="divisi_name"
-                    label="Divisi Name"
-                    lazy-rules
-                  />
-                </div>
-              </div>
-              <div class="q-row">
-                <div class="q-col-xs-6">
-                  <q-input
-                    filled
-                    v-model="departemen_code"
-                    label="Departemen Code"
-                    lazy-rules
-                  />
-                </div>
-                <div class="q-col-xs-6">
-                  <q-input
-                    filled
-                    v-model="departemen_name"
-                    label="Departemen Name"
-                    lazy-rules
-                  />
-                </div>
-              </div>
-              <div class="q-row">
-                <div class="q-col-xs-6">
-                  <q-input filled v-model="telp" label="Telp" lazy-rules />
-                </div>
-                <div class="q-col-xs-6">
-                  <q-select
-                    filled
-                    v-model="selectedApprovalLevel"
-                    :options="
-                      approvalLevels.map((level) => ({
-                        label: level.name,
-                        value: level.id,
-                      }))
-                    "
-                    label="Approval Level"
                   />
                 </div>
               </div>
@@ -166,10 +110,11 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
+
 export default defineComponent({
   name: "LoginPage",
 
@@ -180,65 +125,28 @@ export default defineComponent({
     const password = ref("");
     const password_confirmation = ref("");
     const telp = ref("");
-    const company_code = ref("");
     const company_name = ref("");
-    const divisi_code = ref("");
-    const divisi_name = ref("");
-    const departemen_code = ref("");
-    const departemen_name = ref("");
     const errorMessage = ref("");
-    const showPassword = ref(false);
-    const approvalLevels = ref([]);
-    const selectedApprovalLevel = ref([]); // Ganti approval_level_id dengan selectedApprovalLevel
-    const role_id = ref("66ccdadd-ad42-449a-ab2d-2b8a3217e4a1");
-    const fetchApprovalLevels = async () => {
-      try {
-        const response = await axios.get(
-          "http://192.168.1.244:8000/api/show/approvalLevel"
-        );
-        approvalLevels.value = response.data.approvalLevels;
-      } catch (error) {
-        console.error("Error fetching approval levels:", error);
-      }
-    };
-
-    onMounted(() => {
-      fetchApprovalLevels();
-    });
+    const showPassword = ref(false); // New
+    const showConfirmPassword = ref(false); // New
 
     const register = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.1.244:8000/api/register",
+          "http://192.168.18.43:8000/api/userRegister",
           {
             name: name.value,
             email: email.value,
             password: password.value,
             password_confirmation: password_confirmation.value,
             telp: telp.value,
-            company_code: company_code.value,
             company_name: company_name.value,
-            divisi_code: divisi_code.value,
-            divisi_name: divisi_name.value,
-            departemen_code: departemen_code.value,
-            departemen_name: departemen_name.value,
-            approval_level_id: selectedApprovalLevel.value.value,
-            role_id: role_id.value,
           }
         );
 
         if (response.data.success) {
-          // Display success swal
-          Swal.fire({
-            icon: "success",
-            title: "Registration successful",
-            text: "You have been registered successfully!",
-          }).then(() => {
-            // Redirect to / after swal is closed
-            router.push("/");
-          });
+          router.push("/");
         } else {
-          // Display error swal
           Swal.fire({
             icon: "error",
             title: "Registration failed",
@@ -252,12 +160,16 @@ export default defineComponent({
       }
     };
 
+    const goToLogin = () => {
+      router.push("/");
+    };
+
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
     };
 
-    const goToLogin = () => {
-      router.push("/");
+    const toggleConfirmPassword = () => {
+      showConfirmPassword.value = !showConfirmPassword.value;
     };
 
     return {
@@ -266,20 +178,14 @@ export default defineComponent({
       password,
       password_confirmation,
       telp,
-      company_code,
       company_name,
-      divisi_code,
-      divisi_name,
-      departemen_code,
-      departemen_name,
-      role_id,
-      selectedApprovalLevel, // Mengganti approval_level_id menjadi selectedApprovalLevel
       errorMessage,
-      showPassword,
-      approvalLevels,
       register,
-      togglePassword,
       goToLogin,
+      showPassword, // New
+      showConfirmPassword, // New
+      togglePassword, // New
+      toggleConfirmPassword, // New
     };
   },
 });

@@ -8,30 +8,15 @@
         >
           <q-card-section>
             <div class="text-center q-pt-lg">
-<<<<<<< Updated upstream
-              <div class="col text-h6 ellipsis">Login Prisca-Apps</div>
-=======
               <q-img
                 src="/public/images/prisca logo.png"
                 style="width: 103px; height: 103px; margin: 0 auto"
               />
             </div>
           </q-card-section>
-          <!-- <q-card-section>
-            <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">Login to Prisca-Apps</div>
->>>>>>> Stashed changes
-            </div>
-          </q-card-section> -->
           <q-card-section>
             <q-form class="q-gutter-md">
-<<<<<<< Updated upstream
-              <q-input filled v-model="username" label="username" lazy-rules />
-=======
               <q-input filled v-model="email" label="Email" lazy-rules />
->>>>>>> Stashed changes
-
-              <!-- Input password dengan tombol mata -->
               <q-input
                 filled
                 v-model="password"
@@ -47,11 +32,9 @@
                   />
                 </template>
               </q-input>
-
               <div class="text-red-9" v-if="errorMessage">
                 {{ errorMessage }}
               </div>
-
               <div class="text-center">
                 <q-btn
                   label="Login"
@@ -89,54 +72,43 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
-import axios from "axios";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-
-export default defineComponent({
+import axios from "axios";
+export default {
   name: "LoginPage",
-
   setup() {
     const router = useRouter();
-    const username = ref("");
+    const email = ref("");
     const password = ref("");
     const errorMessage = ref("");
     const showPassword = ref(false);
-
+    console.log(process.env.VUE_APP_API_URL);
+    const apiUrl = process.env.VUE_APP_API_URL;
     const login = async () => {
       try {
-        const response = await axios.post("https://dummyjson.com/auth/login", {
-          username: username.value,
-          password: password.value,
-        });
+        const response = await axios.post(
+          "http://192.168.18.43:8000/api/login",
+          {
+            email: email.value,
+            password: password.value,
+          }
+        );
 
         if (response.status === 200) {
           const token = response.data.token;
-<<<<<<< Updated upstream
-          const username = response.data.username;
-          // Store the token in local storage
-          localStorage.setItem("token", token);
-
-          // Log the token to the console
-          console.log("Token:", token);
-          console.log("Username:", username);
-          // Redirect to the dashboard
-          router.push("/dashboard");
-=======
-          const userLevel = response.data.user.level;
+          const userLevel = response.data.user.role.name;
+          const userId = response.data.user.id;
           localStorage.setItem("token", token);
           localStorage.setItem("userLevel", userLevel);
+          localStorage.setItem("userId", userId);
           if (userLevel === "Departemen") {
-            router.push("/dashboard-departemen");
-          } else if (userLevel === "Divisi") {
-            router.push("/dashboard-divisi");
-          } else {
-            router.push("/");
+            router.push("/dashboard-Admin");
+          } else if (userLevel === "user_approval") {
+            router.push("/purchase-request-approval");
+          } else if (userLevel === "company") {
+            router.push("/dashboard-Admin");
           }
-
-          console.log("Token:", token);
-          console.log("userLevel:", userLevel);
->>>>>>> Stashed changes
         } else {
           console.error("Error during login:", response.statusText);
           errorMessage.value = "Invalid email or password";
@@ -147,43 +119,42 @@ export default defineComponent({
       }
     };
 
-<<<<<<< Updated upstream
-=======
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
     };
+
     const goToRegisterBuyer = () => {
-      router.push("/register-buyer"); // Mengarahkan pengguna ke halaman pendaftaran
+      router.push("/register-buyer");
     };
->>>>>>> Stashed changes
+
     return {
-      username,
+      email,
       password,
-      login,
-<<<<<<< Updated upstream
-=======
       errorMessage,
       showPassword,
+      login,
       togglePassword,
       goToRegisterBuyer,
->>>>>>> Stashed changes
     };
   },
-});
+};
 </script>
 
 <style>
 .bg-image {
   background-image: linear-gradient(135deg, #365486 0%, #365486 100%);
 }
+
 .text-red-9 {
   color: red;
 }
+
 .register-link {
-  color: blue; /* Atur warna teks menjadi biru */
-  cursor: pointer; /* Ganti kursor saat diarahkan ke tautan */
+  color: blue;
+  cursor: pointer;
 }
+
 .custom-card {
-  background-color: #f9f5f6; /* Ubah warna latar belakang sesuai kebutuhan */
+  background-color: #f9f5f6;
 }
 </style>
