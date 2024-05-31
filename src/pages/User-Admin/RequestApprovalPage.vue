@@ -124,7 +124,7 @@ export default {
       };
 
       axios
-        .get("http://192.168.18.43:8000/api/buyer/show/userApproval", config)
+        .get("http://192.168.3.11:8000/api/buyer/show/userApproval", config)
         .then((response) => {
           userApprovals.value = response.data.userApproval;
         })
@@ -194,7 +194,7 @@ export default {
 
         axios
           .post(
-            "http://192.168.18.43:8000/api/buyer/create/approvalRequest",
+            "http://192.168.3.11:8000/api/buyer/create/approvalRequest",
             { approvalRequest },
             config
           )
@@ -235,7 +235,7 @@ export default {
 
       axios
         .get(
-          `http://192.168.18.43:8000/api/buyer/show/approvalRequest/${code.value}`,
+          `http://192.168.3.11:8000/api/buyer/show/approvalRequest/${code.value}`,
           config
         )
         .then((response) => {

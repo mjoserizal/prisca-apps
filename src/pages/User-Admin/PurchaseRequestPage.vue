@@ -194,7 +194,7 @@ export default {
       };
 
       axios
-        .get("http://192.168.18.43:8000/api/buyer/show/purchaseRequest", config)
+        .get("http://192.168.3.11:8000/api/buyer/show/purchaseRequest", config)
         .then((response) => {
           if (response.data && Array.isArray(response.data.purchaseRequests)) {
             if (response.data.purchaseRequests.length > 0) {
@@ -247,7 +247,7 @@ export default {
 
       axios
         .post(
-          "http://192.168.18.43:8000/api/buyer/create/requestForQuotation",
+          "http://192.168.3.11:8000/api/buyer/create/requestForQuotation",
           requestData,
           {
             headers: {

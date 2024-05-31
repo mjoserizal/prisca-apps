@@ -29,7 +29,7 @@
                 <q-item clickable @click="handleAccountClick">
                   <q-item-section avatar>
                     <q-avatar>
-                      <img alt="Avatar" src="https://cdn.quasar.dev/img/boy-avatar.png" />
+                      <i class="fas fa-user"></i>
                     </q-avatar>
                   </q-item-section>
                   <q-item-section @click="navigateToUserProfile">
@@ -136,6 +136,11 @@ export default {
           text: "Divisi Departemen Management",
           route: "/Divisi-Departemen-Management",
         },
+        {
+          icon: "fas fa-wallet",
+          text: "Quotation",
+          route: "/Quotation-Admin",
+        },
       ];
     }
 
@@ -160,7 +165,7 @@ export default {
 
           axios
             .post(
-              "http://192.168.18.43:8000/api/logout",
+              "http://192.168.3.11:8000/api/logout",
               {},
               {
                 headers: {
@@ -199,7 +204,7 @@ export default {
         };
 
         axios
-          .get("http://192.168.18.43:8000/api/buyer/show/cart", config)
+          .get("http://192.168.3.11:8000/api/buyer/show/cart", config)
           .then((response) => {
             cartItems.value = response.data.cart || [];
           })

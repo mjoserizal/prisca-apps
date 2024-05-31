@@ -88,7 +88,7 @@ export default {
     const login = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.18.43:8000/api/login",
+          "http://192.168.3.11:8000/api/login",
           {
             email: email.value,
             password: password.value,

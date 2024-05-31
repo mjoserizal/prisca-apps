@@ -139,7 +139,7 @@ export default {
 
       axios
         .get(
-          `http://192.168.18.43:8000/api/buyer/show/purchaseRequest/${this.id}`,
+          `http://192.168.3.11:8000/api/buyer/show/purchaseRequest/${this.id}`,
           config
         )
         .then((response) => {
@@ -181,7 +181,7 @@ export default {
 
           return axios
             .post(
-              `http://192.168.18.43:8000/api/buyer/updateLineItem/${lineItem.id}`,
+              `http://192.168.3.11:8000/api/buyer/updateLineItem/${lineItem.id}`,
               { quantity: newQuantity },
               config
             )

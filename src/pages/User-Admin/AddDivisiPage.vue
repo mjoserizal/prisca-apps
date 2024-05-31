@@ -52,7 +52,7 @@ export default {
       };
 
       axios
-        .post("http://192.168.18.43:8000/api/buyer/createDivisi", formData, {
+        .post("http://192.168.3.11:8000/api/buyer/createDivisi", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",

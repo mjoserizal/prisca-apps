@@ -137,6 +137,18 @@ const routes = [
     ],
   },
   {
+    path: "/detailRFQ/:id",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/User-Admin/DetailRFQPage.vue"),
+        name: "detailRFQ",
+        props: true,
+      },
+    ],
+  },
+  {
     path: "/:code/RequestApproval",
     component: () => import("components/HeaderSidebar.vue"),
     children: [
@@ -170,6 +182,18 @@ const routes = [
         path: "",
         component: () =>
           import("pages/User-Approval/PurchaseRequestApprovalPage.vue"),
+      },
+    ],
+  },
+  //Quotation
+  {
+    path: "/Quotation-Admin",
+    name: "QuotationPage",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/User-Admin/QuotationPage.vue"),
       },
     ],
   },

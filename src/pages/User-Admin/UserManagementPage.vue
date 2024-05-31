@@ -150,7 +150,7 @@ export default {
       }
 
       axios
-        .get("http://192.168.18.43:8000/api/buyer/show/userApproval", {
+        .get("http://192.168.3.11:8000/api/buyer/show/userApproval", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -171,7 +171,7 @@ export default {
 
       axios
         .delete(
-          `http://192.168.18.43:8000/api/buyer/delete/userApproval/${id}`,
+          `http://192.168.3.11:8000/api/buyer/delete/userApproval/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

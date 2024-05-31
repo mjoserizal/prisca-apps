@@ -133,7 +133,7 @@ export default defineComponent({
     const register = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.18.43:8000/api/userRegister",
+          "http://192.168.3.11:8000/api/userRegister",
           {
             name: name.value,
             email: email.value,

@@ -95,7 +95,7 @@ export default {
 
       axios
         .get(
-          "http://192.168.18.43:8000/api/userApproval/show/approvalRequest",
+          "http://192.168.3.11:8000/api/userApproval/show/approvalRequest",
           config
         )
         .then((response) => {
@@ -170,7 +170,7 @@ export default {
 
       axios
         .post(
-          `http://192.168.18.43:8000/api/userApproval/accept/approvalRequest/${docCode}`,
+          `http://192.168.3.11:8000/api/userApproval/accept/approvalRequest/${docCode}`,
           payload,
           config
         )
@@ -196,7 +196,7 @@ export default {
 
       axios
         .post(
-          `http://192.168.18.43:8000/api/userApproval/reject/approvalRequest/${docCode}`,
+          `http://192.168.3.11:8000/api/userApproval/reject/approvalRequest/${docCode}`,
           payload,
           config
         )
