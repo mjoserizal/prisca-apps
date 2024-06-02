@@ -108,6 +108,11 @@ export default {
           text: "PR Approval",
           route: "/purchase-request-approval",
         },
+        {
+          icon: "fas fa-shopping-cart",
+          text: "PO Approval",
+          route: "/purchase-order-approval",
+        },
       ];
     } else if (userLevel === "company") {
       menuItems = [
@@ -127,6 +132,11 @@ export default {
           route: "/purchase-request-Admin",
         },
         {
+          icon: "fas fa-file-invoice",
+          text: "Purchase Order Admin",
+          route: "/purchase-order-Admin",
+        },
+        {
           icon: "fas fa-user",
           text: "User Management",
           route: "/user-management",
@@ -137,8 +147,8 @@ export default {
           route: "/Divisi-Departemen-Management",
         },
         {
-          icon: "fas fa-wallet",
-          text: "Quotation",
+          icon: "fas fa-envelope",
+          text: "Quotation Admin",
           route: "/Quotation-Admin",
         },
       ];
@@ -165,7 +175,7 @@ export default {
 
           axios
             .post(
-              "http://192.168.3.11:8000/api/logout",
+              "https://prisca-backend.3mewj5.easypanel.host/api/logout",
               {},
               {
                 headers: {
@@ -204,7 +214,7 @@ export default {
         };
 
         axios
-          .get("http://192.168.3.11:8000/api/buyer/show/cart", config)
+          .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/cart", config)
           .then((response) => {
             cartItems.value = response.data.cart || [];
           })

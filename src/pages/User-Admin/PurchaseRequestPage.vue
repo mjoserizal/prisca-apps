@@ -91,7 +91,7 @@
             <router-link
               v-if="props.row.status === 'approved'"
               :to="{
-                name: 'detailQuotation',
+                name: 'RequestForQuotation',
                 params: { id: props.row.id },
               }"
             >
@@ -194,7 +194,7 @@ export default {
       };
 
       axios
-        .get("http://192.168.3.11:8000/api/buyer/show/purchaseRequest", config)
+        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/purchaseRequest", config)
         .then((response) => {
           if (response.data && Array.isArray(response.data.purchaseRequests)) {
             if (response.data.purchaseRequests.length > 0) {
@@ -247,7 +247,7 @@ export default {
 
       axios
         .post(
-          "http://192.168.3.11:8000/api/buyer/create/requestForQuotation",
+          "https://prisca-backend.3mewj5.easypanel.host/api/buyer/requestForQuotation",
           requestData,
           {
             headers: {

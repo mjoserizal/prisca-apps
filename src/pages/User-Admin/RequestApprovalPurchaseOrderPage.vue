@@ -1,86 +1,41 @@
 <template>
   <div class="container-box">
     <h1 class="q-pa-md text-center font-bold text-lg">
-      Add User Request Approval
+      Add User Request Approval PO
     </h1>
     <div class="q-pa-md">
       <p style="font-weight: bold; text-align: center">{{ code }}</p>
       <div v-for="(approval, index) in additionalApprovals" :key="index">
-        <select
-          v-model="selectedUser[index]"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mb-4"
-        >
-          <option
-            v-for="userApproval in userApprovals"
-            :key="userApproval.id"
-            :value="userApproval.id"
-          >
+        <select v-model="selectedUser[index]"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mb-4">
+          <option v-for="userApproval in userApprovals" :key="userApproval.id" :value="userApproval.id">
             {{ userApproval.name }}
           </option>
         </select>
       </div>
       <div>
-        <q-btn
-          @click="addUserApproval"
-          class="mt-4"
-          outline
-          color="primary"
-          icon="add"
-          label="Tambah User Approval"
-        />
+        <q-btn @click="addUserApproval" class="mt-4" outline color="primary" icon="add" label="Tambah User Approval" />
       </div>
       <div style="display: flex; justify-content: space-between; width: 100%">
-        <q-btn
-          label="Kembali"
-          class="mt-4"
-          outline
-          color="primary"
-          to="/purchase-request-Admin"
-        />
+        <q-btn label="Kembali" class="mt-4" outline color="primary" to="/purchase-request-Admin" />
 
-        <q-btn
-          @click="submitApproval"
-          label="Submit"
-          class="mt-4"
-          outline
-          color="secondary"
-        />
+        <q-btn @click="submitApproval" label="Submit" class="mt-4" outline color="secondary" />
       </div>
     </div>
   </div>
   <div class="container-box">
-    <q-table
-      flat
-      bordered
-      ref="tableRef"
-      :class="tableClass"
-      tabindex="0"
-      :rows="approvalRequests"
-      :columns="columns"
-      row-key="id"
-      selection="multiple"
-      v-model:selected="selected"
-      :pagination="pagination"
-      :filter="filter"
-      @focusin="activateNavigation"
-      @focusout="() => (selectedRows = selected)"
-      @keydown="onKey"
-      @update:selected="onSelected"
-    >
+    <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="approvalOrders" :columns="columns"
+      row-key="id" selection="multiple" v-model:selected="selected" :pagination="pagination" :filter="filter"
+      @focusin="activateNavigation" @focusout="() => (selectedRows = selected)" @keydown="onKey"
+      @update:selected="onSelected">
       <template v-slot:body-cell-status="props">
         <q-td :props="props">
-          <q-btn
-            :color="
-              props.row.approval_status === 'approved'
-                ? 'green'
-                : props.row.approval_status === 'pending'
-                ? 'blue'
-                : 'red'
-            "
-            flat
-            dense
-            :label="props.row.approval_status"
-          />
+          <q-btn :color="props.row.approval_status === 'approved'
+        ? 'green'
+        : props.row.approval_status === 'pending'
+          ? 'blue'
+          : 'red'
+        " flat dense :label="props.row.approval_status" />
         </q-td>
       </template>
     </q-table>
@@ -94,7 +49,7 @@ import { ref, onMounted, toRefs } from "vue";
 import Swal from "sweetalert2";
 
 export default {
-  name: "RequestApprovalPage",
+  name: "requestApprovalOrder",
   props: {
     code: {
       type: String,
@@ -108,7 +63,7 @@ export default {
     const userApprovals = ref([]);
     const selectedUser = ref([]);
     const additionalApprovals = ref([]);
-    const approvalRequests = ref([]);
+    const approvalOrders = ref([]);
 
     const fetchUserApprovals = () => {
       const token = localStorage.getItem("token");
@@ -134,14 +89,14 @@ export default {
     };
 
     const addUserApproval = () => {
-      // Ambil `user_id` yang belum ada di `approvalRequests`
+      // Ambil `user_id` yang belum ada di `approvalOrders`
       const uniqueUserIds = userApprovals.value
         .map((user) => user.id)
         .filter(
-          (id) => !approvalRequests.value.some((req) => req.user_id === id)
+          (id) => !approvalOrders.value.some((req) => req.user_id === id)
         );
 
-      // Jika ada `user_id` yang belum ada di `approvalRequests`, tambahkan ke `additionalApprovals`
+      // Jika ada `user_id` yang belum ada di `approvalOrders`, tambahkan ke `additionalApprovals`
       if (uniqueUserIds.length > 0) {
         const nextUserId = uniqueUserIds.shift(); // Ambil user_id berikutnya dari array
         additionalApprovals.value.push(null);
@@ -159,8 +114,8 @@ export default {
       const userId = localStorage.getItem("userId");
       const uniqueRequests = new Set(); // Use a set to ensure uniqueness
 
-      // Add data for user_id that is currently logged in if it's not already in approvalRequests
-      if (!approvalRequests.value.some((req) => req.user_id === userId)) {
+      // Add data for user_id that is currently logged in if it's not already in approvalOrders
+      if (!approvalOrders.value.some((req) => req.user_id === userId)) {
         uniqueRequests.add(
           JSON.stringify({
             user_id: userId,
@@ -170,9 +125,9 @@ export default {
         );
       }
 
-      // Add data for selectedUser if they're not already in approvalRequests
+      // Add data for selectedUser if they're not already in approvalOrders
       selectedUser.value.forEach((id) => {
-        if (id && !approvalRequests.value.some((req) => req.user_id === id)) {
+        if (id && !approvalOrders.value.some((req) => req.user_id === id)) {
           const request = {
             user_id: id,
             doc_code: code.value,
@@ -182,10 +137,10 @@ export default {
         }
       });
 
-      const approvalRequest = Array.from(uniqueRequests).map(JSON.parse); // Convert set back to array of objects
+      const approvalOrder = Array.from(uniqueRequests).map(JSON.parse); // Convert set back to array of objects
 
       // If there are new requests to submit, proceed with the submission
-      if (approvalRequest.length > 0) {
+      if (approvalOrder.length > 0) {
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -194,20 +149,20 @@ export default {
 
         axios
           .post(
-            "https://prisca-backend.3mewj5.easypanel.host/api/buyer/approvalRequest",
-            { approvalRequest },
+            "https://prisca-backend.3mewj5.easypanel.host/api/buyer/approvalOrder",
+            { approvalOrder },
             config
           )
           .then((response) => {
             console.log("Approval request submitted successfully:");
-            console.log("approvalRequest:", approvalRequest);
+            console.log("approvalOrder:", approvalOrder);
             console.log("Response:", response.data);
             Swal.fire(
               "Success!",
               "Approval request submitted successfully!",
               "success"
             ).then(() => {
-              fetchApprovalRequests(); // Refresh the data in q-table
+              fetchapprovalOrders(); // Refresh the data in q-table
               clearAdditionalApprovals(); // Clear additional approvals dropdown
             });
           })
@@ -220,7 +175,7 @@ export default {
       }
     };
 
-    const fetchApprovalRequests = () => {
+    const fetchapprovalOrders = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         router.push("/");
@@ -235,11 +190,12 @@ export default {
 
       axios
         .get(
-          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/approvalRequest/${code.value}`,
+          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/approvalOrder/${code.value}`,
           config
         )
         .then((response) => {
-          approvalRequests.value = response.data.approvalRequests;
+          // Urutkan approvalOrders berdasarkan sequence
+          approvalOrders.value = response.data.approvalOrders.sort((a, b) => a.sequence - b.sequence);
         })
         .catch((error) => {
           console.error("Error fetching approval requests:", error);
@@ -253,7 +209,7 @@ export default {
 
     onMounted(() => {
       fetchUserApprovals();
-      fetchApprovalRequests();
+      fetchapprovalOrders();
     });
 
     // Kolom untuk q-table
@@ -284,7 +240,7 @@ export default {
     ];
 
     const pagination = ref({
-      sortBy: "user_name",
+      sortBy: "sequence", // Mengatur sortBy ke sequence agar tabel diurutkan berdasarkan sequence
       descending: false,
       page: 1,
       rowsPerPage: 10,
@@ -294,7 +250,7 @@ export default {
       userApprovals,
       selectedUser,
       additionalApprovals,
-      approvalRequests,
+      approvalOrders,
       fetchUserApprovals,
       addUserApproval,
       submitApproval,

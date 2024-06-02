@@ -52,7 +52,7 @@ export default {
       };
 
       axios
-        .post("http://192.168.3.11:8000/api/buyer/createDivisi", formData, {
+        .post("https://prisca-backend.3mewj5.easypanel.host/api/buyer/divisi", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",

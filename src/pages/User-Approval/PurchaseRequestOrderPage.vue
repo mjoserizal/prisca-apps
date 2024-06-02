@@ -1,11 +1,11 @@
 <template>
   <div class="container-box">
     <h1 class="q-pa-md text-center font-bold text-lg">
-      Purchase Request Approval
+      Purchase Order Approval
     </h1>
   </div>
   <div class="container-box">
-    <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="approvalRequests" :columns="columns"
+    <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="approvalOrders" :columns="columns"
       row-key="id" selection="multiple" v-model:selected="selected" :pagination="pagination" :filter="filter"
       @focusin="activateNavigation" @focusout="() => (selectedRows = selected)" @keydown="onKey"
       @update:selected="onSelected">
@@ -24,7 +24,7 @@
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
           <router-link :to="{
-      name: 'detailPRUserApproval',
+      name: 'detailPOUserApproval',
       params: { doc_code: props.row.doc_code },
     }">
             <q-btn round dense flat color="grey" icon="visibility" />
@@ -42,13 +42,13 @@ import { ref, onMounted, toRefs } from "vue";
 import Swal from "sweetalert2";
 
 export default {
-  name: "PurchaseRequestApprovalPage",
+  name: "PurchaseOrderApprovalPage",
   setup() {
     const router = useRouter();
 
-    const approvalRequests = ref([]);
+    const approvalOrders = ref([]);
 
-    const fetchApprovalRequests = () => {
+    const fetchApprovalOrders = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         router.push("/");
@@ -63,21 +63,21 @@ export default {
 
       axios
         .get(
-          "https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalRequest",
+          "https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalOrder",
           config
         )
         .then((response) => {
-          if (response.data && response.data.approvalRequests) {
-            approvalRequests.value = response.data.approvalRequests;
+          if (response.data && response.data.approvalOrders) {
+            approvalOrders.value = response.data.approvalOrders;
           }
         })
         .catch((error) => {
-          console.error("Error fetching approval requests:", error);
+          console.error("Error fetching approval Orders:", error);
         });
     };
 
     onMounted(() => {
-      fetchApprovalRequests();
+      fetchApprovalOrders();
     });
 
     // Kolom untuk q-table
@@ -91,7 +91,7 @@ export default {
       },
       {
         name: "doc_code",
-        label: "PR Code",
+        label: "PO Code",
         field: "doc_code",
         align: "left",
         sortable: true,
@@ -138,18 +138,18 @@ export default {
 
       axios
         .post(
-          `https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalRequest/${docCode}/accept`,
+          `https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalOrder/${docCode}/accept`,
           payload,
           config
         )
         .then((response) => {
           Swal.fire("Success", "Status updated successfully", "success");
-          fetchApprovalRequests(); // Refresh tabel setelah sukses
+          fetchApprovalOrders(); // Refresh tabel setelah sukses
         })
         .catch((error) => {
           console.error("Error updating status:", error);
           Swal.fire("Error", "Failed to update status", "error");
-          // Tidak perlu memanggil fetchApprovalRequests() di sini
+          // Tidak perlu memanggil fetchApprovalOrders() di sini
         });
     };
 
@@ -164,23 +164,23 @@ export default {
 
       axios
         .post(
-          `https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalRequest/${docCode}/reject`,
+          `https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalOrder/${docCode}/reject`,
           payload,
           config
         )
         .then((response) => {
           Swal.fire("Success", "Status updated successfully", "success");
-          fetchApprovalRequests(); // Refresh tabel setelah sukses
+          fetchApprovalOrders(); // Refresh tabel setelah sukses
         })
         .catch((error) => {
           console.error("Error updating status:", error);
           Swal.fire("Error", "Failed to update status", "error");
-          // Tidak perlu memanggil fetchApprovalRequests() di sini
+          // Tidak perlu memanggil fetchApprovalOrders() di sini
         });
     };
 
     return {
-      approvalRequests,
+      approvalOrders,
       columns,
       pagination,
       handleApprovalApproved,

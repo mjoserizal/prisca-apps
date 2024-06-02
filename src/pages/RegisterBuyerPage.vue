@@ -2,16 +2,10 @@
   <q-layout>
     <q-page-container>
       <q-page class="flex bg-image flex-center">
-        <q-card
-          v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }"
-          class="custom-card"
-        >
+        <q-card v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }" class="custom-card">
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <q-img
-                src="/public/images/prisca logo.png"
-                style="width: 103px; height: 103px; margin: 0 auto"
-              />
+              <q-img src="/public/images/prisca logo.png" style="width: 103px; height: 103px; margin: 0 auto" />
             </div>
           </q-card-section>
           <q-card-section>
@@ -27,38 +21,20 @@
               </div>
               <div class="q-row">
                 <div class="q-col-xs-6">
-                  <q-input
-                    filled
-                    v-model="password"
-                    :type="showPassword ? 'text' : 'password'"
-                    label="Password"
-                    lazy-rules
-                  >
+                  <q-input filled v-model="password" :type="showPassword ? 'text' : 'password'" label="Password"
+                    lazy-rules>
                     <template v-slot:append>
-                      <q-icon
-                        :name="showPassword ? 'visibility_off' : 'visibility'"
-                        class="cursor-pointer"
-                        @click="togglePassword"
-                      />
+                      <q-icon :name="showPassword ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                        @click="togglePassword" />
                     </template>
                   </q-input>
                 </div>
                 <div class="q-col-xs-6">
-                  <q-input
-                    filled
-                    v-model="password_confirmation"
-                    :type="showConfirmPassword ? 'text' : 'password'"
-                    label="Password Confirmation"
-                    lazy-rules
-                  >
+                  <q-input filled v-model="password_confirmation" :type="showConfirmPassword ? 'text' : 'password'"
+                    label="Password Confirmation" lazy-rules>
                     <template v-slot:append>
-                      <q-icon
-                        :name="
-                          showConfirmPassword ? 'visibility_off' : 'visibility'
-                        "
-                        class="cursor-pointer"
-                        @click="toggleConfirmPassword"
-                      />
+                      <q-icon :name="showConfirmPassword ? 'visibility_off' : 'visibility'
+          " class="cursor-pointer" @click="toggleConfirmPassword" />
                     </template>
                   </q-input>
                 </div>
@@ -68,12 +44,7 @@
                   <q-input filled v-model="telp" label="Telp" lazy-rules />
                 </div>
                 <div class="q-col-xs-6">
-                  <q-input
-                    filled
-                    v-model="company_name"
-                    label="Company Name"
-                    lazy-rules
-                  />
+                  <q-input filled v-model="company_name" label="Company Name" lazy-rules />
                 </div>
               </div>
               <div class="text-red-9" v-if="errorMessage">
@@ -81,20 +52,13 @@
               </div>
 
               <div class="text-center">
-                <q-btn
-                  label="Register"
-                  @click="register"
-                  type="button"
-                  color="primary"
-                  class="q-ma-xs q-ma-sm"
-                  size="lg"
-                  style="
+                <q-btn label="Register" @click="register" type="button" color="primary" class="q-ma-xs q-ma-sm"
+                  size="lg" style="
                     width: 100%;
                     min-width: 200px;
                     max-width: 550px;
                     margin: auto;
-                  "
-                />
+                  " />
               </div>
               <div class="text-center">
                 <p>
@@ -133,7 +97,7 @@ export default defineComponent({
     const register = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.3.11:8000/api/userRegister",
+          "https://prisca-backend.3mewj5.easypanel.host/api/userRegister",
           {
             name: name.value,
             email: email.value,
@@ -195,12 +159,16 @@ export default defineComponent({
 .bg-image {
   background-image: linear-gradient(135deg, #365486 0%, #365486 100%);
 }
+
 .text-red-9 {
   color: red;
 }
+
 .register-link {
-  color: blue; /* Atur warna teks menjadi biru */
-  cursor: pointer; /* Ganti kursor saat diarahkan ke tautan */
+  color: blue;
+  /* Atur warna teks menjadi biru */
+  cursor: pointer;
+  /* Ganti kursor saat diarahkan ke tautan */
 }
 
 /* Flexbox styling */
@@ -208,10 +176,14 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
 }
+
 .q-col-xs-6 {
-  flex: 0 0 48%; /* Adjust width as needed */
+  flex: 0 0 48%;
+  /* Adjust width as needed */
 }
+
 .custom-card {
-  background-color: #f8f6f4; /* Ubah warna latar belakang sesuai kebutuhan */
+  background-color: #f8f6f4;
+  /* Ubah warna latar belakang sesuai kebutuhan */
 }
 </style>

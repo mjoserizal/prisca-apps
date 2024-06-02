@@ -36,6 +36,17 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/purchase-order-Admin",
+    name: "PurchaseOrderAdminPage",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/User-Admin/PurchaseOrderPage.vue"),
+      },
+    ],
+  },
   //User-Management
   {
     path: "/user-management",
@@ -125,17 +136,31 @@ const routes = [
     ],
   },
   {
-    path: "/detailQuotation/:id",
+    path: "/detailPO/:id",
     component: () => import("components/HeaderSidebar.vue"),
     children: [
       {
         path: "",
-        component: () => import("pages/User-Admin/DetailQuotationPage.vue"),
-        name: "detailQuotation",
+        component: () => import("pages/User-Admin/DetailPurchaseOrderPage.vue"),
+        name: "detailPO",
         props: true,
       },
     ],
   },
+  //Detail Quotation
+  {
+    path: "/RequestForQuotation/:id",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/User-Admin/RequestForQuotationPage.vue"),
+        name: "RequestForQuotation",
+        props: true,
+      },
+    ],
+  },
+  //Detail Quotation
   {
     path: "/detailRFQ/:id",
     component: () => import("components/HeaderSidebar.vue"),
@@ -144,6 +169,45 @@ const routes = [
         path: "",
         component: () => import("pages/User-Admin/DetailRFQPage.vue"),
         name: "detailRFQ",
+        props: true,
+      },
+    ],
+  },
+  {
+    path: "/:code/RequestApprovalOrder",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () =>
+          import("pages/User-Admin/RequestApprovalPurchaseOrderPage.vue"),
+        name: "requestApprovalOrder",
+        props: true,
+      },
+    ],
+  },
+  {
+    path: "/detailPRUserApproval/:doc_code",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () =>
+          import("pages/User-Approval/DetailPRUserApprovalPage.vue"),
+        name: "detailPRUserApproval",
+        props: true,
+      },
+    ],
+  },
+  {
+    path: "/detailPOUserApproval/:doc_code",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () =>
+          import("pages/User-Approval/DetailPOUserApprovalPage.vue"),
+        name: "detailPOUserApproval",
         props: true,
       },
     ],
@@ -182,6 +246,18 @@ const routes = [
         path: "",
         component: () =>
           import("pages/User-Approval/PurchaseRequestApprovalPage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/purchase-order-approval",
+    name: "PurchaseOrderUserApprovalPage",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () =>
+          import("pages/User-Approval/PurchaseRequestOrderPage.vue"),
       },
     ],
   },

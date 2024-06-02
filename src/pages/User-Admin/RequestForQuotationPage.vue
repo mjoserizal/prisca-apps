@@ -1,6 +1,6 @@
 <template>
   <div class="container-box">
-    <h1 class="q-pa-md text-center font-bold text-lg">Detail Quotation</h1>
+    <h1 class="q-pa-md text-center font-bold text-lg">Request For Quotation</h1>
     <div class="q-pa-md" v-if="purchaseRequest">
       <div>
         <p style="text-align: center; font-weight: bold">
@@ -10,12 +10,8 @@
           {{ purchaseRequest.description }}
         </p>
         <p style="text-align: center; font-weight: bold">
-          <q-btn
-            :color="purchaseRequest.status === 'draft' ? 'red' : 'primary'"
-            flat
-            dense
-            :label="purchaseRequest.status"
-          />
+          <q-btn :color="purchaseRequest.status === 'draft' ? 'red' : 'primary'" flat dense
+            :label="purchaseRequest.status" />
         </p>
       </div>
     </div>
@@ -24,42 +20,20 @@
     </div>
     <!-- Tampilkan informasi dari setiap lineItem -->
     <div v-if="purchaseRequest && purchaseRequest.lineItems" class="q-pa-md">
-      <q-table
-        flat
-        bordered
-        ref="tableRef"
-        :class="tableClass"
-        tabindex="0"
-        :rows="groupedLineItems"
-        :columns="lineItemColumns"
-        row-key="groupKey"
-      >
+      <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="groupedLineItems"
+        :columns="lineItemColumns" row-key="groupKey">
         <!-- Kolom actions untuk edit -->
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn
-              v-if="showEditButton"
-              round
-              dense
-              flat
-              color="negative"
-              icon="edit"
-              @click="editQuantity(props.row)"
-            />
-            <q-btn
-              v-if="purchaseRequest.status === 'approved'"
-              round
-              dense
-              flat
-              color="green"
-              icon="send"
-              @click="sendQuotationByVendor(props.row.name, props.row.groupKey)"
-            />
+            <q-btn v-if="showEditButton" round dense flat color="negative" icon="edit"
+              @click="editQuantity(props.row)" />
+            <q-btn v-if="purchaseRequest.status === 'approved'" round dense flat color="green" icon="send"
+              @click="sendQuotationByVendor(props.row.name, props.row.groupKey)" />
           </q-td>
         </template>
       </q-table>
       <div class="row justify-start">
-        <router-link to="/purchase-request-Admin">
+        <router-link to="/purchase-order-Admin">
           <q-btn flat color="primary">Kembali</q-btn>
         </router-link>
       </div>
@@ -92,11 +66,11 @@ export default {
       showEditButton: true,
       lineItemColumns: [
         {
-          name: "name",
+          name: "vendor_name",
           required: true,
           label: "Vendor",
           align: "left",
-          field: "groupKey",
+          field: "vendor_name",
           sortable: true,
         },
         {
@@ -132,21 +106,23 @@ export default {
     groupedLineItems() {
       // Mengelompokkan line items berdasarkan nama vendor
       const groups = {};
-      this.purchaseRequest.lineItems.forEach((item) => {
-        const groupKey = item.vendor_name;
-        if (!groups[groupKey]) {
-          groups[groupKey] = {
-            groupKey: groupKey,
-            name: item.vendor_name,
-            quantity: item.quantity,
-            price: item.price,
-            actions: item.actions,
-          };
-        } else {
-          groups[groupKey].quantity += item.quantity;
-          groups[groupKey].price += item.price;
-        }
-      });
+      if (this.purchaseRequest && this.purchaseRequest.lineItems) {
+        this.purchaseRequest.lineItems.forEach((item) => {
+          const groupKey = item.vendor_name;
+          if (!groups[groupKey]) {
+            groups[groupKey] = {
+              groupKey: groupKey,
+              vendor_name: item.vendor_name,
+              quantity: item.quantity,
+              price: item.price,
+              actions: item.actions,
+            };
+          } else {
+            groups[groupKey].quantity += item.quantity;
+            groups[groupKey].price += item.price;
+          }
+        });
+      }
       return Object.values(groups);
     },
   },
@@ -169,7 +145,7 @@ export default {
 
       axios
         .get(
-          `http://192.168.3.11:8000/api/buyer/show/purchaseRequest/${this.id}`,
+          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/purchaseRequest/${this.id}`,
           config
         )
         .then((response) => {
@@ -211,7 +187,7 @@ export default {
 
           return axios
             .post(
-              `http://192.168.3.11:8000/api/buyer/updateLineItem/${lineItem.id}`,
+              `https://prisca-backend.3mewj5.easypanel.host/api/buyer/updateLineItem/${lineItem.id}`,
               { quantity: newQuantity },
               config
             )
@@ -255,7 +231,7 @@ export default {
 
       axios
         .post(
-          "http://192.168.3.11:8000/api/buyer/create/requestForQuotation",
+          "https://prisca-backend.3mewj5.easypanel.host/api/buyer/requestForQuotation",
           requestData,
           {
             headers: {

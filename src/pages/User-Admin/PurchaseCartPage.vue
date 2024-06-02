@@ -1,70 +1,30 @@
 <template>
   <div class="p-2.5 xl:p-5">
     <div>
-      <q-card
-        class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
-        bordered
-      >
+      <q-card class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg" bordered>
         <q-card-section class="cart-header">
           <div class="text-h6 text-grey-8">Cart List</div>
           <div class="search-wrapper">
-            <q-input
-              outlined
-              dense
-              v-model="searchInput"
-              placeholder="Search product..."
-              class="search-input"
-            />
+            <q-input outlined dense v-model="searchInput" placeholder="Search product..." class="search-input" />
           </div>
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-table
-            flat
-            bordered
-            ref="tableRef"
-            :class="tableClass"
-            tabindex="0"
-            :rows="filteredProducts"
-            :columns="columns"
-            row-key="name"
-            selection="multiple"
-            v-model:selected="selected"
-            v-model:pagination="pagination"
-            :filter="filter"
-            @focusin="activateNavigation"
-            @focusout="() => (selectedRows = selected)"
-            @keydown="onKey"
-            @update:selected="onSelected"
-          >
+          <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="filteredProducts"
+            :columns="columns" row-key="name" selection="multiple" v-model:selected="selected"
+            v-model:pagination="pagination" :filter="filter" @focusin="activateNavigation"
+            @focusout="() => (selectedRows = selected)" @keydown="onKey" @update:selected="onSelected">
             <template v-slot:body-cell-status="props">
               <q-td :props="props">
-                <span
-                  :class="{
-                    'text-green-500': props.row.status === 'Active',
-                    'text-red-500': props.row.status === 'Inactive',
-                  }"
-                  >{{ props.row.status }}</span
-                >
+                <span :class="{
+              'text-green-500': props.row.status === 'Active',
+              'text-red-500': props.row.status === 'Inactive',
+            }">{{ props.row.status }}</span>
               </q-td>
             </template>
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
-                <q-btn
-                  round
-                  dense
-                  flat
-                  color="primary"
-                  icon="edit"
-                  @click="editQuantity(props.row)"
-                />
-                <q-btn
-                  round
-                  dense
-                  flat
-                  color="negative"
-                  icon="delete"
-                  @click="deleteCartItem(props.row.id)"
-                />
+                <q-btn round dense flat color="primary" icon="edit" @click="editQuantity(props.row)" />
+                <q-btn round dense flat color="negative" icon="delete" @click="deleteCartItem(props.row.id)" />
               </q-td>
             </template>
             <template v-slot:body-cell-totalPrice="props">
@@ -181,7 +141,7 @@ export default {
       };
 
       axios
-        .get("http://192.168.3.11:8000/api/buyer/show/cart", config)
+        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/cart", config)
         .then((response) => {
           if (response.data.cart && Array.isArray(response.data.cart)) {
             cartItems.value = response.data.cart.map((item) => ({
@@ -216,7 +176,7 @@ export default {
 
       axios
         .delete(
-          `http://192.168.3.11:8000/api/buyer/removeCart/${itemId}`,
+          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/cart/${itemId}`,
           config
         )
         .then(() => {
@@ -271,7 +231,7 @@ export default {
             const newQuantity = result.value;
             axios
               .put(
-                `http://192.168.3.11:8000/api/buyer/updateCart/${item.id}`,
+                `https://prisca-backend.3mewj5.easypanel.host/api/buyer/cart/${item.id}`,
                 { quantity: newQuantity },
                 config
               )
@@ -342,7 +302,7 @@ export default {
       // Kirim request ke API dengan requestData
       axios
         .post(
-          "http://192.168.3.11:8000/api/buyer/createPurchaseRequest",
+          "https://prisca-backend.3mewj5.easypanel.host/api/buyer/purchaseRequest",
           requestData,
           config
         )
@@ -448,6 +408,7 @@ export default {
   justify-content: space-between;
   margin-bottom: 10px;
 }
+
 .cart-header {
   display: flex;
   justify-content: space-between;

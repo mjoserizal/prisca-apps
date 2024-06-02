@@ -1,23 +1,19 @@
 <template>
   <div class="container-box">
     <h1 class="q-pa-md text-center font-bold text-lg">
-      Detail Purchase Request
+      Detail Purchase Order
     </h1>
-    <div class="q-pa-md" v-if="purchaseRequest">
+    <div class="q-pa-md" v-if="purchaseOrder">
       <div>
         <p style="text-align: center; font-weight: bold">
-          {{ purchaseRequest.code }}
+          {{ purchaseOrder.code }}
         </p>
         <p style="text-align: center; font-weight: bold">
-          {{ purchaseRequest.description }}
+          {{ purchaseOrder.description }}
         </p>
         <p style="text-align: center; font-weight: bold">
-          <q-btn
-            :color="purchaseRequest.status === 'draft' ? 'red' : 'primary'"
-            flat
-            dense
-            :label="purchaseRequest.status"
-          />
+          <q-btn :color="purchaseOrder.status === 'draft' ? 'red' : 'primary'" flat dense
+            :label="purchaseOrder.status" />
         </p>
       </div>
     </div>
@@ -25,33 +21,14 @@
       <p>Loading...</p>
     </div>
     <!-- Tampilkan informasi dari setiap lineItem -->
-    <div v-if="purchaseRequest && purchaseRequest.lineItems" class="q-pa-md">
-      <q-table
-        flat
-        bordered
-        ref="tableRef"
-        :class="tableClass"
-        tabindex="0"
-        :rows="purchaseRequest.lineItems"
-        :columns="lineItemColumns"
-        row-key="id"
-      >
+    <div v-if="purchaseOrder && purchaseOrder.line_items" class="q-pa-md">
+      <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="purchaseOrder.line_items"
+        :columns="lineItemColumns" row-key="id">
         <!-- Kolom actions untuk edit -->
-        <template v-if="showEditButton" v-slot:body-cell-actions="props">
-          <q-td :props="props">
-            <q-btn
-              round
-              dense
-              flat
-              color="negative"
-              icon="edit"
-              @click="editQuantity(props.row)"
-            />
-          </q-td>
-        </template>
+
       </q-table>
       <div class="row justify-start">
-        <router-link to="/purchase-request-Admin">
+        <router-link to="/purchase-Order-Admin">
           <q-btn flat color="primary">Kembali</q-btn>
         </router-link>
       </div>
@@ -71,7 +48,7 @@ const formatToRupiah = (totalPrice) => {
 };
 
 export default {
-  name: "DetailPurchaseRequestPage",
+  name: "DetailPurchaseOrderPage",
   props: {
     id: {
       type: String,
@@ -80,7 +57,7 @@ export default {
   },
   data() {
     return {
-      purchaseRequest: null,
+      purchaseOrder: null,
       showEditButton: true,
       lineItemColumns: [
         {
@@ -108,23 +85,14 @@ export default {
           sortable: true,
           format: (val) => formatToRupiah(val),
         },
-        // Kolom actions untuk edit
-        {
-          name: "actions",
-          required: true,
-          label: "Actions",
-          align: "center",
-          field: "actions",
-          sortable: false,
-        },
       ],
     };
   },
   mounted() {
-    this.fetchPurchaseRequest();
+    this.fetchPurchaseOrder();
   },
   methods: {
-    fetchPurchaseRequest() {
+    fetchPurchaseOrder() {
       const token = localStorage.getItem("token");
       if (!token) {
         this.$router.push("/");
@@ -139,20 +107,20 @@ export default {
 
       axios
         .get(
-          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/purchaseRequest/${this.id}`,
+          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/purchaseOrder/${this.id}`,
           config
         )
         .then((response) => {
-          this.purchaseRequest = response.data.purchaseRequest;
-          this.updateEditButtonStatus(); // Perbarui status tombol edit setelah mendapatkan data purchaseRequest
+          this.purchaseOrder = response.data.purchaseOrder;
+          this.updateEditButtonStatus(); // Perbarui status tombol edit setelah mendapatkan data purchaseOrder
         })
         .catch((error) => {
-          console.error("Error fetching purchase request:", error);
+          console.error("Error fetching purchase Order:", error);
         });
     },
     updateEditButtonStatus() {
       this.showEditButton =
-        this.purchaseRequest && this.purchaseRequest.status !== "approved";
+        this.purchaseOrder && this.purchaseOrder.status !== "approved";
     },
     editQuantity(lineItem) {
       const token = localStorage.getItem("token");
@@ -165,7 +133,8 @@ export default {
         title: "Edit Quantity",
         input: "number",
         inputValue: lineItem.quantity,
-        inputAttributes: {
+        inputAttributes:
+        {
           step: 1,
           min: 1,
         },
@@ -187,12 +156,12 @@ export default {
             )
             .then(() => {
               // Refresh data setelah berhasil disimpan
-              this.fetchPurchaseRequest();
+              this.fetchPurchaseOrder();
             })
             .catch((error) => {
               console.error("Error updating quantity:", error);
               Swal.showValidationMessage(
-                `Request failed: ${error.response.data.message}`
+                `Order failed: ${error.response.data.message}`
               );
             });
         },

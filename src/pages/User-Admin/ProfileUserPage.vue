@@ -153,7 +153,7 @@ export default {
       }
 
       axios
-        .get("http://192.168.3.11:8000/api/buyer/show/profile", {
+        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -176,7 +176,7 @@ export default {
       }
 
       axios
-        .get("http://192.168.3.11:8000/api/buyer/show/divisi", {
+        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/divisi", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -196,7 +196,7 @@ export default {
       }
 
       axios
-        .get("http://192.168.3.11:8000/api/buyer/show/departemen", {
+        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/departemen", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -227,7 +227,7 @@ export default {
       };
 
       axios
-        .post("http://192.168.3.11:8000/api/buyer/update/profile", userData, {
+        .post("https://prisca-backend.3mewj5.easypanel.host/api/buyer/profile", userData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

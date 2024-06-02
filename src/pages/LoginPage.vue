@@ -2,65 +2,39 @@
   <q-layout>
     <q-page-container>
       <q-page class="flex bg-image flex-center">
-        <q-card
-          v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }"
-          class="custom-card"
-        >
+        <q-card v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }" class="custom-card">
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <q-img
-                src="/public/images/prisca logo.png"
-                style="width: 103px; height: 103px; margin: 0 auto"
-              />
+              <q-img src="/public/images/prisca logo.png" style="width: 103px; height: 103px; margin: 0 auto" />
             </div>
           </q-card-section>
           <q-card-section>
             <q-form class="q-gutter-md">
               <q-input filled v-model="email" label="Email" lazy-rules />
-              <q-input
-                filled
-                v-model="password"
-                :type="showPassword ? 'text' : 'password'"
-                label="Password"
-                lazy-rules
-              >
+              <q-input filled v-model="password" :type="showPassword ? 'text' : 'password'" label="Password" lazy-rules>
                 <template v-slot:append>
-                  <q-icon
-                    :name="showPassword ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="togglePassword"
-                  />
+                  <q-icon :name="showPassword ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                    @click="togglePassword" />
                 </template>
               </q-input>
               <div class="text-red-9" v-if="errorMessage">
                 {{ errorMessage }}
               </div>
               <div class="text-center">
-                <q-btn
-                  label="Login"
-                  @click="login"
-                  type="button"
-                  color="primary"
-                  class="q-ma-xs q-ma-sm"
-                  size="lg"
+                <q-btn label="Login" @click="login" type="button" color="primary" class="q-ma-xs q-ma-sm" size="lg"
                   style="
                     width: 100%;
                     min-width: 200px;
                     max-width: 550px;
                     margin: auto;
-                  "
-                />
+                  " />
               </div>
               <div class="text-center">
                 <p>
                   Register as
-                  <span class="register-link" @click="goToRegisterBuyer"
-                    >Vendor</span
-                  >
+                  <span class="register-link" @click="goToRegisterBuyer">Vendor</span>
                   /
-                  <span class="register-link" @click="goToRegisterBuyer"
-                    >Buyer</span
-                  >
+                  <span class="register-link" @click="goToRegisterBuyer">Buyer</span>
                 </p>
               </div>
             </q-form>
@@ -88,7 +62,7 @@ export default {
     const login = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.3.11:8000/api/login",
+          "https://prisca-backend.3mewj5.easypanel.host/api/login",
           {
             email: email.value,
             password: password.value,
