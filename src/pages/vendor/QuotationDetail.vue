@@ -4,13 +4,16 @@
       <q-tab name="detail">
         <router-link
           :to="{ name: 'quotationDetail', params: { id: quotationId } }"
-          >Quotation Detail</router-link
         >
+          Quotation Detail
+        </router-link>
       </q-tab>
       <q-tab name="fix">
-        <router-link :to="{ name: 'quotationFix', params: { id: quotationId } }"
-          >Quotation Fix</router-link
+        <router-link
+          :to="{ name: 'quotationFix', params: { id: quotationId } }"
         >
+          Quotation Fix
+        </router-link>
       </q-tab>
     </q-tabs>
     <q-container>
@@ -79,10 +82,9 @@
               <q-item-section>
                 <q-item-label>
                   {{ item.name }}
-                  <!-- Add item name here -->
-                  <span class="q-item-label__secondary text-black">{{
-                    item.product_name
-                  }}</span>
+                  <span class="q-item-label__secondary text-black">
+                    {{ item.product_name }}
+                  </span>
                 </q-item-label>
               </q-item-section>
               <q-item-section side>
@@ -97,7 +99,7 @@
         </q-card-section>
         <q-card-actions align="right">
           <q-btn label="Cancel" color="primary" @click="cancelEdit" />
-          <q-btn label="Save" color="primary" @click="saveEdit" />
+          <q-btn label="Save" color="primary" @click="confirmSaveEdit" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -110,6 +112,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
+import Swal from "sweetalert2";
 
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
@@ -176,7 +179,7 @@ export default {
         };
 
         const response = await axios.get(
-          `${apiBaseUrl}vendor/show/quotation/${this.quotationId}`,
+          `${apiBaseUrl}vendor/quotation/${this.quotationId}`,
           config
         );
 
@@ -219,6 +222,22 @@ export default {
       this.editDialog = false;
       this.editedProductPrices = [];
     },
+    // Method to confirm saving the edited prices
+    confirmSaveEdit() {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to save the changes to the quotation?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, save it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.saveEdit();
+        }
+      });
+    },
     // Method to save the edited prices
     saveEdit() {
       if (
@@ -253,14 +272,24 @@ export default {
 
       axios
         .post(
-          `${apiBaseUrl}vendor/create/quotation/${this.quotationId}`,
+          `${apiBaseUrl}vendor/quotation/${this.quotationId}`,
           payload,
           config
         )
         .then((response) => {
           if (response.data.message === "create quotation successfully") {
-            console.log("Quotation updated successfully.");
-            // Redirect to the quotation fix page or handle as needed
+            Swal.fire({
+              title: "Success",
+              text: "Quotation has been updated successfully!",
+              icon: "success",
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "OK",
+            }).then(() => {
+              this.$router.push({
+                name: "quotationFix",
+                params: { id: this.quotationId },
+              });
+            });
           } else {
             console.error("Failed to update quotation:", response.data.message);
           }
@@ -283,5 +312,8 @@ export default {
 }
 .q-item-label {
   font-weight: bold;
+}
+.swal2-container {
+  z-index: 9999 !important;
 }
 </style>

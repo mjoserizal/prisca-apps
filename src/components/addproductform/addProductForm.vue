@@ -903,10 +903,7 @@ export default {
             Authorization: `Bearer ${token}`,
           },
         };
-        const response = await axios.get(
-          `${apiBaseUrl}vendor/show/drop`,
-          config
-        );
+        const response = await axios.get(`${apiBaseUrl}vendor/drop`, config);
         console.log(response.data);
         this.groups = response.data.data.groups;
         this.categories = response.data.data.categories;
@@ -1112,7 +1109,7 @@ export default {
           },
         };
         const response = await axios.post(
-          `${apiBaseUrl}vendor/create/product`,
+          `${apiBaseUrl}vendor/product`,
           formData,
           config
         );

@@ -211,7 +211,7 @@ const deleteProduct = async (product) => {
       },
     };
     const response = await axios.delete(
-      `${apiBaseUrl}vendor/deleteProduct/${product.id}`,
+      `${apiBaseUrl}vendor/product/${product.id}`,
       config
     );
     if (response.data.success) {
@@ -240,10 +240,7 @@ onMounted(async () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await axios.get(
-      `${apiBaseUrl}vendor/show/productByUserId`,
-      config
-    );
+    const response = await axios.get(`${apiBaseUrl}vendor/product`, config);
     if (response.data.success) {
       products.value = response.data.products.map((product) => ({
         id: product.id,

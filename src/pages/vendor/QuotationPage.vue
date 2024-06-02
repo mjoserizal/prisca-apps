@@ -107,10 +107,7 @@ onMounted(async () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await axios.get(
-      `${apiBaseUrl}vendor/show/quotation`,
-      config
-    );
+    const response = await axios.get(`${apiBaseUrl}vendor/quotation`, config);
     if (response.data.message === "Success") {
       if (Array.isArray(response.data.quotation)) {
         quotations.value = response.data.quotation.map((q) => ({

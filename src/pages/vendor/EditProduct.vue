@@ -838,6 +838,8 @@
 <script>
 import { Notify } from "quasar";
 import axios from "axios";
+import Swal from "sweetalert2"; // Pastikan Anda telah mengimpor SweetAlert
+
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL; // Mengambil base URL dari environment variable
 
 export default {
@@ -935,7 +937,7 @@ export default {
         };
 
         const response = await axios.get(
-          `${apiBaseUrl}vendor/show/product/${this.productId}`,
+          `${apiBaseUrl}vendor/product/${this.productId}`,
           config
         );
 
@@ -971,10 +973,7 @@ export default {
             Authorization: `Bearer ${token}`,
           },
         };
-        const response = await axios.get(
-          `${apiBaseUrl}vendor/show/drop`,
-          config
-        );
+        const response = await axios.get(`${apiBaseUrl}vendor/drop`, config);
         this.groups = response.data.data.groups;
         this.categories = response.data.data.categories;
         this.etalases = response.data.data.etalases;
@@ -1060,22 +1059,23 @@ export default {
 
         const formData = new FormData();
 
-        // Tambahkan file gambar ke FormData
+        // Add image files to FormData
         for (let key in this.editedProduct.images) {
           const file = document.querySelector(`input[name=${key}]`).files[0];
           if (file) {
             formData.append("image[]", file);
-            console.log(`${key}:`, file.name); // Tambahkan console log di sini
+            console.log(`${key}:`, file.name); // Added console log here
           }
         }
 
-        // Tambahkan file video ke FormData
+        // Add video file to FormData
         const videoFile = document.querySelector("input[name=video]").files[0];
         if (videoFile) {
           formData.append("video", videoFile);
-          console.log("Video:", videoFile.name); // Tambahkan console log di sini
+          console.log("Video:", videoFile.name); // Added console log here
         }
-        // Mengirim data lainnya
+
+        // Add other data to FormData
         formData.append("name", this.editedProduct.name);
         formData.append("group_id", this.editedProduct.group);
         formData.append("category_id", this.editedProduct.category);
@@ -1165,18 +1165,34 @@ export default {
         };
 
         const response = await axios.post(
-          `${apiBaseUrl}vendor/updateProduct/${this.productId}`,
+          `${apiBaseUrl}vendor/product/${this.productId}`,
           formData,
           config
         );
 
         if (response.data.success) {
           console.log("Product updated successfully.");
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Product has been added successfully!",
+            confirmButtonText: "OK",
+          });
         } else {
           console.error("Failed to update product:", response.data.message);
+          Notify.create({
+            type: "negative",
+            message: `Failed to update product: ${response.data.message}`,
+          });
         }
       } catch (error) {
         console.error("Failed to update product:", error);
+        Notify.create({
+          type: "negative",
+          message: `Error: ${
+            error.response ? error.response.data.message : error.message
+          }`,
+        });
       }
     },
   },

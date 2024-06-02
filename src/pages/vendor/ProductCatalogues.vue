@@ -136,6 +136,11 @@ export default defineComponent({
       router.push({ name: "editProduct", params: { id: product.id } });
     };
     const formatToRupiah = (price) => {
+      // Check if price is a valid number
+      if (isNaN(price) || !isFinite(price)) {
+        return "Price not available";
+      }
+
       return new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: "IDR",
@@ -154,10 +159,7 @@ export default defineComponent({
           },
         };
 
-        const response = await axios.get(
-          `${apiBaseUrl}vendor/show/productByUserId`,
-          config
-        );
+        const response = await axios.get(`${apiBaseUrl}vendor/product`, config);
 
         response.data.products.forEach((product) => {
           product.price = parseFloat(product.price);

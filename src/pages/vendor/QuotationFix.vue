@@ -78,6 +78,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
+import Swal from "sweetalert2";
 
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
@@ -149,7 +150,7 @@ export default {
         };
 
         const response = await axios.get(
-          `${apiBaseUrl}vendor/show/quotationFix/${this.quotationId}`,
+          `${apiBaseUrl}vendor/quotationFix/${this.quotationId}`,
           config
         );
 
@@ -180,24 +181,54 @@ export default {
           },
         };
 
-        axios
-          .post(
-            `${apiBaseUrl}vendor/send/quotation/${this.quotationId}/pdf`,
-            null, // Tidak perlu payload
-            config // Sertakan konfigurasi dengan header otorisasi
-          )
-          .then((response) => {
-            // Handle success response
-            console.log(response.data);
-          })
-          .catch((error) => {
-            // Handle error response
-            console.error("Failed to send quotation:", error);
-          });
+        Swal.fire({
+          title: "Confirmation",
+          text: "Are you sure you want to send the quotation?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios
+              .post(
+                `${apiBaseUrl}vendor/quotation/${this.quotationId}/pdf`,
+                null, // Tidak perlu payload
+                config // Sertakan konfigurasi dengan header otorisasi
+              )
+              .then((response) => {
+                console.log(response.data); // Tambahkan ini untuk melihat respon dari server
+                if (
+                  response.data.message ===
+                  "Quotation PDF berhasil dibuat dan dikirim ke pembeli."
+                ) {
+                  Swal.fire({
+                    title: "Success",
+                    text: "Quotation PDF has been sent successfully!",
+                    icon: "success",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK",
+                  });
+                } else {
+                  console.error(
+                    "Failed to send quotation:",
+                    response.data.message
+                  );
+                }
+              })
+              .catch((error) => {
+                // Handle error response
+                console.error("Failed to send quotation:", error);
+              });
+          }
+        });
       } catch (error) {
         console.error("Failed to send quotation:", error);
       }
     },
+
     formatCurrency(value) {
       return new Intl.NumberFormat("id-ID", {
         style: "currency",

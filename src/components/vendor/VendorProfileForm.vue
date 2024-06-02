@@ -179,7 +179,7 @@ export default {
   methods: {
     async fetchVendorData() {
       try {
-        const response = await axios.get(`${apiBaseUrl}vendor/show/profile`, {
+        const response = await axios.get(`${apiBaseUrl}vendor/profile`, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -220,7 +220,7 @@ export default {
         formData.append("siup", this.vendorDetail.master.siup);
 
         const response = await axios.post(
-          `${apiBaseUrl}vendor/update/profile`,
+          `${apiBaseUrl}vendor/profile`,
           formData,
           {
             headers: {

@@ -159,6 +159,11 @@ export default {
         text: "Quotation",
         route: "/quotation",
       },
+      {
+        icon: "fas fa-file-alt",
+        text: "Order",
+        route: "/quotation",
+      },
     ];
 
     const toggleLeftDrawer = () => {

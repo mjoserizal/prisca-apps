@@ -217,7 +217,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          `${apiBaseUrl}vendor/show/product/${props.id}`,
+          `${apiBaseUrl}vendor/product/${props.id}`,
           config
         );
 
