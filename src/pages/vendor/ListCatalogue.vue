@@ -25,7 +25,7 @@
                     label="Add Product"
                     color="primary"
                     class="q-mb-md"
-                    to="/addinfo"
+                    to="addinfo"
                     exact
                   />
                 </div>

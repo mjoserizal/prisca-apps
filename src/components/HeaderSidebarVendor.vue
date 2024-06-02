@@ -107,13 +107,12 @@
             :key="menuItem.text"
             clickable
             v-ripple
+            @click="navigateTo(menuItem.route)"
           >
             <q-item-section avatar>
               <q-icon :name="menuItem.icon" color="white" />
             </q-item-section>
-            <router-link :to="menuItem.route" class="text-white">
-              <q-item-section>{{ menuItem.text }}</q-item-section>
-            </router-link>
+            <q-item-section>{{ menuItem.text }}</q-item-section>
           </q-item>
         </div>
         <!-- Menu Group -->
@@ -131,51 +130,48 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-export default {
-  name: "HeaderSidebarVendor",
-  setup() {
-    const leftDrawerOpen = ref(false);
-    let menuItems = [
-      {
-        icon: "fas fa-list",
-        text: "Catalogue List",
-        route: "/listcatalogue",
-      },
-      {
-        icon: "fas fa-box",
-        text: "Product",
-        route: "/product",
-      },
-      {
-        icon: "fas fa-user",
-        text: "Vendor Profile",
-        route: "/vendordetail",
-      },
-      {
-        icon: "fas fa-file-alt",
-        text: "Quotation",
-        route: "/quotation",
-      },
-      {
-        icon: "fas fa-file-alt",
-        text: "Order",
-        route: "/quotation",
-      },
-    ];
+const router = useRouter();
 
-    const toggleLeftDrawer = () => {
-      leftDrawerOpen.value = !leftDrawerOpen.value;
-    };
-
-    return {
-      leftDrawerOpen,
-      menuItems,
-      toggleLeftDrawer,
-    };
+const leftDrawerOpen = ref(false);
+let menuItems = [
+  {
+    icon: "fas fa-list",
+    text: "Catalogue List",
+    route: router.resolve({ name: "listCatalogue" }).href,
   },
+  {
+    icon: "fas fa-box",
+    text: "Product",
+    route: router.resolve({ name: "product" }).href,
+  },
+  {
+    icon: "fas fa-user",
+    text: "Vendor Profile",
+    route: router.resolve({ name: "vendorDetail" }).href,
+  },
+  {
+    icon: "fas fa-file-alt",
+    text: "Quotation",
+    route: router.resolve({ name: "quotation" }).href,
+  },
+  {
+    icon: "fas fa-file-alt",
+    text: "Order",
+    route: router.resolve({ name: "order" }).href,
+  },
+];
+
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+};
+
+const navigateTo = (route) => {
+  router.push(route);
+  leftDrawerOpen.value = true; // Tutup drawer setelah navigasi
 };
 </script>
 

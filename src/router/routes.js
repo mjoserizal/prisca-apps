@@ -1,94 +1,96 @@
 const routes = [
   {
-    path: "/",
+    path: "/vendor",
     component: () => import("components/HeaderSidebarVendor.vue"),
+    name: "HeaderSidebarVendor",
     children: [
       {
-        path: "/dashboard",
+        path: "dashboard",
         component: () => import("pages/IndexPage.vue"),
         name: "dashboard",
       },
 
       {
-        path: "/vendordetail",
+        path: "vendordetail",
         component: () => import("pages/vendor/VendorDetail.vue"),
         name: "vendorDetail",
       },
       {
-        path: "/vendor-profile",
+        path: "vendor-profile",
         component: () => import("pages/vendor/VendorProfile.vue"),
         name: "vendorProfile",
       },
       {
-        path: "/editproduct/:id",
+        path: "editproduct/:id",
         component: () => import("pages/vendor/EditProduct.vue"),
         name: "editProduct",
         props: true,
       },
       {
-        path: "/quodetail/:id",
+        path: "quodetail/:id",
         component: () => import("pages/vendor/QuotationDetail.vue"),
         name: "quotationDetail",
         props: true,
       },
       {
-        path: "/quofix/:id",
+        path: "quofix/:id",
         component: () => import("pages/vendor/QuotationFix.vue"),
         name: "quotationFix",
         props: true,
       },
 
       {
-        path: "/catalogue",
+        path: "catalogue",
         component: () => import("pages/CataloguePage.vue"),
         name: "catalogue",
       },
       {
-        path: "/quotation",
+        path: "quotation",
         component: () => import("pages/vendor/QuotationPage.vue"),
         name: "quotation",
       },
       {
-        path: "/product",
+        path: "order",
+        component: () => import("pages/vendor/OrderPage.vue"),
+        name: "order",
+      },
+
+      {
+        path: "product",
         component: () => import("src/pages/vendor/ProductCatalogues.vue"),
         name: "product",
       },
       {
-        path: "/addproduct",
+        path: "addproduct",
         component: () => import("src/pages/vendor/AddProduct.vue"),
         name: "addProduct",
       },
       {
-        path: "/addinfo",
+        path: "addinfo",
         component: () => import("src/pages/vendor/AddInfo.vue"),
         name: "addInfo",
       },
       {
-        path: "/input",
+        path: "input",
         component: () => import("src/pages/vendor/FormParent.vue"),
         name: "inpt",
       },
 
       {
-        path: "/listcatalogue",
+        path: "listcatalogue",
         component: () => import("src/pages/vendor/ListCatalogue.vue"),
         name: "listCatalogue",
       },
       {
-        path: "/product/:id",
+        path: "product/:id",
         component: () => import("src/pages/vendor/ProductDetail.vue"),
         name: "product-detail",
       },
       {
-        path: "/detail/:id",
+        path: "detail/:id",
         component: () => import("pages/vendor/ProductDetail.vue"),
         name: "detail",
         props: true,
-      },
-      {
-        path: "/purchase-cart",
-        component: () => import("pages/PurchaseCartPage.vue"),
-        name: "PurchaseCartPage",
       },
     ],
   },
@@ -96,6 +98,7 @@ const routes = [
   {
     path: "/register-vendor",
     component: () => import("src/pages/auth/RegisterVendor.vue"),
+    name: "register-vendor",
   },
 ];
 
