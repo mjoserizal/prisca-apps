@@ -78,7 +78,7 @@ export default {
       }
 
       axios
-        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/quotationFix", {
+        .get("http://192.168.16.70:8000/api/buyer/quotationFix", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

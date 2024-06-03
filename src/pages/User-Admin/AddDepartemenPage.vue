@@ -82,7 +82,7 @@ export default {
       };
 
       axios
-        .post("https://prisca-backend.3mewj5.easypanel.host/api/buyer/departemen", formData, {
+        .post("http://192.168.16.70:8000/api/buyer/departemen", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export default {
       }
 
       axios
-        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/divisi", {
+        .get("http://192.168.16.70:8000/api/buyer/divisi", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -63,7 +63,7 @@ export default {
 
       axios
         .get(
-          "https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalRequest",
+          "http://192.168.16.70:8000/api/userApproval/approvalRequest",
           config
         )
         .then((response) => {
@@ -138,7 +138,7 @@ export default {
 
       axios
         .post(
-          `https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalRequest/${docCode}/accept`,
+          `http://192.168.16.70:8000/api/userApproval/approvalRequest/${docCode}/accept`,
           payload,
           config
         )
@@ -164,7 +164,7 @@ export default {
 
       axios
         .post(
-          `https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalRequest/${docCode}/reject`,
+          `http://192.168.16.70:8000/api/userApproval/approvalRequest/${docCode}/reject`,
           payload,
           config
         )

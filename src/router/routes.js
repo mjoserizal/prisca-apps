@@ -273,6 +273,41 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/Order-Admin",
+    name: "OrderPage",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/User-Admin/OrderPage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/detail-order/:id", // Define the route path with a parameter for the order ID
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/User-Admin/DetailOrderPage.vue"),
+        name: "detailOrder", // Set a unique name for the route
+        props: true, // Pass route params as props to the component
+      },
+    ],
+  },
+  {
+    path: "/detail-invoice/:id", // Define the route path with a parameter for the order ID
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/User-Admin/DetailInvoicePage.vue"),
+        name: "detailInvoice", // Set a unique name for the route
+        props: true, // Pass route params as props to the component
+      },
+    ],
+  },
   //Login
   {
     path: "/",

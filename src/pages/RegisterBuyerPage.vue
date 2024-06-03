@@ -97,7 +97,7 @@ export default defineComponent({
     const register = async () => {
       try {
         const response = await axios.post(
-          "https://prisca-backend.3mewj5.easypanel.host/api/userRegister",
+          "http://192.168.16.70:8000/api/userRegister",
           {
             name: name.value,
             email: email.value,

@@ -2,21 +2,21 @@
   <div>
     <div class="container-box">
       <h1 class="q-pa-md text-center font-bold text-lg">
-        Purchase Orders
+        Orders
       </h1>
     </div>
 
     <div class="container-box">
-      <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="purchaseOrders" :columns="columns"
+      <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="orders" :columns="columns"
         row-key="id" selection="multiple" v-model:selected="selected" v-model:pagination="pagination" :filter="filter"
         @focusin="activateNavigation" @focusout="() => (selectedRows = selected)" @keydown="onKey"
         @update:selected="onSelected">
         <!-- Slot untuk menyesuaikan tampilan sel di kolom "Status" -->
         <template v-slot:body-cell-status="props">
           <q-td :props="props">
-            <q-btn :color="props.row.status === 'approved'
+            <q-btn :color="props.row.status === 'selesai'
         ? 'green'
-        : props.row.status === 'draft'
+        : props.row.status === 'dikirim'
           ? 'blue'
           : 'red'
         " flat dense :label="props.row.status" />
@@ -26,21 +26,17 @@
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <router-link :to="{
-        name: 'detailPO',
+        name: 'detailOrder',
         params: { id: props.row.id },
       }">
               <q-btn round dense flat color="grey" icon="visibility" />
             </router-link>
-
-            <router-link :to="{
-        name: 'requestApprovalOrder',
-        params: { code: props.row.code },
+            <router-link v-if="props.row.status === 'selesai'" :to="{
+        name: 'detailInvoice',
+        params: { id: props.row.id },
       }">
-              <q-btn round dense flat color="blue" icon="add" />
+              <q-btn round dense flat color="blue" icon="receipt_long" />
             </router-link>
-
-            <q-btn v-if="props.row.status === 'approved'" round dense flat color="green" icon="send"
-              @click="handleSend(props.row.id)" />
           </q-td>
         </template>
       </q-table>
@@ -53,10 +49,10 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 export default {
-  name: "PurchaseOrderPage",
+  name: "OrderPage",
   data() {
     return {
-      purchaseOrders: [], // Ubah nama dari purchaseOrder ke purchaseOrders
+      orders: [],
       selected: [],
       columns: [
         {
@@ -65,14 +61,6 @@ export default {
           label: "Code",
           align: "left",
           field: "code",
-          sortable: true,
-        },
-        {
-          name: "description",
-          required: true,
-          label: "Description",
-          align: "left",
-          field: "description",
           sortable: true,
         },
         {
@@ -100,7 +88,7 @@ export default {
     };
   },
   methods: {
-    fetchPurchaseOrders() {
+    fetchOrders() {
       const token = localStorage.getItem("token");
       if (!token) {
         this.$router.push("/");
@@ -114,61 +102,25 @@ export default {
       };
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/purchaseOrder", config)
+        .get("http://192.168.16.70:8000/api/buyer/order", config)
         .then((response) => {
-          if (response.data && Array.isArray(response.data.purchaseOrders)) {
-            this.purchaseOrders = response.data.purchaseOrders;
+          if (response.data && Array.isArray(response.data.orders)) {
+            this.orders = response.data.orders;
           } else {
-            console.error("Invalid purchase orders data format:", response.data);
+            console.error("Invalid orders data format:", response.data);
           }
         })
         .catch((error) => {
           if (error.response && error.response.status === 401) {
             this.$router.push("/");
           } else {
-            console.error("Error fetching purchase orders:", error);
+            console.error("Error fetching orders:", error);
           }
         });
     },
-    handleSend(id) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        this.$router.push("/");
-        return;
-      }
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      axios
-        .post(
-          `http://192.168.16.70:8000/api/buyer/order`,
-          { purchase_order_id: id },
-          config
-        )
-        .then((response) => {
-          Swal.fire(
-            'Success',
-            `Purchase Order with ID: ${id} has been sent successfully!`,
-            'success'
-          );
-          this.fetchPurchaseOrders(); // Refresh the table data
-        })
-        .catch((error) => {
-          console.error("Error sending Purchase Order: ", error);
-          Swal.fire(
-            'Error',
-            'Failed to send Purchase Order. Please try again later.',
-            'error'
-          );
-        });
-    }
   },
   mounted() {
-    this.fetchPurchaseOrders();
+    this.fetchOrders();
   },
 };
 </script>

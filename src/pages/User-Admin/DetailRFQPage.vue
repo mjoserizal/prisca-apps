@@ -90,7 +90,7 @@ export default {
 
       const { id } = this.$route.params;
       axios
-        .get(`https://prisca-backend.3mewj5.easypanel.host/api/buyer/quotationFix/${id}`, {
+        .get(`http://192.168.16.70:8000/api/buyer/quotationFix/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -139,7 +139,7 @@ export default {
       const { id } = this.$route.params;
       axios
         .post(
-          "https://prisca-backend.3mewj5.easypanel.host/api/buyer/purchaseOrder",
+          "http://192.168.16.70:8000/api/buyer/purchaseOrder",
           { request_for_qoutations_id: id, description },
           {
             headers: {

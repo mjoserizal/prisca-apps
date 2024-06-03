@@ -124,7 +124,7 @@ export default {
       };
 
       axios
-        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/userApproval", config)
+        .get("http://192.168.16.70:8000/api/buyer/userApproval", config)
         .then((response) => {
           userApprovals.value = response.data.userApproval;
         })
@@ -194,7 +194,7 @@ export default {
 
         axios
           .post(
-            "https://prisca-backend.3mewj5.easypanel.host/api/buyer/approvalRequest",
+            "http://192.168.16.70:8000/api/buyer/approvalRequest",
             { approvalRequest },
             config
           )
@@ -235,7 +235,7 @@ export default {
 
       axios
         .get(
-          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/approvalRequest/${code.value}`,
+          `http://192.168.16.70:8000/api/buyer/approvalRequest/${code.value}`,
           config
         )
         .then((response) => {

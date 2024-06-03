@@ -150,7 +150,7 @@ export default {
       }
 
       axios
-        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/userApproval", {
+        .get("http://192.168.16.70:8000/api/buyer/userApproval", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -171,7 +171,7 @@ export default {
 
       axios
         .delete(
-          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/userApproval/${id}`,
+          `http://192.168.16.70:8000/api/buyer/userApproval/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

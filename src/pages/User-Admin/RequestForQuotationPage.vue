@@ -25,15 +25,13 @@
         <!-- Kolom actions untuk edit -->
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn v-if="showEditButton" round dense flat color="negative" icon="edit"
-              @click="editQuantity(props.row)" />
             <q-btn v-if="purchaseRequest.status === 'approved'" round dense flat color="green" icon="send"
               @click="sendQuotationByVendor(props.row.name, props.row.groupKey)" />
           </q-td>
         </template>
       </q-table>
       <div class="row justify-start">
-        <router-link to="/purchase-order-Admin">
+        <router-link to="/purchase-request-Admin">
           <q-btn flat color="primary">Kembali</q-btn>
         </router-link>
       </div>
@@ -145,65 +143,17 @@ export default {
 
       axios
         .get(
-          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/purchaseRequest/${this.id}`,
+          `http://192.168.16.70:8000/api/buyer/purchaseRequest/${this.id}`,
           config
         )
         .then((response) => {
           this.purchaseRequest = response.data.purchaseRequest;
-          this.updateEditButtonStatus(); // Perbarui status tombol edit setelah mendapatkan data purchaseRequest
         })
         .catch((error) => {
           console.error("Error fetching purchase request:", error);
         });
     },
-    updateEditButtonStatus() {
-      this.showEditButton =
-        this.purchaseRequest && this.purchaseRequest.status !== "approved";
-    },
-    editQuantity(lineItem) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        this.$router.push("/");
-        return;
-      }
 
-      Swal.fire({
-        title: "Edit Quantity",
-        input: "number",
-        inputValue: lineItem.quantity,
-        inputAttributes: {
-          step: 1,
-          min: 1,
-        },
-        showCancelButton: true,
-        confirmButtonText: "Save",
-        showLoaderOnConfirm: true,
-        preConfirm: (newQuantity) => {
-          const config = {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          };
-
-          return axios
-            .post(
-              `https://prisca-backend.3mewj5.easypanel.host/api/buyer/updateLineItem/${lineItem.id}`,
-              { quantity: newQuantity },
-              config
-            )
-            .then(() => {
-              // Refresh data setelah berhasil disimpan
-              this.fetchPurchaseRequest();
-            })
-            .catch((error) => {
-              console.error("Error updating quantity:", error);
-              Swal.showValidationMessage(
-                `Request failed: ${error.response.data.message}`
-              );
-            });
-        },
-      });
-    },
     sendQuotationByVendor(vendorName) {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -231,7 +181,7 @@ export default {
 
       axios
         .post(
-          "https://prisca-backend.3mewj5.easypanel.host/api/buyer/requestForQuotation",
+          "http://192.168.16.70:8000/api/buyer/requestForQuotation",
           requestData,
           {
             headers: {

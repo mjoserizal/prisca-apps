@@ -139,7 +139,7 @@ export default {
 
       axios
         .get(
-          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/purchaseRequest/${this.id}`,
+          `http://192.168.16.70:8000/api/buyer/purchaseRequest/${this.id}`,
           config
         )
         .then((response) => {
@@ -181,7 +181,7 @@ export default {
 
           return axios
             .post(
-              `https://prisca-backend.3mewj5.easypanel.host/api/buyer/updateLineItem/${lineItem.id}`,
+              `http://192.168.16.70:8000/api/buyer/updateLineItem/${lineItem.id}`,
               { quantity: newQuantity },
               config
             )

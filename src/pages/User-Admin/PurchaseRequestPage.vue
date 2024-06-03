@@ -194,7 +194,7 @@ export default {
       };
 
       axios
-        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/purchaseRequest", config)
+        .get("http://192.168.16.70:8000/api/buyer/purchaseRequest", config)
         .then((response) => {
           if (response.data && Array.isArray(response.data.purchaseRequests)) {
             if (response.data.purchaseRequests.length > 0) {
@@ -247,7 +247,7 @@ export default {
 
       axios
         .post(
-          "https://prisca-backend.3mewj5.easypanel.host/api/buyer/requestForQuotation",
+          "http://192.168.16.70:8000/api/buyer/requestForQuotation",
           requestData,
           {
             headers: {

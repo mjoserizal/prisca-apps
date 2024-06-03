@@ -17,7 +17,7 @@
         <q-btn @click="addUserApproval" class="mt-4" outline color="primary" icon="add" label="Tambah User Approval" />
       </div>
       <div style="display: flex; justify-content: space-between; width: 100%">
-        <q-btn label="Kembali" class="mt-4" outline color="primary" to="/purchase-request-Admin" />
+        <q-btn label="Kembali" class="mt-4" outline color="primary" to="/purchase-order-Admin" />
 
         <q-btn @click="submitApproval" label="Submit" class="mt-4" outline color="secondary" />
       </div>
@@ -79,7 +79,7 @@ export default {
       };
 
       axios
-        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/userApproval", config)
+        .get("http://192.168.16.70:8000/api/buyer/userApproval", config)
         .then((response) => {
           userApprovals.value = response.data.userApproval;
         })
@@ -149,7 +149,7 @@ export default {
 
         axios
           .post(
-            "https://prisca-backend.3mewj5.easypanel.host/api/buyer/approvalOrder",
+            "http://192.168.16.70:8000/api/buyer/approvalOrder",
             { approvalOrder },
             config
           )
@@ -190,7 +190,7 @@ export default {
 
       axios
         .get(
-          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/approvalOrder/${code.value}`,
+          `http://192.168.16.70:8000/api/buyer/approvalOrder/${code.value}`,
           config
         )
         .then((response) => {

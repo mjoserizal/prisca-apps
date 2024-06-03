@@ -38,7 +38,6 @@
 
 <script>
 import axios from "axios";
-import Swal from "sweetalert2";
 
 const formatToRupiah = (totalPrice) => {
   return new Intl.NumberFormat("id-ID", {
@@ -77,6 +76,15 @@ export default {
           sortable: true,
         },
         {
+          name: "discount",
+          required: true,
+          label: "Discount",
+          align: "center",
+          field: "discount",
+          sortable: true,
+          format: (val) => (val === null ? "No Discount" : `${val}%`),
+        },
+        {
           name: "price",
           required: true,
           label: "Price",
@@ -107,65 +115,15 @@ export default {
 
       axios
         .get(
-          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/purchaseOrder/${this.id}`,
+          `http://192.168.16.70:8000/api/buyer/purchaseOrder/${this.id}`,
           config
         )
         .then((response) => {
           this.purchaseOrder = response.data.purchaseOrder;
-          this.updateEditButtonStatus(); // Perbarui status tombol edit setelah mendapatkan data purchaseOrder
         })
         .catch((error) => {
           console.error("Error fetching purchase Order:", error);
         });
-    },
-    updateEditButtonStatus() {
-      this.showEditButton =
-        this.purchaseOrder && this.purchaseOrder.status !== "approved";
-    },
-    editQuantity(lineItem) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        this.$router.push("/");
-        return;
-      }
-
-      Swal.fire({
-        title: "Edit Quantity",
-        input: "number",
-        inputValue: lineItem.quantity,
-        inputAttributes:
-        {
-          step: 1,
-          min: 1,
-        },
-        showCancelButton: true,
-        confirmButtonText: "Save",
-        showLoaderOnConfirm: true,
-        preConfirm: (newQuantity) => {
-          const config = {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          };
-
-          return axios
-            .post(
-              `https://prisca-backend.3mewj5.easypanel.host/api/buyer/updateLineItem/${lineItem.id}`,
-              { quantity: newQuantity },
-              config
-            )
-            .then(() => {
-              // Refresh data setelah berhasil disimpan
-              this.fetchPurchaseOrder();
-            })
-            .catch((error) => {
-              console.error("Error updating quantity:", error);
-              Swal.showValidationMessage(
-                `Order failed: ${error.response.data.message}`
-              );
-            });
-        },
-      });
     },
   },
 };

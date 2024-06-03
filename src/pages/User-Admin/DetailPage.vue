@@ -219,7 +219,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          `https://prisca-backend.3mewj5.easypanel.host/api/buyer/product/${props.id}`,
+          `http://192.168.16.70:8000/api/buyer/product/${props.id}`,
           config
         );
 
@@ -277,7 +277,7 @@ export default defineComponent({
           };
 
           const response = await axios.post(
-            "https://prisca-backend.3mewj5.easypanel.host/api/buyer/cart",
+            "http://192.168.16.70:8000/api/buyer/cart",
             data,
             config
           );

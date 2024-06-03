@@ -175,7 +175,7 @@ export default {
       }
 
       axios
-        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/divisi", {
+        .get("http://192.168.16.70:8000/api/buyer/divisi", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -195,7 +195,7 @@ export default {
       }
 
       axios
-        .get("https://prisca-backend.3mewj5.easypanel.host/api/buyer/departemen", {
+        .get("http://192.168.16.70:8000/api/buyer/departemen", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

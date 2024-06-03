@@ -94,7 +94,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          "https://prisca-backend.3mewj5.easypanel.host/api/buyer/product",
+          "http://192.168.16.70:8000/api/buyer/product",
           config
         );
 

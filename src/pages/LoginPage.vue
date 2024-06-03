@@ -62,7 +62,7 @@ export default {
     const login = async () => {
       try {
         const response = await axios.post(
-          "https://prisca-backend.3mewj5.easypanel.host/api/login",
+          "http://192.168.16.70:8000/api/login",
           {
             email: email.value,
             password: password.value,

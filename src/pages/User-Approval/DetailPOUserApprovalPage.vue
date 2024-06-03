@@ -118,7 +118,7 @@ export default {
       }
 
       axios
-        .get(`https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalOrder/${this.doc_code}`, {
+        .get(`http://192.168.16.70:8000/api/userApproval/approvalOrder/${this.doc_code}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -142,8 +142,8 @@ export default {
       }
 
       const url = action === 'accept'
-        ? `https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalOrder/${this.doc_code}/accept`
-        : `https://prisca-backend.3mewj5.easypanel.host/api/userApproval/approvalOrder/${this.doc_code}/reject`;
+        ? `http://192.168.16.70:8000/api/userApproval/approvalOrder/${this.doc_code}/accept`
+        : `http://192.168.16.70:8000/api/userApproval/approvalOrder/${this.doc_code}/reject`;
 
       axios
         .post(url, {}, {
@@ -152,8 +152,9 @@ export default {
           },
         })
         .then((response) => {
-          Swal.fire("Success", `Order ${action}ed successfully`, "success");
-          this.fetchApprovalDetails();
+          Swal.fire("Success", `Order ${action}ed successfully`, "success").then(() => {
+            this.$router.push("/purchase-order-approval");
+          });
         })
         .catch((error) => {
           console.error(`Error ${action}ing Order:`, error);
@@ -164,13 +165,13 @@ export default {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'IDR',
-      }).format(value
-      );
+      }).format(value);
     }
   },
   mounted() {
     this.fetchApprovalDetails();
-  },
+  }
+
 };
 </script>
 
