@@ -5,12 +5,6 @@ const routes = [
     name: "HeaderSidebarVendor",
     children: [
       {
-        path: "dashboard",
-        component: () => import("pages/IndexPage.vue"),
-        name: "dashboard",
-      },
-
-      {
         path: "vendorprofile",
         component: () => import("pages/vendor/VendorProfile.vue"),
         name: "vendorProfile",

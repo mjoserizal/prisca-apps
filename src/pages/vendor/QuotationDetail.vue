@@ -81,7 +81,6 @@
             <q-item v-for="(item, index) in quotation.line_items" :key="index">
               <q-item-section>
                 <q-item-label>
-                  {{ item.product_name }}
                   <span class="q-item-label__secondary text-black">
                     {{ item.product_name }}
                   </span>
