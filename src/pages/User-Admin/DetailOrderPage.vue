@@ -97,7 +97,7 @@ export default {
       };
 
       axios
-        .get(`http://192.168.16.70:8000/api/buyer/order/${orderId}`, config)
+        .get(`http://127.0.0.1:8000/api/buyer/order/${orderId}`, config)
         .then((response) => {
           if (response.data && response.data.success && response.data.orders) {
             this.order = response.data.orders;
@@ -133,7 +133,7 @@ export default {
         },
       };
 
-      axios.get(`http://192.168.16.70:8000/api/buyer/shipment/${orderId}`, config)
+      axios.get(`http://127.0.0.1:8000/api/buyer/shipment/${orderId}`, config)
         .then((response) => {
           if (response.data && response.data.success && response.data.order) {
             this.shipment = response.data.order;
@@ -175,7 +175,7 @@ export default {
             }
           };
 
-          return axios.post(`http://192.168.16.70:8000/api/buyer/shipment/${orderId}`, formData, config)
+          return axios.post(`http://127.0.0.1:8000/api/buyer/shipment/${orderId}`, formData, config)
             .then((response) => {
               if (response.data.success) {
                 Swal.fire('Order Received!', 'Your order has been successfully received.', 'success');

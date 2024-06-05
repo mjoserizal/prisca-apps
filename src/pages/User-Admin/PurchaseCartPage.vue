@@ -141,7 +141,7 @@ export default {
       };
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/cart", config)
+        .get("http://127.0.0.1:8000/api/buyer/cart", config)
         .then((response) => {
           if (response.data.cart && Array.isArray(response.data.cart)) {
             cartItems.value = response.data.cart.map((item) => ({
@@ -176,7 +176,7 @@ export default {
 
       axios
         .delete(
-          `http://192.168.16.70:8000/api/buyer/cart/${itemId}`,
+          `http://127.0.0.1:8000/api/buyer/cart/${itemId}`,
           config
         )
         .then(() => {
@@ -231,7 +231,7 @@ export default {
             const newQuantity = result.value;
             axios
               .put(
-                `http://192.168.16.70:8000/api/buyer/cart/${item.id}`,
+                `http://127.0.0.1:8000/api/buyer/cart/${item.id}`,
                 { quantity: newQuantity },
                 config
               )
@@ -302,7 +302,7 @@ export default {
       // Kirim request ke API dengan requestData
       axios
         .post(
-          "http://192.168.16.70:8000/api/buyer/purchaseRequest",
+          "http://127.0.0.1:8000/api/buyer/purchaseRequest",
           requestData,
           config
         )

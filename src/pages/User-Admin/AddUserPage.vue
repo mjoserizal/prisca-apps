@@ -100,7 +100,7 @@ export default {
       }
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/divisi", {
+        .get("http://127.0.0.1:8000/api/buyer/divisi", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -120,7 +120,7 @@ export default {
       }
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/departemen", {
+        .get("http://127.0.0.1:8000/api/buyer/departemen", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -151,7 +151,7 @@ export default {
 
       axios
         .post(
-          "http://192.168.16.70:8000/api/buyer/userApproval",
+          "http://127.0.0.1:8000/api/buyer/userApproval",
           userData,
           {
             headers: {

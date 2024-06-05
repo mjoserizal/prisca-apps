@@ -12,12 +12,8 @@
           {{ purchaseRequest.description }}
         </p>
         <p style="text-align: center; font-weight: bold">
-          <q-btn
-            :color="purchaseRequest.status === 'draft' ? 'red' : 'primary'"
-            flat
-            dense
-            :label="purchaseRequest.status"
-          />
+          <q-btn :color="purchaseRequest.status === 'draft' ? 'red' : 'primary'" flat dense
+            :label="purchaseRequest.status" />
         </p>
       </div>
     </div>
@@ -26,27 +22,12 @@
     </div>
     <!-- Tampilkan informasi dari setiap lineItem -->
     <div v-if="purchaseRequest && purchaseRequest.lineItems" class="q-pa-md">
-      <q-table
-        flat
-        bordered
-        ref="tableRef"
-        :class="tableClass"
-        tabindex="0"
-        :rows="purchaseRequest.lineItems"
-        :columns="lineItemColumns"
-        row-key="id"
-      >
+      <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="purchaseRequest.lineItems"
+        :columns="lineItemColumns" row-key="id">
         <!-- Kolom actions untuk edit -->
         <template v-if="showEditButton" v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn
-              round
-              dense
-              flat
-              color="negative"
-              icon="edit"
-              @click="editQuantity(props.row)"
-            />
+            <q-btn round dense flat color="negative" icon="edit" @click="editQuantity(props.row)" />
           </q-td>
         </template>
       </q-table>
@@ -139,7 +120,7 @@ export default {
 
       axios
         .get(
-          `http://192.168.16.70:8000/api/buyer/purchaseRequest/${this.id}`,
+          `http://127.0.0.1:8000/api/buyer/purchaseRequest/${this.id}`,
           config
         )
         .then((response) => {
@@ -181,7 +162,7 @@ export default {
 
           return axios
             .post(
-              `http://192.168.16.70:8000/api/buyer/updateLineItem/${lineItem.id}`,
+              `http://127.0.0.1:8000/api/buyer/updateLineItem/${lineItem.id}`,
               { quantity: newQuantity },
               config
             )

@@ -1,53 +1,25 @@
 <template>
   <div class="w-full">
     <div class="p-6">
-      <q-card
-        class="shadow-md overflow-hidden border-b border-gray-200 sm:rounded-lg"
-        bordered
-      >
+      <q-card class="shadow-md overflow-hidden border-b border-gray-200 sm:rounded-lg" bordered>
         <q-card-section>
           <div class="text-h6 text-grey-8">Product List</div>
         </q-card-section>
         <q-separator></q-separator>
         <q-card-section class="q-pa-none">
-          <q-table
-            square
-            class="no-shadow"
-            :rows="filteredProducts"
-            :columns="columns"
-            row-key="id"
-            :loading="loadingProducts"
-          >
+          <q-table square class="no-shadow" :rows="filteredProducts" :columns="columns" row-key="id"
+            :loading="loadingProducts">
             <template v-slot:top>
               <q-toolbar class="q-gutter-md" style="flex-wrap: wrap">
                 <div class="row items-center q-gutter-md">
-                  <q-btn
-                    label="Add Product"
-                    color="primary"
-                    class="q-mb-md"
-                    to="addinfo"
-                    exact
-                  />
+                  <q-btn label="Add Product" color="primary" class="q-mb-md" to="addproduct" exact />
                 </div>
 
                 <q-space />
                 <div class="row items-center q-gutter-md">
-                  <q-input
-                    outlined
-                    dense
-                    v-model="searchInput"
-                    placeholder="Search product..."
-                    class="search-input"
-                  />
-                  <q-btn
-                    color="indigo"
-                    @click="openFilterPanel"
-                    class="filter-button"
-                  >
-                    <i
-                      class="fa-solid fa-arrow-down-wide-short"
-                      style="padding-right: 10px"
-                    ></i>
+                  <q-input outlined dense v-model="searchInput" placeholder="Search product..." class="search-input" />
+                  <q-btn color="indigo" @click="openFilterPanel" class="filter-button">
+                    <i class="fa-solid fa-arrow-down-wide-short" style="padding-right: 10px"></i>
                     Filter
                   </q-btn>
                 </div>
@@ -62,30 +34,21 @@
 
             <template v-slot:body-cell-status="props">
               <q-td :props="props">
-                <span
-                  :class="{
-                    'text-green-500': props.row.status === 'active',
-                    'text-red-500': props.row.status === 'inactive',
-                  }"
-                >
+                <span :class="{
+            'text-green-500': props.row.status === 'active',
+            'text-red-500': props.row.status === 'inactive',
+          }">
                   <template v-if="props.row.status === 'active'">
-                    <q-icon
-                      name="fiber_manual_record"
-                      class="q-mr-xs"
-                      style="
+                    <q-icon name="fiber_manual_record" class="q-mr-xs" style="
                         font-size: 8px;
                         vertical-align: middle;
                         color: green;
-                      "
-                    />
+                      " />
                     Active
                   </template>
                   <template v-else>
-                    <q-icon
-                      name="fiber_manual_record"
-                      class="q-mr-xs"
-                      style="font-size: 8px; vertical-align: middle; color: red"
-                    />
+                    <q-icon name="fiber_manual_record" class="q-mr-xs"
+                      style="font-size: 8px; vertical-align: middle; color: red" />
                     Inactive
                   </template>
                 </span>
@@ -95,23 +58,9 @@
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
                 <div class="flex justify-end">
-                  <q-btn
-                    round
-                    dense
-                    flat
-                    color="primary"
-                    icon="edit"
-                    @click="editProduct(props.row)"
-                  />
-                  <q-btn
-                    round
-                    dense
-                    flat
-                    color="danger"
-                    icon="delete"
-                    text-color="red"
-                    @click="confirmDeleteProduct(props.row)"
-                  />
+                  <q-btn round dense flat color="primary" icon="edit" @click="editProduct(props.row)" />
+                  <q-btn round dense flat color="danger" icon="delete" text-color="red"
+                    @click="confirmDeleteProduct(props.row)" />
                 </div>
               </q-td>
             </template>
@@ -289,32 +238,28 @@ const openFilterPanel = () => {
     title: "Filter Options",
     html: `
       <label for="priceRange">Price Range: <span id="priceRangeValue">${formatToRupiah(
-        minPriceFilter.value
-      )} - ${formatToRupiah(maxPriceFilter.value)}</span></label>
+      minPriceFilter.value
+    )} - ${formatToRupiah(maxPriceFilter.value)}</span></label>
       <br><br>
-      <input type="number" id="minPriceFilter" name="minPriceFilter" min="100000" max="2000000" value="${
-        minPriceFilter.value
+      <input type="number" id="minPriceFilter" name="minPriceFilter" min="100000" max="2000000" value="${minPriceFilter.value
       }">
-      <input type="number" id="maxPriceFilter" name="maxPriceFilter" min="100000" max="2000000" value="${
-        maxPriceFilter.value
+      <input type="number" id="maxPriceFilter" name="maxPriceFilter" min="100000" max="2000000" value="${maxPriceFilter.value
       }">
       <br><br>
       <select id="brandFilter" name="brandFilter">
-        <option value="">${
-          brandFilter ? "Show All Brands" : "Select Brand"
-        }</option>
+        <option value="">${brandFilter ? "Show All Brands" : "Select Brand"
+      }</option>
         ${uniqueBrands
-          .map((brand) => `<option value="${brand}">${brand}</option>`)
-          .join("")}
+        .map((brand) => `<option value="${brand}">${brand}</option>`)
+        .join("")}
       </select>
       <br><br>
       <select id="categoryFilter" name="categoryFilter">
-        <option value="">${
-          categoryFilter ? "Show All Categories" : "Select Category"
-        }</option>
+        <option value="">${categoryFilter ? "Show All Categories" : "Select Category"
+      }</option>
         ${uniqueCategories
-          .map((category) => `<option value="${category}">${category}</option>`)
-          .join("")}
+        .map((category) => `<option value="${category}">${category}</option>`)
+        .join("")}
       </select>
     `,
     showCancelButton: true,

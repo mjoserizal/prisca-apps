@@ -6,81 +6,36 @@
     <div class="q-pa-md">
       <p style="font-weight: bold; text-align: center">{{ code }}</p>
       <div v-for="(approval, index) in additionalApprovals" :key="index">
-        <select
-          v-model="selectedUser[index]"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mb-4"
-        >
-          <option
-            v-for="userApproval in userApprovals"
-            :key="userApproval.id"
-            :value="userApproval.id"
-          >
+        <select v-model="selectedUser[index]"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mb-4">
+          <option v-for="userApproval in userApprovals" :key="userApproval.id" :value="userApproval.id">
             {{ userApproval.name }}
           </option>
         </select>
       </div>
       <div>
-        <q-btn
-          @click="addUserApproval"
-          class="mt-4"
-          outline
-          color="primary"
-          icon="add"
-          label="Tambah User Approval"
-        />
+        <q-btn @click="addUserApproval" class="mt-4" outline color="primary" icon="add" label="Tambah User Approval" />
       </div>
       <div style="display: flex; justify-content: space-between; width: 100%">
-        <q-btn
-          label="Kembali"
-          class="mt-4"
-          outline
-          color="primary"
-          to="/purchase-request-Admin"
-        />
+        <q-btn label="Kembali" class="mt-4" outline color="primary" to="/purchase-request-Admin" />
 
-        <q-btn
-          @click="submitApproval"
-          label="Submit"
-          class="mt-4"
-          outline
-          color="secondary"
-        />
+        <q-btn @click="submitApproval" label="Submit" class="mt-4" outline color="secondary" />
       </div>
     </div>
   </div>
   <div class="container-box">
-    <q-table
-      flat
-      bordered
-      ref="tableRef"
-      :class="tableClass"
-      tabindex="0"
-      :rows="approvalRequests"
-      :columns="columns"
-      row-key="id"
-      selection="multiple"
-      v-model:selected="selected"
-      :pagination="pagination"
-      :filter="filter"
-      @focusin="activateNavigation"
-      @focusout="() => (selectedRows = selected)"
-      @keydown="onKey"
-      @update:selected="onSelected"
-    >
+    <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="approvalRequests" :columns="columns"
+      row-key="id" selection="multiple" v-model:selected="selected" :pagination="pagination" :filter="filter"
+      @focusin="activateNavigation" @focusout="() => (selectedRows = selected)" @keydown="onKey"
+      @update:selected="onSelected">
       <template v-slot:body-cell-status="props">
         <q-td :props="props">
-          <q-btn
-            :color="
-              props.row.approval_status === 'approved'
-                ? 'green'
-                : props.row.approval_status === 'pending'
-                ? 'blue'
-                : 'red'
-            "
-            flat
-            dense
-            :label="props.row.approval_status"
-          />
+          <q-btn :color="props.row.approval_status === 'approved'
+          ? 'green'
+          : props.row.approval_status === 'pending'
+            ? 'blue'
+            : 'red'
+        " flat dense :label="props.row.approval_status" />
         </q-td>
       </template>
     </q-table>
@@ -124,7 +79,7 @@ export default {
       };
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/userApproval", config)
+        .get("http://127.0.0.1:8000/api/buyer/userApproval", config)
         .then((response) => {
           userApprovals.value = response.data.userApproval;
         })
@@ -194,7 +149,7 @@ export default {
 
         axios
           .post(
-            "http://192.168.16.70:8000/api/buyer/approvalRequest",
+            "http://127.0.0.1:8000/api/buyer/approvalRequest",
             { approvalRequest },
             config
           )
@@ -235,7 +190,7 @@ export default {
 
       axios
         .get(
-          `http://192.168.16.70:8000/api/buyer/approvalRequest/${code.value}`,
+          `http://127.0.0.1:8000/api/buyer/approvalRequest/${code.value}`,
           config
         )
         .then((response) => {

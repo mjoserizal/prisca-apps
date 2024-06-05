@@ -143,7 +143,7 @@ export default {
 
       axios
         .get(
-          `http://192.168.16.70:8000/api/buyer/purchaseRequest/${this.id}`,
+          `http://127.0.0.1:8000/api/buyer/purchaseRequest/${this.id}`,
           config
         )
         .then((response) => {
@@ -181,7 +181,7 @@ export default {
 
       axios
         .post(
-          "http://192.168.16.70:8000/api/buyer/requestForQuotation",
+          "http://127.0.0.1:8000/api/buyer/requestForQuotation",
           requestData,
           {
             headers: {

@@ -5,48 +5,22 @@
       <!-- Toolbar -->
       <q-toolbar>
         <!-- Toggle Left Drawer Button -->
-        <q-btn
-          flat
-          dense
-          round
-          @click="toggleLeftDrawer"
-          aria-label="Menu"
-          icon="menu"
-        />
+        <q-btn flat dense round @click="toggleLeftDrawer" aria-label="Menu" icon="menu" />
 
         <!-- Logo -->
-        <q-img
-          src="/public/images/prisca logo.png"
-          style="margin-right: 8px; height: 50px; width: 50px"
-        />
+        <q-img src="/public/images/prisca logo.png" style="margin-right: 8px; height: 50px; width: 50px" />
 
         <q-space />
-        <q-btn
-          flat
-          dense
-          round
-          @click="toggleDarkMode"
-          aria-label="Toggle Dark Mode"
-          icon="dark_mode"
-        />
+        <q-btn flat dense round @click="toggleDarkMode" aria-label="Toggle Dark Mode" icon="dark_mode" />
         <!-- Account Button -->
         <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn
-            flat
-            round
-            dense
-            icon="account_circle"
-            @click="toggleAccountDropdown"
-          >
+          <q-btn flat round dense icon="account_circle" @click="toggleAccountDropdown">
             <q-menu auto-close>
               <q-list>
                 <q-item clickable @click="handleAccountClick">
                   <q-item-section avatar>
                     <q-avatar>
-                      <img
-                        alt="Avatar"
-                        src="https://cdn.quasar.dev/img/boy-avatar.png"
-                      />
+                      <img alt="Avatar" src="https://cdn.quasar.dev/img/boy-avatar.png" />
                     </q-avatar>
                   </q-item-section>
                   <q-item-section @click="navigateToUserProfile">
@@ -60,7 +34,7 @@
                 </q-item>
                 <q-separator />
                 <!-- Logout Button -->
-                <q-item clickable @click="logout">
+                <q-item clickable @click="confirmLogout">
                   <q-item-section> Logout </q-item-section>
                 </q-item>
               </q-list>
@@ -71,29 +45,12 @@
     </q-header>
 
     <!-- Left Drawer -->
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      class="text-white"
-      style="background-color: #013a63"
-      :width="220"
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="text-white" style="background-color: #013a63"
+      :width="220">
       <!-- Sidebar Header -->
-      <div
-        class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5"
-      >
-        <q-avatar
-          size="125px"
-          class="q-mb-md"
-          style="width: 160px; height: 80px"
-        >
-          <img
-            src="/public/images/ISM.png"
-            alt="Logo"
-            fit="contain"
-            class="absolute-center"
-          />
+      <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
+        <q-avatar size="125px" class="q-mb-md" style="width: 160px; height: 80px">
+          <img src="/public/images/ISM.png" alt="Logo" fit="contain" class="absolute-center" />
         </q-avatar>
       </div>
       <!-- Sidebar Menu -->
@@ -102,13 +59,8 @@
         <div>
           <h3 class="mb-4 ml-4 text-sm font-semibold text-white">MENU</h3>
 
-          <q-item
-            v-for="menuItem in menuItems"
-            :key="menuItem.text"
-            clickable
-            v-ripple
-            @click="navigateTo(menuItem.route)"
-          >
+          <q-item v-for="menuItem in menuItems" :key="menuItem.text" clickable v-ripple
+            @click="navigateTo(menuItem.route)">
             <q-item-section avatar>
               <q-icon :name="menuItem.icon" color="white" />
             </q-item-section>
@@ -133,6 +85,8 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 const router = useRouter();
 
@@ -148,7 +102,6 @@ let menuItems = [
     text: "Product",
     route: router.resolve({ name: "product" }).href,
   },
-
   {
     icon: "fas fa-file-alt",
     text: "Quotation",
@@ -164,13 +117,62 @@ let menuItems = [
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
+
 const navigateToVendorProfile = () => {
   router.push({ name: "vendorProfile" });
 };
 
 const navigateTo = (route) => {
   router.push(route);
-  leftDrawerOpen.value = true; // Tutup drawer setelah navigasi
+  leftDrawerOpen.value = true; // Close drawer after navigation
+};
+
+const confirmLogout = () => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You will be logged out!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, logout!",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      logout();
+    }
+  });
+};
+
+const logout = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not found.");
+      return;
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    await axios.post(`${process.env.VUE_APP_API_BASE_URL}logout`, {}, config);
+    localStorage.removeItem("token");
+    router.push({ name: "login" });
+
+    Swal.fire({
+      icon: "success",
+      title: "Logged out",
+      text: "You have been logged out successfully.",
+    });
+  } catch (error) {
+    console.error("Logout failed:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Logout Failed",
+      text: "An error occurred while logging out.",
+    });
+  }
 };
 </script>
 

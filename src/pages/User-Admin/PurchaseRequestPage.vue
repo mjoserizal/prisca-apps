@@ -5,96 +5,49 @@
         Create Purchase Request
       </h1>
       <div class="q-pa-md">
-        <q-stepper
-          v-model="step"
-          header-nav
-          ref="stepper"
-          animated
-          class="custom-stepper"
-          without-border
-          flat
-        >
-          <q-step
-            :name="1"
-            title="Step 1"
-            caption="Create PR"
-            icon="settings"
-            :done="step > 1"
-          ></q-step>
-          <q-step
-            :name="2"
-            title="Step 2"
-            caption="PR Item"
-            icon="create_new_folder"
-            :done="step > 2"
-          ></q-step>
+        <q-stepper v-model="step" header-nav ref="stepper" animated class="custom-stepper" without-border flat>
+          <q-step :name="1" title="Step 1" caption="Create PR" icon="settings" :done="step > 1"></q-step>
+          <q-step :name="2" title="Step 2" caption="PR Item" icon="create_new_folder" :done="step > 2"></q-step>
         </q-stepper>
       </div>
     </div>
 
     <div class="container-box">
-      <q-table
-        flat
-        bordered
-        ref="tableRef"
-        :class="tableClass"
-        tabindex="0"
-        :rows="aggregatePurchaseRequests"
-        :columns="columns"
-        row-key="code"
-        selection="multiple"
-        v-model:selected="selected"
-        v-model:pagination="pagination"
-        :filter="filter"
-        @focusin="activateNavigation"
-        @focusout="() => (selectedRows = selected)"
-        @keydown="onKey"
-        @update:selected="onSelected"
-      >
+      <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="aggregatePurchaseRequests"
+        :columns="columns" row-key="code" selection="multiple" v-model:selected="selected"
+        v-model:pagination="pagination" :filter="filter" @focusin="activateNavigation"
+        @focusout="() => (selectedRows = selected)" @keydown="onKey" @update:selected="onSelected">
         <!-- Slot untuk menyesuaikan tampilan sel di kolom "Status" -->
         <template v-slot:body-cell-status="props">
           <q-td :props="props">
-            <q-btn
-              :color="
-                props.row.status === 'approved'
-                  ? 'green'
-                  : props.row.status === 'draft'
-                  ? 'blue'
-                  : 'red'
-              "
-              flat
-              dense
-              :label="props.row.status"
-            />
+            <q-btn :color="props.row.status === 'approved'
+            ? 'green'
+            : props.row.status === 'draft'
+              ? 'blue'
+              : 'red'
+          " flat dense :label="props.row.status" />
           </q-td>
         </template>
         <!-- Slot untuk aksi sel -->
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <router-link
-              :to="{
-                name: 'detailPR',
-                params: { id: props.row.id },
-              }"
-            >
+            <router-link :to="{
+          name: 'detailPR',
+          params: { id: props.row.id },
+        }">
               <q-btn round dense flat color="grey" icon="visibility" />
             </router-link>
 
-            <router-link
-              :to="{
-                name: 'requestApproval',
-                params: { code: props.row.code },
-              }"
-            >
+            <router-link :to="{
+          name: 'requestApproval',
+          params: { code: props.row.code },
+        }">
               <q-btn round dense flat color="blue" icon="add" />
             </router-link>
-            <router-link
-              v-if="props.row.status === 'approved'"
-              :to="{
-                name: 'RequestForQuotation',
-                params: { id: props.row.id },
-              }"
-            >
+            <router-link v-if="props.row.status === 'approved'" :to="{
+          name: 'RequestForQuotation',
+          params: { id: props.row.id },
+        }">
               <q-btn round dense flat color="grey" icon="more_vert" />
             </router-link>
           </q-td>
@@ -194,7 +147,7 @@ export default {
       };
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/purchaseRequest", config)
+        .get("http://127.0.0.1:8000/api/buyer/purchaseRequest", config)
         .then((response) => {
           if (response.data && Array.isArray(response.data.purchaseRequests)) {
             if (response.data.purchaseRequests.length > 0) {
@@ -247,7 +200,7 @@ export default {
 
       axios
         .post(
-          "http://192.168.16.70:8000/api/buyer/requestForQuotation",
+          "http://127.0.0.1:8000/api/buyer/requestForQuotation",
           requestData,
           {
             headers: {

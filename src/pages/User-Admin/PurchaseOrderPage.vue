@@ -114,7 +114,7 @@ export default {
       };
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/purchaseOrder", config)
+        .get("http://127.0.0.1:8000/api/buyer/purchaseOrder", config)
         .then((response) => {
           if (response.data && Array.isArray(response.data.purchaseOrders)) {
             this.purchaseOrders = response.data.purchaseOrders;
@@ -145,7 +145,7 @@ export default {
 
       axios
         .post(
-          `http://192.168.16.70:8000/api/buyer/order`,
+          `http://127.0.0.1:8000/api/buyer/order`,
           { purchase_order_id: id },
           config
         )

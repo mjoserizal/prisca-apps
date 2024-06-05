@@ -94,7 +94,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          "http://192.168.16.70:8000/api/buyer/product",
+          "http://127.0.0.1:8000/api/buyer/product",
           config
         );
 

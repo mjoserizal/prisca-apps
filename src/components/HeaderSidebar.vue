@@ -98,10 +98,10 @@ export default {
   setup() {
     const router = useRouter();
     const leftDrawerOpen = ref(false);
-    const userLevel = localStorage.getItem("userLevel");
-    const isUserApproval = computed(() => userLevel === "user_approval");
+    const userRole = localStorage.getItem("userRole");
+    const isUserApproval = computed(() => userRole === "user_approval");
     let menuItems = [];
-    if (userLevel === "user_approval") {
+    if (userRole === "user_approval") {
       menuItems = [
         {
           icon: "fas fa-shopping-cart",
@@ -114,7 +114,7 @@ export default {
           route: "/purchase-order-approval",
         },
       ];
-    } else if (userLevel === "company") {
+    } else if (userRole === "company") {
       menuItems = [
         {
           icon: "fas fa-home",
@@ -180,7 +180,7 @@ export default {
 
           axios
             .post(
-              "http://192.168.16.70:8000/api/logout",
+              "http://127.0.0.1:8000/api/logout",
               {},
               {
                 headers: {
@@ -189,7 +189,7 @@ export default {
               }
             )
             .then(() => {
-              localStorage.removeItem("userLevel");
+              localStorage.removeItem("userRole");
               localStorage.removeItem("token");
               localStorage.removeItem("userId");
               router.push("/");
@@ -210,7 +210,7 @@ export default {
     };
     // Fetch cart items from the server
     const fetchCartItems = () => {
-      if (userLevel !== "user_approval") {
+      if (userRole !== "user_approval") {
         const token = localStorage.getItem("token");
         const config = {
           headers: {
@@ -219,7 +219,7 @@ export default {
         };
 
         axios
-          .get("http://192.168.16.70:8000/api/buyer/cart", config)
+          .get("http://127.0.0.1:8000/api/buyer/cart", config)
           .then((response) => {
             cartItems.value = response.data.cart || [];
           })
@@ -242,7 +242,7 @@ export default {
     });
 
     // Initial fetch of cart items
-    if (userLevel !== "user_approval") {
+    if (userRole !== "user_approval") {
       onMounted(fetchCartItems);
     }
 
@@ -253,21 +253,21 @@ export default {
 
     // Method to determine the correct purchase cart route based on the user's level
     const getPurchaseCartRoute = () => {
-      if (userLevel === "Departemen") {
+      if (userRole === "Departemen") {
         return "/purchase-cart-departemen";
-      } else if (userLevel === "Divisi") {
+      } else if (userRole === "Divisi") {
         return "/purchase-cart-divisi";
-      } else if (userLevel === "company") {
+      } else if (userRole === "company") {
         return "/purchase-cart-admin";
       }
     };
     let accountText = "Account";
 
-    if (userLevel === "Departemen") {
+    if (userRole === "Departemen") {
       accountText = "Departemen";
-    } else if (userLevel === "user_approval") {
+    } else if (userRole === "user_approval") {
       accountText = "User Approval";
-    } else if (userLevel === "company") {
+    } else if (userRole === "company") {
       accountText = "company";
     }
     return {

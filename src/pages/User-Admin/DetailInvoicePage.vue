@@ -104,7 +104,7 @@ export default {
       };
 
       axios
-        .get(`http://192.168.16.70:8000/api/buyer/payment/${paymentId}`, config)
+        .get(`http://127.0.0.1:8000/api/buyer/payment/${paymentId}`, config)
         .then((response) => {
           if (response.data && response.data.success) {
             this.payment = response.data.data.payment;
@@ -154,7 +154,7 @@ export default {
           const formData = new FormData();
           formData.append("bukti", file);
 
-          return axios.post(`http://192.168.16.70:8000/api/buyer/payment/${paymentId}`, formData, {
+          return axios.post(`http://127.0.0.1:8000/api/buyer/payment/${paymentId}`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${localStorage.getItem("token")}`,

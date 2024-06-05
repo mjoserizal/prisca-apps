@@ -79,7 +79,7 @@ export default {
       };
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/userApproval", config)
+        .get("http://127.0.0.1:8000/api/buyer/userApproval", config)
         .then((response) => {
           userApprovals.value = response.data.userApproval;
         })
@@ -149,7 +149,7 @@ export default {
 
         axios
           .post(
-            "http://192.168.16.70:8000/api/buyer/approvalOrder",
+            "http://127.0.0.1:8000/api/buyer/approvalOrder",
             { approvalOrder },
             config
           )
@@ -190,7 +190,7 @@ export default {
 
       axios
         .get(
-          `http://192.168.16.70:8000/api/buyer/approvalOrder/${code.value}`,
+          `http://127.0.0.1:8000/api/buyer/approvalOrder/${code.value}`,
           config
         )
         .then((response) => {

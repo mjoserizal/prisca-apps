@@ -115,7 +115,7 @@ export default {
 
       axios
         .get(
-          `http://192.168.16.70:8000/api/buyer/purchaseOrder/${this.id}`,
+          `http://127.0.0.1:8000/api/buyer/purchaseOrder/${this.id}`,
           config
         )
         .then((response) => {

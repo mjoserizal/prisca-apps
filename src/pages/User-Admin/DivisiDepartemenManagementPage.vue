@@ -2,10 +2,7 @@
   <div class="p-2.5 xl:p-5">
     <!-- Tabel untuk Divisi -->
     <div>
-      <q-card
-        class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
-        bordered
-      >
+      <q-card class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg" bordered>
         <q-card-section class="cart-header">
           <div class="text-h6 text-grey-8">
             Divisi
@@ -14,34 +11,14 @@
             </router-link>
           </div>
           <div class="search-wrapper">
-            <q-input
-              outlined
-              dense
-              v-model="divisiFilter"
-              placeholder="Search divisi..."
-              class="search-input"
-            />
+            <q-input outlined dense v-model="divisiFilter" placeholder="Search divisi..." class="search-input" />
           </div>
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-table
-            flat
-            bordered
-            ref="divisiTableRef"
-            :class="tableClass"
-            tabindex="0"
-            :rows="divisiList"
-            :columns="divisiColumns"
-            row-key="code"
-            selection="multiple"
-            v-model:selected="selectedDivisi"
-            v-model:pagination="divisiPagination"
-            :filter="divisiFilter"
-            @focusin="activateNavigation"
-            @focusout="() => (selectedDivisiRows = selectedDivisi)"
-            @keydown="onKey"
-            @update:selected="onSelected"
-          />
+          <q-table flat bordered ref="divisiTableRef" :class="tableClass" tabindex="0" :rows="divisiList"
+            :columns="divisiColumns" row-key="code" selection="multiple" v-model:selected="selectedDivisi"
+            v-model:pagination="divisiPagination" :filter="divisiFilter" @focusin="activateNavigation"
+            @focusout="() => (selectedDivisiRows = selectedDivisi)" @keydown="onKey" @update:selected="onSelected" />
         </q-card-section>
       </q-card>
     </div>
@@ -49,10 +26,7 @@
   <!-- Tabel untuk Departemen -->
   <div class="p-2.5 xl:p-5">
     <div>
-      <q-card
-        class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
-        bordered
-      >
+      <q-card class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg" bordered>
         <q-card-section class="cart-header">
           <div class="text-h6 text-grey-8">
             Departemen
@@ -61,34 +35,16 @@
             </router-link>
           </div>
           <div class="search-wrapper">
-            <q-input
-              outlined
-              dense
-              v-model="departemenFilter"
-              placeholder="Search departemen..."
-              class="search-input"
-            />
+            <q-input outlined dense v-model="departemenFilter" placeholder="Search departemen..."
+              class="search-input" />
           </div>
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-table
-            flat
-            bordered
-            ref="departemenTableRef"
-            :class="tableClass"
-            tabindex="0"
-            :rows="filteredDepartemenList"
-            :columns="departemenColumns"
-            row-key="code"
-            selection="multiple"
-            v-model:selected="selectedDepartemen"
-            v-model:pagination="departemenPagination"
-            :filter="departemenFilter"
-            @focusin="activateNavigation"
-            @focusout="() => (selectedDepartemenRows = selectedDepartemen)"
-            @keydown="onKey"
-            @update:selected="onSelected"
-          />
+          <q-table flat bordered ref="departemenTableRef" :class="tableClass" tabindex="0"
+            :rows="filteredDepartemenList" :columns="departemenColumns" row-key="code" selection="multiple"
+            v-model:selected="selectedDepartemen" v-model:pagination="departemenPagination" :filter="departemenFilter"
+            @focusin="activateNavigation" @focusout="() => (selectedDepartemenRows = selectedDepartemen)"
+            @keydown="onKey" @update:selected="onSelected" />
         </q-card-section>
       </q-card>
     </div>
@@ -175,7 +131,7 @@ export default {
       }
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/divisi", {
+        .get("http://127.0.0.1:8000/api/buyer/divisi", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -195,7 +151,7 @@ export default {
       }
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/departemen", {
+        .get("http://127.0.0.1:8000/api/buyer/departemen", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -232,6 +188,7 @@ export default {
   box-shadow: none;
   padding: 0;
 }
+
 .cart-header {
   display: flex;
   justify-content: space-between;

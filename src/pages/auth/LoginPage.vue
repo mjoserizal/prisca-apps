@@ -2,65 +2,39 @@
   <q-layout>
     <q-page-container>
       <q-page class="flex bg-image flex-center">
-        <q-card
-          v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }"
-          class="custom-card"
-        >
+        <q-card v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }" class="custom-card">
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <q-img
-                src="/public/images/prisca logo.png"
-                style="width: 103px; height: 103px; margin: 0 auto"
-              />
+              <q-img src="/public/images/prisca logo.png" style="width: 103px; height: 103px; margin: 0 auto" />
             </div>
           </q-card-section>
           <q-card-section>
             <q-form @keyup.enter="loginIfValid" class="q-gutter-md">
               <q-input filled v-model="email" label="Email" lazy-rules />
-              <q-input
-                filled
-                v-model="password"
-                :type="showPassword ? 'text' : 'password'"
-                label="Password"
-                lazy-rules
-              >
+              <q-input filled v-model="password" :type="showPassword ? 'text' : 'password'" label="Password" lazy-rules>
                 <template v-slot:append>
-                  <q-icon
-                    :name="showPassword ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="togglePassword"
-                  />
+                  <q-icon :name="showPassword ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                    @click="togglePassword" />
                 </template>
               </q-input>
               <div class="text-red-9" v-if="errorMessage">
                 {{ errorMessage }}
               </div>
               <div class="text-center">
-                <q-btn
-                  label="Login"
-                  @click="login"
-                  type="button"
-                  color="primary"
-                  class="q-ma-xs q-ma-sm"
-                  size="lg"
+                <q-btn label="Login" @click="login" type="button" color="primary" class="q-ma-xs q-ma-sm" size="lg"
                   style="
                     width: 100%;
                     min-width: 200px;
                     max-width: 550px;
                     margin: auto;
-                  "
-                />
+                  " />
               </div>
               <div class="text-center">
                 <p>
                   Register as
-                  <span class="register-link" @click="goToRegisterVendor"
-                    >Vendor</span
-                  >
+                  <span class="register-link" @click="goToRegisterVendor">Vendor</span>
                   /
-                  <span class="register-link" @click="goToRegisterBuyer"
-                    >Buyer</span
-                  >
+                  <span class="register-link" @click="goToRegisterBuyer">Buyer</span>
                 </p>
               </div>
             </q-form>
@@ -96,19 +70,21 @@ export default {
 
         if (response.status === 200) {
           const token = response.data.token;
-          const userLevel = response.data.user.level;
           const userRole = response.data.user.role.name;
+          const userId = response.data.user.id;
+
 
           localStorage.setItem("token", token);
-          localStorage.setItem("userLevel", userLevel);
           localStorage.setItem("userRole", userRole);
+          localStorage.setItem("userId", userId);
 
-          if (userLevel === "Departemen") {
-            router.push("/dashboard-departemen");
-          } else if (userLevel === "Divisi") {
-            router.push("/dashboard-divisi");
-          } else if (userLevel === "Company") {
-            router.push("/dashboard-company");
+
+          if (userRole === "Departemen") {
+            router.push("/dashboard-Admin");
+          } else if (userRole === "user_approval") {
+            router.push("/purchase-request-approval");
+          } else if (userRole === "company") {
+            router.push("/dashboard-Admin");
           } else if (userRole === "vendor") {
             router.push({ name: "vendorProfile" });
           }

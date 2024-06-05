@@ -1,10 +1,7 @@
 <template>
   <div class="p-2.5 xl:p-5">
     <div>
-      <q-card
-        class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
-        bordered
-      >
+      <q-card class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg" bordered>
         <q-card-section class="cart-header">
           <div class="text-h6 text-grey-8">
             User Management
@@ -14,56 +11,24 @@
           </div>
 
           <div class="search-wrapper">
-            <q-input
-              outlined
-              dense
-              v-model="filter"
-              placeholder="Search user..."
-              class="search-input"
-            />
+            <q-input outlined dense v-model="filter" placeholder="Search user..." class="search-input" />
           </div>
         </q-card-section>
         <q-card-section class="q-pa-none">
-          <q-table
-            flat
-            bordered
-            ref="tableRef"
-            :class="tableClass"
-            tabindex="0"
-            :rows="userApprovalList"
-            :columns="columns"
-            row-key="code"
-            selection="multiple"
-            v-model:selected="selected"
-            v-model:pagination="pagination"
-            :filter="filter"
-            @focusin="activateNavigation"
-            @focusout="() => (selectedRows = selected)"
-            @keydown="onKey"
-            @update:selected="onSelected"
-          >
+          <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="userApprovalList"
+            :columns="columns" row-key="code" selection="multiple" v-model:selected="selected"
+            v-model:pagination="pagination" :filter="filter" @focusin="activateNavigation"
+            @focusout="() => (selectedRows = selected)" @keydown="onKey" @update:selected="onSelected">
             <!-- Slot untuk menyesuaikan tampilan sel di kolom "Status" -->
             <template v-slot:body-cell-status="props">
               <q-td :props="props">
-                <q-btn
-                  :color="props.row.status === 'draft' ? 'red' : 'primary'"
-                  flat
-                  dense
-                  :label="props.row.status"
-                />
+                <q-btn :color="props.row.status === 'draft' ? 'red' : 'primary'" flat dense :label="props.row.status" />
               </q-td>
             </template>
             <!-- Slot untuk aksi sel -->
             <template v-slot:body-cell-actions="props">
               <q-td :props="props">
-                <q-btn
-                  round
-                  dense
-                  flat
-                  color="negative"
-                  icon="delete"
-                  @click="deleteUser(props.row.id)"
-                />
+                <q-btn round dense flat color="negative" icon="delete" @click="deleteUser(props.row.id)" />
               </q-td>
             </template>
           </q-table>
@@ -150,7 +115,7 @@ export default {
       }
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/userApproval", {
+        .get("http://127.0.0.1:8000/api/buyer/userApproval", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -171,7 +136,7 @@ export default {
 
       axios
         .delete(
-          `http://192.168.16.70:8000/api/buyer/userApproval/${id}`,
+          `http://127.0.0.1:8000/api/buyer/userApproval/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -222,6 +187,7 @@ export default {
   box-shadow: none;
   padding: 0;
 }
+
 .cart-header {
   display: flex;
   justify-content: space-between;

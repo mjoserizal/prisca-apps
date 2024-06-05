@@ -78,7 +78,7 @@ export default {
       }
 
       axios
-        .get("http://192.168.16.70:8000/api/buyer/quotationFix", {
+        .get("http://127.0.0.1:8000/api/buyer/quotationFix", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

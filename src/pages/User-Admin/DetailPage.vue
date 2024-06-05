@@ -2,32 +2,16 @@
   <q-card class="my-card">
     <q-card-section class="product-details-section">
       <!-- Q-Carousel untuk gambar produk -->
-      <q-carousel
-        v-if="product.images && product.images.length > 1"
-        animated
-        v-model="slide"
-        arrows
-        navigation
-        infinite
-        class="carousel-container"
-      >
-        <q-carousel-slide
-          v-for="(image, index) in product.images"
-          :key="index"
-          :name="index"
-          :img-src="`data:image/png;base64, ${image.base64_image}`"
-          class="carousel-image"
-        />
+      <q-carousel v-if="product.images && product.images.length > 1" animated v-model="slide" arrows navigation infinite
+        class="carousel-container">
+        <q-carousel-slide v-for="(image, index) in product.images" :key="index" :name="index"
+          :img-src="`data:image/png;base64, ${image.base64_image}`" class="carousel-image" />
       </q-carousel>
 
       <!-- Tampilkan gambar tunggal jika hanya ada satu gambar -->
-      <img
-        v-else-if="product.images && product.images.length === 1"
-        :src="`data:image/png;base64, ${product.images[0].base64_image}`"
-        alt="Product Image"
-        class="single-image"
-        style="margin: 10px"
-      />
+      <img v-else-if="product.images && product.images.length === 1"
+        :src="`data:image/png;base64, ${product.images[0].base64_image}`" alt="Product Image" class="single-image"
+        style="margin: 10px" />
 
       <!-- Deskripsi produk -->
       <div class="product-description">
@@ -37,10 +21,10 @@
         <br />
         <div class="text-subtitle2" style="font-weight: bold; font-size: 42px">
           {{
-            product.commercial_info && product.commercial_info.commercialInfo
-              ? formatPrice(product.commercial_info.commercialInfo.price)
-              : "N/A"
-          }}
+        product.commercial_info && product.commercial_info.commercialInfo
+          ? formatPrice(product.commercial_info.commercialInfo.price)
+          : "N/A"
+      }}
         </div>
         <br />
         <div class="text-subtitle2" style="margin-bottom: 10px">
@@ -50,26 +34,26 @@
         <div class="text-subtitle2">
           Stok:
           {{
-            product.commercial_info && product.commercial_info.commercialInfo
-              ? product.commercial_info.commercialInfo.stock
-              : "N/A"
-          }}
+        product.commercial_info && product.commercial_info.commercialInfo
+          ? product.commercial_info.commercialInfo.stock
+          : "N/A"
+      }}
         </div>
         <div class="text-subtitle2">
           Produk Spesifikasi :
           {{
-            product.detail && product.detail.productSpecification
-              ? product.detail.productSpecification
-              : "N/A"
-          }}
+          product.detail && product.detail.productSpecification
+            ? product.detail.productSpecification
+            : "N/A"
+        }}
         </div>
         <div class="text-subtitle2">
           Min Purchase :
           {{
-            product.commercial_info && product.commercial_info.purchaseQty
-              ? product.commercial_info.purchaseQty.min
-              : "N/A"
-          }}
+          product.commercial_info && product.commercial_info.purchaseQty
+            ? product.commercial_info.purchaseQty.min
+            : "N/A"
+        }}
           Pcs
         </div>
         <div class="text-subtitle2">
@@ -79,22 +63,15 @@
         <div class="text-subtitle2">
           Warranty :
           {{
-            product.other && product.other.warranty
-              ? product.other.warranty
-              : "N/A"
-          }}
+        product.other && product.other.warranty
+          ? product.other.warranty
+          : "N/A"
+      }}
           Months
         </div>
         <div class="row justify-end">
-          <q-btn
-            outline
-            rounded
-            @click="addToCart"
-            color="deep-orange"
-            icon="add_shopping_cart"
-            style="border-radius: 6px"
-            label="add to cart"
-          />
+          <q-btn outline rounded @click="addToCart" color="deep-orange" icon="add_shopping_cart"
+            style="border-radius: 6px" label="add to cart" />
         </div>
       </div>
     </q-card-section>
@@ -117,14 +94,14 @@
               <div class="text-subtitle2">
                 Technical Specification:
                 <span style="font-weight: normal">{{
-                  product.detail.technicalSpecification
-                }}</span>
+        product.detail.technicalSpecification
+      }}</span>
               </div>
               <div class="text-subtitle2">
                 Feature:
                 <span style="font-weight: normal">{{
-                  product.detail.feature
-                }}</span>
+          product.detail.feature
+        }}</span>
               </div>
             </div>
             <div v-else>N/A</div>
@@ -138,24 +115,19 @@
               <div class="text-subtitle2">
                 Incomterm:
                 <span style="font-weight: normal">{{
-                  product.other.incomterm
-                }}</span>
+        product.other.incomterm
+      }}</span>
               </div>
               <div class="text-subtitle2">
                 Tags:
                 <span style="font-weight: normal">{{
-                  product.other.tags
-                }}</span>
+          product.other.tags
+        }}</span>
               </div>
               <div class="text-subtitle2">Video:</div>
               <!-- Tambahkan video jika manipulatedVideoUrl tidak kosong -->
-              <video
-                controls
-                :src="manipulatedVideoUrl"
-                class="product-video"
-                v-if="manipulatedVideoUrl"
-                style="margin: 0 auto; max-width: 100%; max-height: 250px"
-              ></video>
+              <video controls :src="manipulatedVideoUrl" class="product-video" v-if="manipulatedVideoUrl"
+                style="margin: 0 auto; max-width: 100%; max-height: 250px"></video>
               <div v-else>No video available</div>
             </div>
             <div v-else>N/A</div>
@@ -219,7 +191,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          `http://192.168.16.70:8000/api/buyer/product/${props.id}`,
+          `http://127.0.0.1:8000/api/buyer/product/${props.id}`,
           config
         );
 
@@ -277,7 +249,7 @@ export default defineComponent({
           };
 
           const response = await axios.post(
-            "http://192.168.16.70:8000/api/buyer/cart",
+            "http://127.0.0.1:8000/api/buyer/cart",
             data,
             config
           );
@@ -336,8 +308,10 @@ export default defineComponent({
 
 .product-details-section {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Ubah menjadi grid dengan dua kolom */
-  gap: 20px; /* Tambahkan jarak antar elemen */
+  grid-template-columns: 1fr 1fr;
+  /* Ubah menjadi grid dengan dua kolom */
+  gap: 20px;
+  /* Tambahkan jarak antar elemen */
 }
 
 .product-description {
@@ -346,29 +320,39 @@ export default defineComponent({
 
 .carousel-container,
 .single-image {
-  width: 100%; /* Mengisi lebar container dengan lebar maksimum */
-  height: auto; /* Mengatur tinggi agar proporsional */
+  width: 100%;
+  /* Mengisi lebar container dengan lebar maksimum */
+  height: auto;
+  /* Mengatur tinggi agar proporsional */
 }
 
 .carousel-image {
-  object-fit: cover; /* Untuk memastikan gambar diisi secara proporsional */
-  width: 100%; /* Menetapkan lebar gambar */
-  height: 200px; /* Menetapkan tinggi gambar */
+  object-fit: cover;
+  /* Untuk memastikan gambar diisi secara proporsional */
+  width: 100%;
+  /* Menetapkan lebar gambar */
+  height: 200px;
+  /* Menetapkan tinggi gambar */
 }
+
 /* Atur tata letak responsif menggunakan media queries */
 @media screen and (max-width: 768px) {
   .product-details-section {
-    grid-template-columns: 1fr; /* Ubah menjadi satu kolom pada perangkat seluler */
+    grid-template-columns: 1fr;
+    /* Ubah menjadi satu kolom pada perangkat seluler */
   }
 
   .carousel-container,
   .single-image {
-    width: 100%; /* Mengisi lebar container dengan lebar maksimum */
-    height: auto; /* Mengatur tinggi agar proporsional */
+    width: 100%;
+    /* Mengisi lebar container dengan lebar maksimum */
+    height: auto;
+    /* Mengatur tinggi agar proporsional */
   }
 
   .carousel-image {
-    height: 150px; /* Ubah tinggi gambar untuk perangkat seluler */
+    height: 150px;
+    /* Ubah tinggi gambar untuk perangkat seluler */
   }
 }
 </style>

@@ -118,7 +118,7 @@ export default {
       }
 
       axios
-        .get(`http://192.168.16.70:8000/api/userApproval/approvalOrder/${this.doc_code}`, {
+        .get(`http://127.0.0.1:8000/api/userApproval/approvalOrder/${this.doc_code}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -142,8 +142,8 @@ export default {
       }
 
       const url = action === 'accept'
-        ? `http://192.168.16.70:8000/api/userApproval/approvalOrder/${this.doc_code}/accept`
-        : `http://192.168.16.70:8000/api/userApproval/approvalOrder/${this.doc_code}/reject`;
+        ? `http://127.0.0.1:8000/api/userApproval/approvalOrder/${this.doc_code}/accept`
+        : `http://127.0.0.1:8000/api/userApproval/approvalOrder/${this.doc_code}/reject`;
 
       axios
         .post(url, {}, {

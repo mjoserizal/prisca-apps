@@ -11,34 +11,18 @@
         </div>
 
         <div class="row items-center q-gutter-md">
-          <q-input
-            outlined
-            dense
-            v-model="searchInput"
-            placeholder="Search product..."
-            class="search-input"
-          />
+          <q-input outlined dense v-model="searchInput" placeholder="Search product..." class="search-input" />
           <q-btn color="indigo" @click="openFilterPanel" class="filter-button">
-            <i
-              class="fa-solid fa-arrow-down-wide-short"
-              style="padding-right: 10px"
-            ></i>
+            <i class="fa-solid fa-arrow-down-wide-short" style="padding-right: 10px"></i>
             Filter
           </q-btn>
         </div>
       </div>
 
       <!-- Loading Skeleton -->
-      <q-page
-        v-if="loadingProducts"
-        class="fit row wrap justify-start items-start content-start q-pa-md"
-      >
-        <q-col
-          class="col-6 col-sm-4 col-md-3 col-lg-2 q-mb-md"
-          style="padding: 6px"
-          v-for="n in skeletonCount"
-          :key="n"
-        >
+      <q-page v-if="loadingProducts" class="fit row wrap justify-start items-start content-start q-pa-md">
+        <q-col class="col-6 col-sm-4 col-md-3 col-lg-2 q-mb-md" style="padding: 6px" v-for="n in skeletonCount"
+          :key="n">
           <q-card class="my-card" flat bordered>
             <q-skeleton height="150px" />
             <q-card-section>
@@ -57,27 +41,15 @@
       </q-page>
 
       <!-- Actual Product Cards -->
-      <q-page
-        v-else
-        class="fit row wrap justify-start items-start content-start q-pa-md"
-      >
-        <q-col
-          class="col-6 col-sm-4 col-md-3 col-lg-2 q-mb-md"
-          style="padding: 6px"
-          v-for="product in filteredProducts"
-          :key="product.id"
-        >
+      <q-page v-else class="fit row wrap justify-start items-start content-start q-pa-md">
+        <q-col class="col-6 col-sm-4 col-md-3 col-lg-2 q-mb-md" style="padding: 6px" v-for="product in filteredProducts"
+          :key="product.id">
           <q-card class="my-card" flat bordered>
-            <q-img
-              v-if="product.images && product.images.length > 0"
-              :src="`data:image/png;base64, ${product.images[0].base64_image}`"
-            />
+            <q-img v-if="product.images && product.images.length > 0"
+              :src="`data:image/png;base64, ${product.images[0].base64_image}`" />
 
             <q-card-section>
-              <div
-                class="col text-h6 ellipsis"
-                style="color: #013a63; font-weight: normal"
-              >
+              <div class="col text-h6 ellipsis" style="color: #013a63; font-weight: normal">
                 {{ product.name }}
               </div>
               <div class="text-h7 q-mt-sm q-mb-xs" style="font-weight: bold">
@@ -92,16 +64,11 @@
             </q-card-section>
 
             <q-card-actions>
-              <router-link :to="{ name: 'detail', params: { id: product.id } }">
+              <router-link :to="{ name: 'product-detail', params: { id: product.id } }">
                 <q-btn flat color="primary" label="Detail" />
               </router-link>
               <q-space />
-              <q-btn
-                flat
-                color="warning"
-                label="Edit"
-                @click="editProduct(product)"
-              />
+              <q-btn flat color="warning" label="Edit" @click="editProduct(product)" />
             </q-card-actions>
           </q-card>
         </q-col>
@@ -197,43 +164,38 @@ export default defineComponent({
         title: "Filter Options",
         html: `
   <label for="priceRange">Price Range: <span id="priceRangeValue">${formatToRupiah(
-    minPriceFilter.value
-  )} - ${formatToRupiah(maxPriceFilter.value)}</span></label>
+          minPriceFilter.value
+        )} - ${formatToRupiah(maxPriceFilter.value)}</span></label>
   <br><br>
-  <input type="number" id="minPriceFilter" name="minPriceFilter" min="100000" max="2000000" value="${
-    minPriceFilter.value
-  }">
-  <input type="number" id="maxPriceFilter" name="maxPriceFilter" min="100000" max="2000000" value="${
-    maxPriceFilter.value
-  }">
+  <input type="number" id="minPriceFilter" name="minPriceFilter" min="100000" max="2000000" value="${minPriceFilter.value
+          }">
+  <input type="number" id="maxPriceFilter" name="maxPriceFilter" min="100000" max="2000000" value="${maxPriceFilter.value
+          }">
   <br><br>
   <select id="brandFilter" name="brandFilter">
-    <option value="">${
-      brandFilter ? "Show All Brands" : "Select Brand"
-    }</option>
+    <option value="">${brandFilter ? "Show All Brands" : "Select Brand"
+          }</option>
     ${uniqueBrands
-      .map((brand) => `<option value="${brand}">${brand}</option>`)
-      .join("")}
+            .map((brand) => `<option value="${brand}">${brand}</option>`)
+            .join("")}
   </select>
   <br><br>
   <select id="categoryFilter" name="categoryFilter">
-    <option value="">${
-      categoryFilter ? "Show All Categories" : "Select Category"
-    }</option>
+    <option value="">${categoryFilter ? "Show All Categories" : "Select Category"
+          }</option>
     ${uniqueCategories
-      .map((category) => `<option value="${category}">${category}</option>`)
-      .join("")}
+            .map((category) => `<option value="${category}">${category}</option>`)
+            .join("")}
   </select>
   <select id="vendorFilter" name="vendorFilter">
-    <option value="">${
-      vendorFilter ? "Show All Vendors" : "Select Vendor"
-    }</option>
+    <option value="">${vendorFilter ? "Show All Vendors" : "Select Vendor"
+          }</option>
     ${uniqueVendors
-      .map(
-        (vendor_name) =>
-          `<option value="${vendor_name}">${vendor_name}</option>`
-      )
-      .join("")}
+            .map(
+              (vendor_name) =>
+                `<option value="${vendor_name}">${vendor_name}</option>`
+            )
+            .join("")}
   </select>
 `,
         showCancelButton: true,
@@ -369,6 +331,7 @@ export default defineComponent({
   border-radius: 8px;
   overflow: hidden;
 }
+
 .container-box-1 {
   background-color: #f8f8ff;
   border-radius: 8px;
@@ -376,15 +339,19 @@ export default defineComponent({
   margin: 1.5rem;
   border: 1px solid #ddd;
 }
+
 .my-card {
   height: 100%;
 }
+
 .my-card .q-img {
   height: 150px;
 }
+
 .my-card .q-card-section {
   height: calc(100% - 150px);
 }
+
 .text-ellipsis {
   text-overflow: ellipsis;
   white-space: nowrap;
