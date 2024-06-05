@@ -239,6 +239,8 @@ export default {
             title: "Success",
             text: "Vendor profile has been updated successfully!",
             confirmButtonText: "OK",
+          }).then(() => {
+            location.reload();
           });
         } else {
           console.error("Failed to update vendor data:", response.data.message);

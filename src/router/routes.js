@@ -11,12 +11,7 @@ const routes = [
       },
 
       {
-        path: "vendordetail",
-        component: () => import("pages/vendor/VendorDetail.vue"),
-        name: "vendorDetail",
-      },
-      {
-        path: "vendor-profile",
+        path: "vendorprofile",
         component: () => import("pages/vendor/VendorProfile.vue"),
         name: "vendorProfile",
       },
@@ -54,6 +49,11 @@ const routes = [
         component: () => import("pages/vendor/OrderPage.vue"),
         name: "order",
       },
+      {
+        path: "orderdetail/:id",
+        component: () => import("src/pages/vendor/OrderDetail.vue"),
+        name: "orderDetail",
+      },
 
       {
         path: "product",
@@ -70,16 +70,17 @@ const routes = [
         component: () => import("src/pages/vendor/AddInfo.vue"),
         name: "addInfo",
       },
-      {
-        path: "input",
-        component: () => import("src/pages/vendor/FormParent.vue"),
-        name: "inpt",
-      },
 
       {
         path: "listcatalogue",
         component: () => import("src/pages/vendor/ListCatalogue.vue"),
         name: "listCatalogue",
+      },
+
+      {
+        path: "invoice/:id",
+        component: () => import("src/pages/vendor/InvoicePage.vue"),
+        name: "invoicePage",
       },
       {
         path: "product/:id",

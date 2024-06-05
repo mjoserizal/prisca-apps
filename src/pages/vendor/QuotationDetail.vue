@@ -81,7 +81,7 @@
             <q-item v-for="(item, index) in quotation.line_items" :key="index">
               <q-item-section>
                 <q-item-label>
-                  {{ item.name }}
+                  {{ item.product_name }}
                   <span class="q-item-label__secondary text-black">
                     {{ item.product_name }}
                   </span>
@@ -122,7 +122,6 @@ export default {
     return {
       quotationId: null,
       quotation: null,
-      // New data properties for the dialog
       editDialog: false,
       editedProductPrices: [],
       totalPrice: 0,
@@ -263,6 +262,7 @@ export default {
 
       const payload = {
         quotationItems: this.quotation.line_items.map((item, index) => ({
+          product_id: item.product_id,
           name: item.product_name,
           quantity: item.quantity,
           price: this.editedProductPrices[index],

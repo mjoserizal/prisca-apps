@@ -148,11 +148,7 @@ let menuItems = [
     text: "Product",
     route: router.resolve({ name: "product" }).href,
   },
-  {
-    icon: "fas fa-user",
-    text: "Vendor Profile",
-    route: router.resolve({ name: "vendorDetail" }).href,
-  },
+
   {
     icon: "fas fa-file-alt",
     text: "Quotation",
@@ -167,6 +163,9 @@ let menuItems = [
 
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
+};
+const navigateToVendorProfile = () => {
+  router.push({ name: "vendorProfile" });
 };
 
 const navigateTo = (route) => {
