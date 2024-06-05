@@ -1,6 +1,6 @@
 <template>
   <div class="container-box">
-    <h1 class="q-pa-md text-center font-bold text-lg">Detail Quotation</h1>
+    <h1 class="q-pa-md text-center font-bold text-lg">Request For Quotation</h1>
     <div class="q-pa-md" v-if="purchaseRequest">
       <div>
         <p style="text-align: center; font-weight: bold">
@@ -10,12 +10,8 @@
           {{ purchaseRequest.description }}
         </p>
         <p style="text-align: center; font-weight: bold">
-          <q-btn
-            :color="purchaseRequest.status === 'draft' ? 'red' : 'primary'"
-            flat
-            dense
-            :label="purchaseRequest.status"
-          />
+          <q-btn :color="purchaseRequest.status === 'draft' ? 'red' : 'primary'" flat dense
+            :label="purchaseRequest.status" />
         </p>
       </div>
     </div>
@@ -24,37 +20,13 @@
     </div>
     <!-- Tampilkan informasi dari setiap lineItem -->
     <div v-if="purchaseRequest && purchaseRequest.lineItems" class="q-pa-md">
-      <q-table
-        flat
-        bordered
-        ref="tableRef"
-        :class="tableClass"
-        tabindex="0"
-        :rows="groupedLineItems"
-        :columns="lineItemColumns"
-        row-key="groupKey"
-      >
+      <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="groupedLineItems"
+        :columns="lineItemColumns" row-key="groupKey">
         <!-- Kolom actions untuk edit -->
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn
-              v-if="showEditButton"
-              round
-              dense
-              flat
-              color="negative"
-              icon="edit"
-              @click="editQuantity(props.row)"
-            />
-            <q-btn
-              v-if="purchaseRequest.status === 'approved'"
-              round
-              dense
-              flat
-              color="green"
-              icon="send"
-              @click="sendQuotationByVendor(props.row.name, props.row.groupKey)"
-            />
+            <q-btn v-if="purchaseRequest.status === 'approved'" round dense flat color="green" icon="send"
+              @click="sendQuotationByVendor(props.row.name, props.row.groupKey)" />
           </q-td>
         </template>
       </q-table>
@@ -92,11 +64,11 @@ export default {
       showEditButton: true,
       lineItemColumns: [
         {
-          name: "name",
+          name: "vendor_name",
           required: true,
           label: "Vendor",
           align: "left",
-          field: "groupKey",
+          field: "vendor_name",
           sortable: true,
         },
         {
@@ -132,21 +104,23 @@ export default {
     groupedLineItems() {
       // Mengelompokkan line items berdasarkan nama vendor
       const groups = {};
-      this.purchaseRequest.lineItems.forEach((item) => {
-        const groupKey = item.vendor_name;
-        if (!groups[groupKey]) {
-          groups[groupKey] = {
-            groupKey: groupKey,
-            name: item.vendor_name,
-            quantity: item.quantity,
-            price: item.price,
-            actions: item.actions,
-          };
-        } else {
-          groups[groupKey].quantity += item.quantity;
-          groups[groupKey].price += item.price;
-        }
-      });
+      if (this.purchaseRequest && this.purchaseRequest.lineItems) {
+        this.purchaseRequest.lineItems.forEach((item) => {
+          const groupKey = item.vendor_name;
+          if (!groups[groupKey]) {
+            groups[groupKey] = {
+              groupKey: groupKey,
+              vendor_name: item.vendor_name,
+              quantity: item.quantity,
+              price: item.price,
+              actions: item.actions,
+            };
+          } else {
+            groups[groupKey].quantity += item.quantity;
+            groups[groupKey].price += item.price;
+          }
+        });
+      }
       return Object.values(groups);
     },
   },
@@ -169,65 +143,17 @@ export default {
 
       axios
         .get(
-          `http://192.168.18.43:8000/api/buyer/show/purchaseRequest/${this.id}`,
+          `http://192.168.16.70:8000/api/buyer/purchaseRequest/${this.id}`,
           config
         )
         .then((response) => {
           this.purchaseRequest = response.data.purchaseRequest;
-          this.updateEditButtonStatus(); // Perbarui status tombol edit setelah mendapatkan data purchaseRequest
         })
         .catch((error) => {
           console.error("Error fetching purchase request:", error);
         });
     },
-    updateEditButtonStatus() {
-      this.showEditButton =
-        this.purchaseRequest && this.purchaseRequest.status !== "approved";
-    },
-    editQuantity(lineItem) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        this.$router.push("/");
-        return;
-      }
 
-      Swal.fire({
-        title: "Edit Quantity",
-        input: "number",
-        inputValue: lineItem.quantity,
-        inputAttributes: {
-          step: 1,
-          min: 1,
-        },
-        showCancelButton: true,
-        confirmButtonText: "Save",
-        showLoaderOnConfirm: true,
-        preConfirm: (newQuantity) => {
-          const config = {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          };
-
-          return axios
-            .post(
-              `http://192.168.18.43:8000/api/buyer/updateLineItem/${lineItem.id}`,
-              { quantity: newQuantity },
-              config
-            )
-            .then(() => {
-              // Refresh data setelah berhasil disimpan
-              this.fetchPurchaseRequest();
-            })
-            .catch((error) => {
-              console.error("Error updating quantity:", error);
-              Swal.showValidationMessage(
-                `Request failed: ${error.response.data.message}`
-              );
-            });
-        },
-      });
-    },
     sendQuotationByVendor(vendorName) {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -255,7 +181,7 @@ export default {
 
       axios
         .post(
-          "http://192.168.18.43:8000/api/buyer/create/requestForQuotation",
+          "http://192.168.16.70:8000/api/buyer/requestForQuotation",
           requestData,
           {
             headers: {

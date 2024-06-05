@@ -29,7 +29,7 @@
                 <q-item clickable @click="handleAccountClick">
                   <q-item-section avatar>
                     <q-avatar>
-                      <img alt="Avatar" src="https://cdn.quasar.dev/img/boy-avatar.png" />
+                      <i class="fas fa-user"></i>
                     </q-avatar>
                   </q-item-section>
                   <q-item-section @click="navigateToUserProfile">
@@ -108,6 +108,11 @@ export default {
           text: "PR Approval",
           route: "/purchase-request-approval",
         },
+        {
+          icon: "fas fa-shopping-cart",
+          text: "PO Approval",
+          route: "/purchase-order-approval",
+        },
       ];
     } else if (userLevel === "company") {
       menuItems = [
@@ -127,6 +132,11 @@ export default {
           route: "/purchase-request-Admin",
         },
         {
+          icon: "fas fa-file-invoice",
+          text: "Purchase Order Admin",
+          route: "/purchase-order-Admin",
+        },
+        {
           icon: "fas fa-user",
           text: "User Management",
           route: "/user-management",
@@ -135,6 +145,16 @@ export default {
           icon: "fas fa-people-group",
           text: "Divisi Departemen Management",
           route: "/Divisi-Departemen-Management",
+        },
+        {
+          icon: "fas fa-envelope",
+          text: "Quotation Admin",
+          route: "/Quotation-Admin",
+        },
+        {
+          icon: "fas fa-shopping-basket",
+          text: "Order Admin",
+          route: "/Order-Admin",
         },
       ];
     }
@@ -160,7 +180,7 @@ export default {
 
           axios
             .post(
-              "http://192.168.18.43:8000/api/logout",
+              "http://192.168.16.70:8000/api/logout",
               {},
               {
                 headers: {
@@ -199,7 +219,7 @@ export default {
         };
 
         axios
-          .get("http://192.168.18.43:8000/api/buyer/show/cart", config)
+          .get("http://192.168.16.70:8000/api/buyer/cart", config)
           .then((response) => {
             cartItems.value = response.data.cart || [];
           })
