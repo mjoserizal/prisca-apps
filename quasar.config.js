@@ -12,6 +12,7 @@ const { configure } = require("quasar/wrappers");
 const path = require("path");
 
 module.exports = configure(function (/* ctx */) {
+  require("dotenv").config();
   return {
     eslint: {
       // fix: true,
@@ -54,6 +55,11 @@ module.exports = configure(function (/* ctx */) {
         node: "node20",
       },
 
+      // publicPath: process.env.VUE_APP_API_BASE_URL,
+
+      env: {
+        VUE_APP_API_BASE_URL: process.env.VUE_APP_API_BASE_URL,
+      },
       vueRouterMode: "history", // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
@@ -63,7 +69,7 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -99,8 +105,11 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
-      config: {},
+      config: {
+        // dark: "auto", // Atur 'auto' untuk mengikuti preferensi pengguna, atau 'true' untuk selalu tema gelap
+      },
       iconSet: "fontawesome-v5",
+
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
 
@@ -112,7 +121,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ["Notify"],
     },
 
     // animations: 'all', // --- includes all animations
