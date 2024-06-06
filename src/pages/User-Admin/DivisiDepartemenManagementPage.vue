@@ -5,7 +5,7 @@
       <q-card class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg" bordered>
         <q-card-section class="cart-header">
           <div class="text-h6 text-grey-8">
-            Divisi
+            Division
             <router-link to="/add-divisi">
               <q-btn round dense flat color="primary" icon="add" />
             </router-link>
@@ -29,7 +29,7 @@
       <q-card class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg" bordered>
         <q-card-section class="cart-header">
           <div class="text-h6 text-grey-8">
-            Departemen
+            Department
             <router-link to="/add-departemen">
               <q-btn round dense flat color="primary" icon="add" />
             </router-link>

@@ -29,7 +29,7 @@
       </q-table>
       <div class="row justify-start">
         <router-link to="/purchase-Order-Admin">
-          <q-btn flat color="primary">Kembali</q-btn>
+          <q-btn flat color="primary">Back</q-btn>
         </router-link>
       </div>
     </div>

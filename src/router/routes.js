@@ -335,70 +335,70 @@ const routes = [
     children: [
       {
         path: "vendorprofile",
-        component: () => import("pages/Vendor/VendorProfile.vue"),
+        component: () => import("pages/vendor/VendorProfile.vue"),
         name: "vendorProfile",
       },
       {
         path: "editproduct/:id",
-        component: () => import("pages/Vendor/EditProduct.vue"),
+        component: () => import("pages/vendor/EditProduct.vue"),
         name: "editProduct",
         props: true,
       },
       {
         path: "quodetail/:id",
-        component: () => import("pages/Vendor/QuotationDetail.vue"),
+        component: () => import("pages/vendor/QuotationDetail.vue"),
         name: "quotationDetail",
         props: true,
       },
       {
         path: "quofix/:id",
-        component: () => import("pages/Vendor/QuotationFix.vue"),
+        component: () => import("pages/vendor/QuotationFix.vue"),
         name: "quotationFix",
         props: true,
       },
       {
         path: "quotation",
-        component: () => import("pages/Vendor/QuotationPage.vue"),
+        component: () => import("pages/vendor/QuotationPage.vue"),
         name: "quotation",
       },
       {
         path: "order",
-        component: () => import("pages/Vendor/OrderPage.vue"),
+        component: () => import("pages/vendor/OrderPage.vue"),
         name: "order",
       },
       {
         path: "orderdetail/:id",
-        component: () => import("src/pages/Vendor/OrderDetail.vue"),
+        component: () => import("src/pages/vendor/OrderDetail.vue"),
         name: "orderDetail",
         props: true,
       },
 
       {
         path: "product",
-        component: () => import("src/pages/Vendor/ProductCatalogues.vue"),
+        component: () => import("src/pages/vendor/ProductCatalogues.vue"),
         name: "product",
       },
       {
         path: "addproduct",
-        component: () => import("src/pages/Vendor/AddProduct.vue"),
+        component: () => import("src/pages/vendor/AddProduct.vue"),
         name: "addProduct",
       },
 
       {
         path: "listcatalogue",
-        component: () => import("src/pages/Vendor/ListCatalogue.vue"),
+        component: () => import("src/pages/vendor/ListCatalogue.vue"),
         name: "listCatalogue",
       },
 
       {
         path: "invoice/:id",
-        component: () => import("src/pages/Vendor/InvoicePage.vue"),
+        component: () => import("src/pages/vendor/InvoicePage.vue"),
         name: "invoicePage",
         props: true,
       },
       {
         path: "product/:id",
-        component: () => import("src/pages/Vendor/ProductDetail.vue"),
+        component: () => import("src/pages/vendor/ProductDetail.vue"),
         name: "product-detail",
         props: true,
       },

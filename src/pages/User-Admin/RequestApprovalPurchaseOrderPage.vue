@@ -17,7 +17,7 @@
         <q-btn @click="addUserApproval" class="mt-4" outline color="primary" icon="add" label="Tambah User Approval" />
       </div>
       <div style="display: flex; justify-content: space-between; width: 100%">
-        <q-btn label="Kembali" class="mt-4" outline color="primary" to="/purchase-order-Admin" />
+        <q-btn label="Back" class="mt-4" outline color="primary" to="/purchase-order-Admin" />
 
         <q-btn @click="submitApproval" label="Submit" class="mt-4" outline color="secondary" />
       </div>

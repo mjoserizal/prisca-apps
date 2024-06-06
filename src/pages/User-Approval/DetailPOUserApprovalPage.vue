@@ -72,7 +72,7 @@
       </q-card-section>
       <q-card-section align="right">
         <router-link to="/purchase-Order-approval">
-          <q-btn flat color="deep-orange">Kembali</q-btn>
+          <q-btn flat color="deep-orange">Back</q-btn>
         </router-link>
       </q-card-section>
     </q-card>

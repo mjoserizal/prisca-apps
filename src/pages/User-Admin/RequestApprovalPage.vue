@@ -17,7 +17,7 @@
         <q-btn @click="addUserApproval" class="mt-4" outline color="primary" icon="add" label="Tambah User Approval" />
       </div>
       <div style="display: flex; justify-content: space-between; width: 100%">
-        <q-btn label="Kembali" class="mt-4" outline color="primary" to="/purchase-request-Admin" />
+        <q-btn label="Back" class="mt-4" outline color="primary" to="/purchase-request-Admin" />
 
         <q-btn @click="submitApproval" label="Submit" class="mt-4" outline color="secondary" />
       </div>
@@ -31,10 +31,10 @@
       <template v-slot:body-cell-status="props">
         <q-td :props="props">
           <q-btn :color="props.row.approval_status === 'approved'
-          ? 'green'
-          : props.row.approval_status === 'pending'
-            ? 'blue'
-            : 'red'
+        ? 'green'
+        : props.row.approval_status === 'pending'
+          ? 'blue'
+          : 'red'
         " flat dense :label="props.row.approval_status" />
         </q-td>
       </template>

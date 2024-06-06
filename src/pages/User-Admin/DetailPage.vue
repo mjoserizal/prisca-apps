@@ -32,7 +32,7 @@
         </div>
         <div class="text-subtitle2">Category : {{ product.category }}</div>
         <div class="text-subtitle2">
-          Stok:
+          Stock:
           {{
         product.commercial_info && product.commercial_info.commercialInfo
           ? product.commercial_info.commercialInfo.stock
@@ -40,7 +40,7 @@
       }}
         </div>
         <div class="text-subtitle2">
-          Produk Spesifikasi :
+          Product Specifications :
           {{
           product.detail && product.detail.productSpecification
             ? product.detail.productSpecification
@@ -121,8 +121,8 @@
               <div class="text-subtitle2">
                 Tags:
                 <span style="font-weight: normal">{{
-          product.other.tags
-        }}</span>
+                  product.other.tags
+                  }}</span>
               </div>
               <div class="text-subtitle2">Video:</div>
               <!-- Tambahkan video jika manipulatedVideoUrl tidak kosong -->
@@ -139,7 +139,7 @@
     <q-card-actions class="q-gutter-md justify-between">
       <div class="row justify-start">
         <router-link to="/dashboard-Admin">
-          <q-btn flat color="deep-orange">Kembali</q-btn>
+          <q-btn flat color="deep-orange">Back</q-btn>
         </router-link>
       </div>
     </q-card-actions>

@@ -3,14 +3,14 @@
     <form @submit.prevent="updateUserData" class="bg-white p-6 rounded-md shadow-md">
       <!-- Input Nama Perusahaan -->
       <div class="mb-4">
-        <label for="name" class="block mb-2 text-sm font-medium text-gray-600">Nama:</label>
+        <label for="name" class="block mb-2 text-sm font-medium text-gray-600">Name:</label>
         <input type="text" id="name" name="name" v-model="userProfile.name"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
       </div>
 
       <!-- Input Nomor Telepon Perusahaan -->
       <div class="mb-4">
-        <label for="telp" class="block mb-2 text-sm font-medium text-gray-600">Nomor Telepon :</label>
+        <label for="telp" class="block mb-2 text-sm font-medium text-gray-600">Number Phone :</label>
         <input type="text" id="telp" name="telp" v-model="userProfile.telp"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
       </div>
@@ -24,14 +24,14 @@
 
       <!-- Input Alamat Perusahaan -->
       <div class="mb-4">
-        <label for="address" class="block mb-2 text-sm font-medium text-gray-600">Alamat:</label>
+        <label for="address" class="block mb-2 text-sm font-medium text-gray-600">Address:</label>
         <input type="text" id="address" name="address" v-model="userProfile.company.address"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
       </div>
 
       <!-- Input Divisi -->
       <div class="mb-4">
-        <label for="divisi" class="block mb-2 text-sm font-medium text-gray-600">Divisi:</label>
+        <label for="divisi" class="block mb-2 text-sm font-medium text-gray-600">Division:</label>
         <select id="divisi" v-model="selectedDivisi"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
           <option v-for="divisi in divisiList" :key="divisi.code" :value="divisi.code">
@@ -42,7 +42,7 @@
 
       <!-- Input Departemen -->
       <div class="mb-4">
-        <label for="departemen" class="block mb-2 text-sm font-medium text-gray-600">Departemen:</label>
+        <label for="departemen" class="block mb-2 text-sm font-medium text-gray-600">Department:</label>
         <select id="departemen" v-model="selectedDepartemen"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
           <option v-for="departemen in departemenList" :key="departemen.code" :value="departemen.code">
@@ -54,7 +54,7 @@
       <div class="mt-4">
         <button type="submit"
           class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-250 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          Simpan Perubahan
+          Save Changes
         </button>
       </div>
     </form>
