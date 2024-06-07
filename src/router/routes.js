@@ -334,9 +334,16 @@ const routes = [
     name: "HeaderSidebarVendorPage",
     children: [
       {
+        // Vendor Profile
         path: "vendorprofile",
         component: () => import("pages/Vendor/VendorProfile.vue"),
         name: "vendorProfile",
+      },
+      // Catalogue
+      {
+        path: "listcatalogue",
+        component: () => import("src/pages/Vendor/ListCatalogue.vue"),
+        name: "listCatalogue",
       },
       {
         path: "editproduct/:id",
@@ -382,12 +389,6 @@ const routes = [
         path: "addproduct",
         component: () => import("src/pages/Vendor/AddProduct.vue"),
         name: "addProduct",
-      },
-
-      {
-        path: "listcatalogue",
-        component: () => import("src/pages/Vendor/ListCatalogue.vue"),
-        name: "listCatalogue",
       },
 
       {

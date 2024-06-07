@@ -83,10 +83,15 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import axios from "axios";
+
+// Define component name
+defineComponent({
+  name: "HeaderSidebarVendor",
+});
 
 const router = useRouter();
 
@@ -110,6 +115,11 @@ let menuItems = [
   {
     icon: "fas fa-file-alt",
     text: "Order",
+    route: router.resolve({ name: "order" }).href,
+  },
+  {
+    icon: "fas fa-file-alt",
+    text: "Invoice",
     route: router.resolve({ name: "order" }).href,
   },
 ];
