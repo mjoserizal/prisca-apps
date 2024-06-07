@@ -59,6 +59,7 @@ import { defineComponent, ref, computed } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default defineComponent({
   name: "IndexPage",
 
@@ -94,7 +95,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/buyer/product",
+          `${apiBaseUrl}buyer/product`,
           config
         );
 

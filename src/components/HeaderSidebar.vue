@@ -13,7 +13,6 @@
         <q-space />
 
         <!-- Cart Button -->
-        <!-- Cart Button -->
         <q-btn v-if="!isUserApproval" flat dense round icon="fa-solid fa-bag-shopping" aria-label="Cart" class="q-ml-xs"
           @click="$router.push(getPurchaseCartRoute())">
           <q-badge color="deep-orange" text-color="white" floating v-if="totalCartItems > 0">
@@ -93,6 +92,8 @@ import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { EventBus } from "src/router/EventBus";
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+
 export default {
   name: "HeaderSidebar",
   setup() {
@@ -180,7 +181,7 @@ export default {
 
           axios
             .post(
-              "http://127.0.0.1:8000/api/logout",
+              `${apiBaseUrl}logout`,
               {},
               {
                 headers: {
@@ -219,7 +220,7 @@ export default {
         };
 
         axios
-          .get("http://127.0.0.1:8000/api/buyer/cart", config)
+          .get(`${apiBaseUrl}buyer/cart`, config)
           .then((response) => {
             cartItems.value = response.data.cart || [];
           })

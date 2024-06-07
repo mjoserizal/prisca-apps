@@ -51,7 +51,7 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default {
   name: "PurchaseOrderPage",
   data() {
@@ -114,7 +114,7 @@ export default {
       };
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/purchaseOrder", config)
+        .get(`${apiBaseUrl}buyer/purchaseOrder`, config)
         .then((response) => {
           if (response.data && Array.isArray(response.data.purchaseOrders)) {
             this.purchaseOrders = response.data.purchaseOrders;
@@ -145,7 +145,7 @@ export default {
 
       axios
         .post(
-          `http://127.0.0.1:8000/api/buyer/order`,
+          `${apiBaseUrl}buyer/order`,
           { purchase_order_id: id },
           config
         )

@@ -42,6 +42,8 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+
 export default {
   name: "UserProfile",
   data() {
@@ -115,7 +117,7 @@ export default {
       }
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/userApproval", {
+        .get(`${apiBaseUrl}buyer/userApproval`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -136,7 +138,7 @@ export default {
 
       axios
         .delete(
-          `http://127.0.0.1:8000/api/buyer/userApproval/${id}`,
+          `${apiBaseUrl}buyer/userApproval/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

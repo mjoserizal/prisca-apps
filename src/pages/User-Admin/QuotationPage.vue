@@ -37,7 +37,7 @@
 
 <script>
 import axios from "axios";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default {
   name: "QuotationPage",
   data() {
@@ -78,7 +78,7 @@ export default {
       }
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/quotationFix", {
+        .get(`${apiBaseUrl}buyer/quotationFix`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

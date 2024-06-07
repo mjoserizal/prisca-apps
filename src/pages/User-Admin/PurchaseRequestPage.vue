@@ -21,10 +21,10 @@
         <template v-slot:body-cell-status="props">
           <q-td :props="props">
             <q-btn :color="props.row.status === 'approved'
-            ? 'green'
-            : props.row.status === 'draft'
-              ? 'blue'
-              : 'red'
+          ? 'green'
+          : props.row.status === 'draft'
+            ? 'blue'
+            : 'red'
           " flat dense :label="props.row.status" />
           </q-td>
         </template>
@@ -60,7 +60,7 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default {
   name: "PurchaseRequestPage",
   data() {
@@ -147,7 +147,7 @@ export default {
       };
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/purchaseRequest", config)
+        .get(`${apiBaseUrl}buyer/purchaseRequest`, config)
         .then((response) => {
           if (response.data && Array.isArray(response.data.purchaseRequests)) {
             if (response.data.purchaseRequests.length > 0) {
@@ -200,7 +200,7 @@ export default {
 
       axios
         .post(
-          "http://127.0.0.1:8000/api/buyer/requestForQuotation",
+          `${apiBaseUrl}buyer/requestForQuotation`,
           requestData,
           {
             headers: {

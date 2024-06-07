@@ -40,6 +40,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { ref, onMounted, toRefs } from "vue";
 import Swal from "sweetalert2";
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
 export default {
   name: "PurchaseOrderApprovalPage",
@@ -63,7 +64,7 @@ export default {
 
       axios
         .get(
-          "http://127.0.0.1:8000/api/userApproval/approvalOrder",
+          `${apiBaseUrl}userApproval/approvalOrder`,
           config
         )
         .then((response) => {
@@ -138,7 +139,7 @@ export default {
 
       axios
         .post(
-          `http://127.0.0.1:8000/api/userApproval/approvalOrder/${docCode}/accept`,
+          `${apiBaseUrl}userApproval/approvalOrder/${docCode}/accept`,
           payload,
           config
         )
@@ -164,7 +165,7 @@ export default {
 
       axios
         .post(
-          `http://127.0.0.1:8000/api/userApproval/approvalOrder/${docCode}/reject`,
+          `${apiBaseUrl}userApproval/approvalOrder/${docCode}/reject`,
           payload,
           config
         )

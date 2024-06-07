@@ -43,7 +43,7 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 const formatToRupiah = (totalPrice) => {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -120,7 +120,7 @@ export default {
 
       axios
         .get(
-          `http://127.0.0.1:8000/api/buyer/purchaseRequest/${this.id}`,
+          `${apiBaseUrl}buyer/purchaseRequest/${this.id}`,
           config
         )
         .then((response) => {
@@ -162,7 +162,7 @@ export default {
 
           return axios
             .post(
-              `http://127.0.0.1:8000/api/buyer/updateLineItem/${lineItem.id}`,
+              `${apiBaseUrl}buyer/updateLineItem/${lineItem.id}`,
               { quantity: newQuantity },
               config
             )

@@ -47,7 +47,7 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default {
   name: "OrderPage",
   data() {
@@ -102,7 +102,7 @@ export default {
       };
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/order", config)
+        .get(`${apiBaseUrl}buyer/order`, config)
         .then((response) => {
           if (response.data && Array.isArray(response.data.orders)) {
             this.orders = response.data.orders;

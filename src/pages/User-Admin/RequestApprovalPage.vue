@@ -47,7 +47,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { ref, onMounted, toRefs } from "vue";
 import Swal from "sweetalert2";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default {
   name: "RequestApprovalPage",
   props: {
@@ -79,7 +79,7 @@ export default {
       };
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/userApproval", config)
+        .get(`${apiBaseUrl}buyer/userApproval`, config)
         .then((response) => {
           userApprovals.value = response.data.userApproval;
         })
@@ -149,7 +149,7 @@ export default {
 
         axios
           .post(
-            "http://127.0.0.1:8000/api/buyer/approvalRequest",
+            `${apiBaseUrl}buyer/approvalRequest`,
             { approvalRequest },
             config
           )
@@ -190,7 +190,7 @@ export default {
 
       axios
         .get(
-          `http://127.0.0.1:8000/api/buyer/approvalRequest/${code.value}`,
+          `${apiBaseUrl}buyer/approvalRequest/${code.value}`,
           config
         )
         .then((response) => {

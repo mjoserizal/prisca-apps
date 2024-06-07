@@ -65,7 +65,7 @@
 import axios from "axios";
 import { useRouter } from "vue-router";
 import Swal from 'sweetalert2';
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default {
   name: "UserProfile",
   data() {
@@ -98,7 +98,7 @@ export default {
       }
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/profile", {
+        .get(`${apiBaseUrl}buyer/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -123,7 +123,7 @@ export default {
       }
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/divisi", {
+        .get(`${apiBaseUrl}buyer/divisi`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -143,7 +143,7 @@ export default {
       }
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/departemen", {
+        .get(`${apiBaseUrl}buyer/departemen`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -174,7 +174,7 @@ export default {
       };
 
       axios
-        .post("http://127.0.0.1:8000/api/buyer/profile", userData, {
+        .post(`${apiBaseUrl}buyer/profile`, userData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -72,7 +72,7 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default {
   name: "DetailRFQPage",
   data() {
@@ -90,7 +90,7 @@ export default {
 
       const { id } = this.$route.params;
       axios
-        .get(`http://127.0.0.1:8000/api/buyer/quotationFix/${id}`, {
+        .get(`${apiBaseUrl}buyer/quotationFix/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -139,7 +139,7 @@ export default {
       const { id } = this.$route.params;
       axios
         .post(
-          "http://127.0.0.1:8000/api/buyer/purchaseOrder",
+          `${apiBaseUrl}buyer/purchaseOrder`,
           { request_for_qoutations_id: id, description },
           {
             headers: {

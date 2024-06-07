@@ -22,7 +22,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default {
   name: "AddDivisiPage",
   data() {
@@ -43,7 +43,7 @@ export default {
       };
 
       axios
-        .post("http://127.0.0.1:8000/api/buyer/divisi", formData, {
+        .post(`${apiBaseUrl}buyer/divisi`, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",

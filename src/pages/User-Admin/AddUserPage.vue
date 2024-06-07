@@ -66,7 +66,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default {
   name: "createUser",
   data() {
@@ -100,7 +100,7 @@ export default {
       }
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/divisi", {
+        .get(`${apiBaseUrl}buyer/divisi`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -120,7 +120,7 @@ export default {
       }
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/departemen", {
+        .get(`${apiBaseUrl}buyer/departemen`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -151,7 +151,7 @@ export default {
 
       axios
         .post(
-          "http://127.0.0.1:8000/api/buyer/userApproval",
+          `${apiBaseUrl}buyer/userApproval`,
           userData,
           {
             headers: {

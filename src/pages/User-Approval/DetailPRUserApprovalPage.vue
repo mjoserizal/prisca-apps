@@ -81,6 +81,7 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
 export default {
   name: "DetailPRUserApprovalPage",
@@ -117,7 +118,7 @@ export default {
       }
 
       axios
-        .get(`http://127.0.0.1:8000/api/userApproval/approvalRequest/${this.doc_code}`, {
+        .get(`${apiBaseUrl}userApproval/approvalRequest/${this.doc_code}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -141,8 +142,8 @@ export default {
       }
 
       const url = action === 'accept'
-        ? `http://127.0.0.1:8000/api/userApproval/approvalRequest/${this.doc_code}/accept`
-        : `http://127.0.0.1:8000/api/userApproval/approvalRequest/${this.doc_code}/reject`;
+        ? `${apiBaseUrl}userApproval/approvalRequest/${this.doc_code}/accept`
+        : `${apiBaseUrl}userApproval/approvalRequest/${this.doc_code}/reject`;
 
       axios
         .post(url, {}, {

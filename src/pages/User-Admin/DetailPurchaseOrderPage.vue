@@ -38,7 +38,7 @@
 
 <script>
 import axios from "axios";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 const formatToRupiah = (totalPrice) => {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -115,7 +115,7 @@ export default {
 
       axios
         .get(
-          `http://127.0.0.1:8000/api/buyer/purchaseOrder/${this.id}`,
+          `${apiBaseUrl}buyer/purchaseOrder/${this.id}`,
           config
         )
         .then((response) => {

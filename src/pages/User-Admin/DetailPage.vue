@@ -121,7 +121,7 @@
               <div class="text-subtitle2">
                 Tags:
                 <span style="font-weight: normal">{{
-                  product.other.tags
+          product.other.tags
                   }}</span>
               </div>
               <div class="text-subtitle2">Video:</div>
@@ -155,7 +155,7 @@ import store from "src/router/store";
 import { useRouter } from "vue-router";
 import { EventBus } from "src/router/EventBus";
 import Swal from "sweetalert2";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default defineComponent({
   name: "DetailPage",
 
@@ -191,7 +191,7 @@ export default defineComponent({
         };
 
         const response = await axios.get(
-          `http://127.0.0.1:8000/api/buyer/product/${props.id}`,
+          `${apiBaseUrl}buyer/product/${props.id}`,
           config
         );
 
@@ -249,7 +249,7 @@ export default defineComponent({
           };
 
           const response = await axios.post(
-            "http://127.0.0.1:8000/api/buyer/cart",
+            `${apiBaseUrl}buyer/cart`,
             data,
             config
           );

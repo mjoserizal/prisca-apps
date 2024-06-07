@@ -53,6 +53,8 @@
 
 <script>
 import axios from "axios";
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+
 export default {
   name: "PurchaseRequestPage",
   data() {
@@ -131,7 +133,7 @@ export default {
       }
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/divisi", {
+        .get(`${apiBaseUrl}buyer/divisi`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -151,7 +153,7 @@ export default {
       }
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/departemen", {
+        .get(`${apiBaseUrl}buyer/departemen`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

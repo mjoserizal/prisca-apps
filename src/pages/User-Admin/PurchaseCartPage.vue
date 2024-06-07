@@ -58,7 +58,7 @@ import { computed, ref, onMounted } from "vue";
 import { EventBus } from "src/router/EventBus";
 import Swal from "sweetalert2";
 import axios from "axios";
-
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default {
   name: "PurchaseCartPage",
 
@@ -141,7 +141,7 @@ export default {
       };
 
       axios
-        .get("http://127.0.0.1:8000/api/buyer/cart", config)
+        .get(`${apiBaseUrl}buyer/cart`, config)
         .then((response) => {
           if (response.data.cart && Array.isArray(response.data.cart)) {
             cartItems.value = response.data.cart.map((item) => ({
@@ -176,7 +176,7 @@ export default {
 
       axios
         .delete(
-          `http://127.0.0.1:8000/api/buyer/cart/${itemId}`,
+          `${apiBaseUrl}buyer/cart/${itemId}`,
           config
         )
         .then(() => {
@@ -231,7 +231,7 @@ export default {
             const newQuantity = result.value;
             axios
               .put(
-                `http://127.0.0.1:8000/api/buyer/cart/${item.id}`,
+                `${apiBaseUrl}buyer/cart/${item.id}`,
                 { quantity: newQuantity },
                 config
               )
@@ -302,7 +302,7 @@ export default {
       // Kirim request ke API dengan requestData
       axios
         .post(
-          "http://127.0.0.1:8000/api/buyer/purchaseRequest",
+          `${apiBaseUrl}buyer/purchaseRequest`,
           requestData,
           config
         )

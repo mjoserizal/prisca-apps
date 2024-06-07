@@ -57,12 +57,19 @@ export default {
     const password = ref("");
     const errorMessage = ref("");
     const showPassword = ref(false);
-    console.log(process.env.VUE_APP_API_URL);
-    const apiUrl = process.env.VUE_APP_API_URL;
+    console.log(process.env.VUE_APP_API_BASE_URL);
+    const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
     const login = async () => {
       try {
+        // const response = await axios.post(
+        //   "http://192.168.16.70:8000/api/login",
+        //   {
+        //     email: email.value,
+        //     password: password.value,
+        //   }
+        // );
         const response = await axios.post(
-          "http://192.168.16.70:8000/api/login",
+          `${apiBaseUrl}/login`,
           {
             email: email.value,
             password: password.value,
