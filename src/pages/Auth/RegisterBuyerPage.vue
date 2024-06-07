@@ -93,11 +93,11 @@ export default defineComponent({
     const errorMessage = ref("");
     const showPassword = ref(false); // New
     const showConfirmPassword = ref(false); // New
-
+    const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
     const register = async () => {
       try {
         const response = await axios.post(
-          "http://192.168.16.70:8000/api/userRegister",
+          `${apiBaseUrl}userRegister`,
           {
             name: name.value,
             email: email.value,
