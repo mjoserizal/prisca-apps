@@ -9,7 +9,7 @@
             </div>
           </q-card-section>
           <q-card-section>
-            <q-form class="q-gutter-md">
+            <q-form @keyup.enter="loginIfValid" class="q-gutter-md">
               <q-input filled v-model="email" label="Email" lazy-rules />
               <q-input filled v-model="password" :type="showPassword ? 'text' : 'password'" label="Password" lazy-rules>
                 <template v-slot:append>
@@ -32,7 +32,7 @@
               <div class="text-center">
                 <p>
                   Register as
-                  <span class="register-link" @click="goToRegisterBuyer">Vendor</span>
+                  <span class="register-link" @click="goToRegisterVendor">Vendor</span>
                   /
                   <span class="register-link" @click="goToRegisterBuyer">Buyer</span>
                 </p>
@@ -49,6 +49,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+
 export default {
   name: "LoginPage",
   setup() {
@@ -57,38 +58,35 @@ export default {
     const password = ref("");
     const errorMessage = ref("");
     const showPassword = ref(false);
-    console.log(process.env.VUE_APP_API_BASE_URL);
     const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+
+    console.log(process.env.VUE_APP_API_BASE_URL);
     const login = async () => {
       try {
-        // const response = await axios.post(
-        //   "http://192.168.16.70:8000/api/login",
-        //   {
-        //     email: email.value,
-        //     password: password.value,
-        //   }
-        // );
-        const response = await axios.post(
-          `${apiBaseUrl}/login`,
-          {
-            email: email.value,
-            password: password.value,
-          }
-        );
+        const response = await axios.post(`${apiBaseUrl}login`, {
+          email: email.value,
+          password: password.value,
+        });
 
         if (response.status === 200) {
           const token = response.data.token;
-          const userLevel = response.data.user.role.name;
+          const userRole = response.data.user.role.name;
           const userId = response.data.user.id;
+
+
           localStorage.setItem("token", token);
-          localStorage.setItem("userLevel", userLevel);
+          localStorage.setItem("userRole", userRole);
           localStorage.setItem("userId", userId);
-          if (userLevel === "Departemen") {
+
+
+          if (userRole === "Departemen") {
             router.push("/dashboard-Admin");
-          } else if (userLevel === "user_approval") {
+          } else if (userRole === "user_approval") {
             router.push("/purchase-request-approval");
-          } else if (userLevel === "company") {
+          } else if (userRole === "company") {
             router.push("/dashboard-Admin");
+          } else if (userRole === "vendor") {
+            router.push({ name: "vendorProfile" });
           }
         } else {
           console.error("Error during login:", response.statusText);
@@ -100,12 +98,20 @@ export default {
       }
     };
 
+    const loginIfValid = () => {
+      if (email.value && password.value) {
+        login();
+      }
+    };
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
     };
 
     const goToRegisterBuyer = () => {
       router.push("/register-buyer");
+    };
+    const goToRegisterVendor = () => {
+      router.push({ name: "register-vendor" });
     };
 
     return {
@@ -116,6 +122,8 @@ export default {
       login,
       togglePassword,
       goToRegisterBuyer,
+      goToRegisterVendor,
+      loginIfValid,
     };
   },
 };
