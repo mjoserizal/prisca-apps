@@ -1,42 +1,22 @@
 <template>
   <div class="w-full">
     <div class="p-6">
-      <q-card
-        class="shadow-md overflow-hidden border-b border-gray-200 sm:rounded-lg"
-        bordered
-      >
+      <q-card class="shadow-md overflow-hidden border-b border-gray-200 sm:rounded-lg" bordered>
         <q-card-section>
           <div class="text-h6 text-grey-8">Order List</div>
         </q-card-section>
         <q-separator></q-separator>
         <q-card-section class="q-pa-none">
-          <q-table
-            square
-            class="no-shadow"
-            :rows="orders"
-            :columns="columns"
-            row-key="id"
-            :filter="filter"
-            :loading="loading"
-          >
+          <q-table square class="no-shadow" :rows="orders" :columns="columns" row-key="id" :filter="filter"
+            :loading="loading">
             <!-- Tombol Action -->
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
-                <q-btn
-                  v-if="props.row.canSendInvoice"
-                  icon="send"
-                  color="primary"
-                  size="sm"
-                  @click="viewInvoice(props.row)"
-                >
+                <q-btn v-if="props.row.canSendInvoice" icon="send" color="primary" size="sm"
+                  @click="viewInvoice(props.row)">
                   Lihat Invoice
                 </q-btn>
-                <q-btn
-                  icon="info"
-                  color="primary"
-                  size="sm"
-                  @click="viewOrder(props.row)"
-                >
+                <q-btn icon="info" color="primary" size="sm" @click="viewOrder(props.row)">
                   Detail
                 </q-btn>
               </q-td>
@@ -109,7 +89,7 @@ const viewOrder = (order) => {
 
 const viewInvoice = (order) => {
   console.log("View invoice:", order);
-  router.push({ name: "invoicePage", params: { id: order.id } }); // Ubah ini sesuai dengan nama rute dan parameter yang benar
+  router.push({ name: "invoiceDetail", params: { id: order.id } }); // Ubah ini sesuai dengan nama rute dan parameter yang benar
 };
 
 onMounted(async () => {

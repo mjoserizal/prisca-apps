@@ -17,7 +17,7 @@
           <q-btn flat round dense icon="account_circle" @click="toggleAccountDropdown">
             <q-menu auto-close>
               <q-list>
-                <q-item clickable @click="handleAccountClick">
+                <!-- <q-item clickable @click="handleAccountClick">
                   <q-item-section avatar>
                     <q-avatar>
                       <img alt="Avatar" src="https://cdn.quasar.dev/img/boy-avatar.png" />
@@ -26,7 +26,7 @@
                   <q-item-section @click="navigateToUserProfile">
                     <q-item-label>{{ accountText }}</q-item-label>
                   </q-item-section>
-                </q-item>
+                </q-item> -->
                 <q-separator />
                 <!-- Vendor Profile -->
                 <q-item clickable @click="navigateToVendorProfile">
@@ -120,7 +120,7 @@ let menuItems = [
   {
     icon: "fas fa-file-alt",
     text: "Invoice",
-    route: router.resolve({ name: "order" }).href,
+    route: router.resolve({ name: "invoicePage" }).href,
   },
 ];
 

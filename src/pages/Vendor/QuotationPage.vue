@@ -31,7 +31,9 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import dayjs from "dayjs";
-import "dayjs/locale/id";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
@@ -60,11 +62,7 @@ const columns = [
     name: "date",
     label: "Date",
     align: "center",
-    field: (row) => {
-      return dayjs(row.created_at, "DD-MM-YYYY")
-        .locale("id")
-        .format("DD MMMM YYYY");
-    },
+    field: "date",
     sortable: true,
   },
   {
@@ -99,7 +97,7 @@ onMounted(async () => {
           id: q.id,
           code: q.code,
           company_name: q.company_name,
-          date: q.created_at,
+          date: dayjs(q.created_at, "DD-MM-YYYY").format("DD MMM YYYY"),
         }));
       } else {
         const q = response.data.quotation;
@@ -108,7 +106,7 @@ onMounted(async () => {
             id: q.id,
             code: q.code,
             company_name: q.company_name,
-            date: q.created_at,
+            date: dayjs(q.created_at, "DD-MM-YYYY").format("DD MMM YYYY"),
           },
         ];
       }

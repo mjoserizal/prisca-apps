@@ -55,14 +55,7 @@
 
         <q-card-section class="text-h6">Item Details</q-card-section>
         <q-card-section>
-          <q-table
-            class="shadow-md"
-            flat
-            bordered
-            :rows="order.line_items"
-            :columns="columns"
-            row-key="id"
-          />
+          <q-table class="shadow-md" flat bordered :rows="order.line_items" :columns="columns" row-key="id" />
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
@@ -70,17 +63,8 @@
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
-          <q-btn
-            v-if="order.status === 'selesai'"
-            label="Kirim Invoice"
-            color="primary"
-            @click="sendInvoice"
-          />
-          <q-btn
-            label="Konfirmasi Pengiriman"
-            color="primary"
-            @click="editOrder"
-          >
+          <q-btn v-if="order.status === 'selesai'" label="Kirim Invoice" color="primary" @click="sendInvoice" />
+          <q-btn label="Konfirmasi Pengiriman" color="primary" @click="editOrder">
             <q-tooltip anchor="bottom middle" self="top middle">
               Input Shipping Receipt
             </q-tooltip>
@@ -104,12 +88,7 @@
       <q-card>
         <q-card-section class="text-h6">Input Shipping Receipt</q-card-section>
         <q-card-section>
-          <q-input
-            v-model="resiNumber"
-            outlined
-            type="text"
-            placeholder="Enter Receipt Number"
-          />
+          <q-input v-model="resiNumber" outlined type="text" placeholder="Enter Receipt Number" />
         </q-card-section>
         <q-card-actions align="right">
           <q-btn label="Cancel" color="primary" @click="cancelEdit" />
@@ -137,7 +116,7 @@ export default {
       editDialog: false,
       resiNumber: "",
       totalPrice: 0,
-
+      tab: "detail",
       columns: [
         {
           name: "product_name",
@@ -173,6 +152,7 @@ export default {
   async mounted() {
     this.orderId = this.$route.params.id;
     await this.fetchOrderDetail();
+    await this.fetchShipment();
   },
   methods: {
     async fetchOrderDetail() {
@@ -350,12 +330,8 @@ export default {
             title: "Success",
             text: "Invoice sent successfully.",
           });
-          await this.fetchShipment(); // Memanggil fetchShipment setelah mengirim invoice
         } else {
-          console.error(
-            "Failed to send invoice:",
-            response.data.message || "Unknown error."
-          );
+          console.error("Failed to send invoice:", response.data.message);
           Swal.fire({
             icon: "error",
             title: "Error",
@@ -374,3 +350,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.q-card-section {
+  margin-bottom: 16px;
+}
+</style>

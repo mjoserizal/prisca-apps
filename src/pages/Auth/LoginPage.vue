@@ -86,7 +86,7 @@ export default {
           } else if (userRole === "company") {
             router.push("/dashboard-Admin");
           } else if (userRole === "vendor") {
-            router.push({ name: "vendorProfile" });
+            router.push({ name: "listCatalogue" });
           }
         } else {
           console.error("Error during login:", response.statusText);

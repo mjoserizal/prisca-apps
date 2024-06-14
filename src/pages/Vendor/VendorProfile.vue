@@ -1,58 +1,64 @@
 <template>
   <div class="q-pa-md">
     <div class="q-gutter-md row items-center flex">
-      <q-avatar size="100px">
+      <!-- <q-avatar size="100px">
         <img src="https://cdn.quasar.dev/img/boy-avatar.png" alt="Avatar" />
-      </q-avatar>
+      </q-avatar> -->
       <div class="q-pa-md">
         <div class="text-h4 text-primary">{{ vendorDetail.name }}</div>
         <div class="text-subtitle2 text-grey">{{ vendorDetail.email }}</div>
       </div>
     </div>
     <q-card class="q-mt-md shadow-2">
-      <q-card-section>
-        <div class="text-h6 text-primary">Alamat</div>
-        <div class="text-body1">{{ vendorDetail.master.alamat || "Alamat tidak tersedia" }}</div>
+      <q-card-section class="row">
+        <div class="col-6">
+          <div class="text-h6 text-primary">Alamat</div>
+          <div class="text-body1">{{ vendorDetail.master.alamat || "Alamat tidak tersedia" }}</div>
+        </div>
+        <div class="col-6">
+          <div class="text-h6 text-primary">Telepon</div>
+          <div class="text-body1">{{ vendorDetail.telp || "Telepon tidak tersedia" }}</div>
+        </div>
       </q-card-section>
       <q-separator />
-      <q-card-section>
-        <div class="text-h6 text-primary">Telepon</div>
-        <div class="text-body1">{{ vendorDetail.telp || "Telepon tidak tersedia" }}</div>
+      <q-card-section class="row">
+        <div class="col-6">
+          <div class="text-h6 text-primary">Website</div>
+          <div class="text-body1">{{ vendorDetail.master.website || "Website tidak tersedia" }}</div>
+        </div>
+        <div class="col-6">
+          <div class="text-h6 text-primary">Bidang Usaha</div>
+          <div class="text-body1">{{ vendorDetail.master.bidang_usaha || "Bidang usaha tidak tersedia" }}</div>
+        </div>
       </q-card-section>
       <q-separator />
-      <q-card-section>
-        <div class="text-h6 text-primary">Website</div>
-        <div class="text-body1">{{ vendorDetail.master.website || "Website tidak tersedia" }}</div>
+      <q-card-section class="row">
+        <div class="col-6">
+          <div class="text-h6 text-primary">Tanggal Berdiri</div>
+          <div class="text-body1">{{ vendorDetail.master.tanggal_berdiri || "Tahun berdiri tidak tersedia" }}</div>
+        </div>
+        <div class="col-6">
+          <div class="text-h6 text-primary">NPWP</div>
+          <div class="text-body1">{{ vendorDetail.master.npwp || "NPWP tidak tersedia" }}</div>
+        </div>
       </q-card-section>
       <q-separator />
-      <q-card-section>
-        <div class="text-h6 text-primary">Bidang Usaha</div>
-        <div class="text-body1">{{ vendorDetail.master.bidang_usaha || "Bidang usaha tidak tersedia" }}</div>
+      <q-card-section class="row">
+        <div class="col-6">
+          <div class="text-h6 text-primary">SIUP</div>
+          <div class="text-body1">{{ vendorDetail.master.siup || "SIUP tidak tersedia" }}</div>
+        </div>
+        <div class="col-6">
+          <div class="text-h6 text-primary">Bank</div>
+          <div class="text-body1">{{ vendorDetail.master.bank || "Bank tidak tersedia" }}</div>
+        </div>
       </q-card-section>
       <q-separator />
-      <q-card-section>
-        <div class="text-h6 text-primary">Tanggal Berdiri</div>
-        <div class="text-body1">{{ vendorDetail.master.tanggal_berdiri || "Tahun berdiri tidak tersedia" }}</div>
-      </q-card-section>
-      <q-separator />
-      <q-card-section>
-        <div class="text-h6 text-primary">NPWP</div>
-        <div class="text-body1">{{ vendorDetail.master.npwp || "NPWP tidak tersedia" }}</div>
-      </q-card-section>
-      <q-separator />
-      <q-card-section>
-        <div class="text-h6 text-primary">SIUP</div>
-        <div class="text-body1">{{ vendorDetail.master.siup || "SIUP tidak tersedia" }}</div>
-      </q-card-section>
-      <q-separator />
-      <q-card-section>
-        <div class="text-h6 text-primary">Bank</div>
-        <div class="text-body1">{{ vendorDetail.master.bank || "Bank tidak tersedia" }}</div>
-      </q-card-section>
-      <q-separator />
-      <q-card-section>
-        <div class="text-h6 text-primary">Rekening</div>
-        <div class="text-body1">{{ vendorDetail.master.rekening || "Rekening tidak tersedia" }}</div>
+      <q-card-section class="row">
+        <div class="col-6">
+          <div class="text-h6 text-primary">Rekening</div>
+          <div class="text-body1">{{ vendorDetail.master.rekening || "Rekening tidak tersedia" }}</div>
+        </div>
       </q-card-section>
     </q-card>
     <q-btn label="Edit Profile" color="primary" @click="toggleEditProfile" class="q-mt-md full-width" icon="edit" />

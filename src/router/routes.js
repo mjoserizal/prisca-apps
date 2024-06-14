@@ -345,6 +345,13 @@ const routes = [
         component: () => import("src/pages/Vendor/ListCatalogue.vue"),
         name: "listCatalogue",
       },
+      //Add Product
+      {
+        path: "addproduct",
+        component: () => import("src/pages/Vendor/AddProduct.vue"),
+        name: "addProduct",
+      },
+      //Edit Product
       {
         path: "editproduct/:id",
         component: () => import("pages/Vendor/EditProduct.vue"),
@@ -386,15 +393,15 @@ const routes = [
         name: "product",
       },
       {
-        path: "addproduct",
-        component: () => import("src/pages/Vendor/AddProduct.vue"),
-        name: "addProduct",
-      },
-
-      {
-        path: "invoice/:id",
+        path: "invoice",
         component: () => import("src/pages/Vendor/InvoicePage.vue"),
         name: "invoicePage",
+        props: true,
+      },
+      {
+        path: "invoice/:id",
+        component: () => import("src/pages/Vendor/InvoiceDetail.vue"),
+        name: "invoiceDetail",
         props: true,
       },
       {

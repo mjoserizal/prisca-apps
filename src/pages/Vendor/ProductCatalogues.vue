@@ -28,8 +28,7 @@
             <q-card-section>
               <q-skeleton height="18px" />
               <q-skeleton height="12px" />
-              <q-skeleton height="12px" />
-              <q-skeleton height="12px" />
+
             </q-card-section>
             <q-card-actions>
               <q-skeleton height="32px" width="50%" />
@@ -44,6 +43,7 @@
       <q-page v-else class="fit row wrap justify-start items-start content-start q-pa-md">
         <q-col class="col-6 col-sm-4 col-md-3 col-lg-2 q-mb-md" style="padding: 6px" v-for="product in filteredProducts"
           :key="product.id">
+
           <q-card class="my-card" flat bordered>
             <q-img v-if="product.images && product.images.length > 0"
               :src="`data:image/png;base64, ${product.images[0].base64_image}`" />
@@ -96,18 +96,13 @@ export default defineComponent({
     const defaultVendorValue = ref("");
     const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
     const loadingProducts = ref(true); // Loading state
-    const skeletonCount = ref(12); // Number of skeletons to display
+    const skeletonCount = ref(12);
 
     const editProduct = (product) => {
       console.log("Edit product:", product);
       router.push({ name: "editProduct", params: { id: product.id } });
     };
     const formatToRupiah = (price) => {
-      // Check if price is a valid number
-      if (isNaN(price) || !isFinite(price)) {
-        return "Price not available";
-      }
-
       return new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: "IDR",
@@ -129,7 +124,7 @@ export default defineComponent({
         const response = await axios.get(`${apiBaseUrl}vendor/product`, config);
 
         response.data.products.forEach((product) => {
-          product.price = parseFloat(product.price);
+          product.price = parseFloat(product.commercial_info.commercialInfo.price);
         });
 
         products.value = response.data.products;
