@@ -25,7 +25,7 @@
         <!-- Slot untuk aksi sel -->
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <router-link :to="{
+            <router-link v-if="props.row.status !== 'selesai'" :to="{
         name: 'detailOrder',
         params: { id: props.row.id },
       }">

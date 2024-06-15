@@ -51,8 +51,8 @@
   </div>
   <div class="navigation-buttons" style="display: flex; justify-content: space-between; margin: 20px;">
     <q-btn @click="$router.push('/order-Admin')" class="q-mb-md" label="Back" color="primary" />
-    <q-btn v-if="payment.status === 'pending'" @click="paymentReceived" class="q-mb-md" label="Payment Received"
-      color="primary" />
+    <q-btn v-if="payment.status === 'pending' && (!payment.bukti || !payment.bukti.match(/\/images\/[^/]+$/))"
+      @click="paymentReceived" class="q-mb-md" label="Payment Received" color="primary" />
     <q-btn v-if="payment.status === 'success'" :href="payment.pdf_url" class="q-mb-md" label="Download Invoice"
       color="primary" target="_blank" />
   </div>
@@ -71,6 +71,7 @@ export default {
         status: "",
         total_bayar: 0,
         created_at: "",
+        bukti: "" // Tambahkan properti 'bukti' di sini
       },
       buyer: {
         name: "",
@@ -120,7 +121,7 @@ export default {
             this.$router.push("/");
           } else {
             console.error("Error fetching payment details:", error);
-            Swal.fire("Error", "Failed to fetch payment details. Please try again later.", "error");
+            Swal.fire("Error", "Invoice Belum Dikirim Oleh Vendor", "error");
           }
         });
     },
@@ -184,6 +185,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .container-box {
   background-color: #fff;
