@@ -2,7 +2,7 @@
   <q-page>
     <div class="container-box">
       <h1 class="q-pa-md text-center font-bold text-lg">
-        Orders Detail
+        Detail Order
       </h1>
     </div>
     <q-container>
@@ -309,9 +309,13 @@ export default {
           },
         };
 
+        const payload = {
+          order_id: this.orderId,
+        };
+
         const response = await axios.post(
-          `${apiBaseUrl}vendor/invoice/${this.orderId}`,
-          {},
+          `${apiBaseUrl}vendor/invoice`,
+          payload,
           config
         );
 
@@ -361,8 +365,11 @@ export default {
 
 <style scoped>
 .container-box {
-  background-color: #f5f5f5;
-  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 20px;
+  border: 1px solid #ddd;
 }
 
 .invoice-header {
