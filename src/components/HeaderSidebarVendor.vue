@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="bg-grey-1">
+  <q-layout view="hHh lpR fFf" class="bg-grey-1 full-height">
     <!-- Header -->
     <q-header elevated class="bg-white text-grey-8 q-py-xs" height-hint="58">
       <!-- Toolbar -->
@@ -11,22 +11,11 @@
         <q-img src="/public/images/prisca logo.png" style="margin-right: 8px; height: 50px; width: 50px" />
 
         <q-space />
-        <q-btn flat dense round @click="toggleDarkMode" aria-label="Toggle Dark Mode" icon="dark_mode" />
         <!-- Account Button -->
         <div class="q-gutter-sm row items-center no-wrap">
           <q-btn flat round dense icon="account_circle" @click="toggleAccountDropdown">
             <q-menu auto-close>
               <q-list>
-                <!-- <q-item clickable @click="handleAccountClick">
-                  <q-item-section avatar>
-                    <q-avatar>
-                      <img alt="Avatar" src="https://cdn.quasar.dev/img/boy-avatar.png" />
-                    </q-avatar>
-                  </q-item-section>
-                  <q-item-section @click="navigateToUserProfile">
-                    <q-item-label>{{ accountText }}</q-item-label>
-                  </q-item-section>
-                </q-item> -->
                 <q-separator />
                 <!-- Vendor Profile -->
                 <q-item clickable @click="navigateToVendorProfile">
@@ -45,8 +34,8 @@
     </q-header>
 
     <!-- Left Drawer -->
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="text-white" style="background-color: #013a63"
-      :width="220">
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="text-white full-height drawer-custom"
+      style="background-color: #013a63" :width="220">
       <!-- Sidebar Header -->
       <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <q-avatar size="125px" class="q-mb-md" style="width: 160px; height: 80px">
@@ -54,7 +43,7 @@
         </q-avatar>
       </div>
       <!-- Sidebar Menu -->
-      <q-list padding class="justify-content: center">
+      <q-list padding class="full-height">
         <!-- Menu Group -->
         <div>
           <h3 class="mb-4 ml-4 text-sm font-semibold text-white">MENU</h3>
@@ -68,15 +57,11 @@
           </q-item>
         </div>
         <!-- Menu Group -->
-
-        <!-- Others Group -->
-        <div></div>
       </q-list>
-      <!-- Sidebar Menu -->
     </q-drawer>
 
     <!-- Main Content -->
-    <q-page-container>
+    <q-page-container class="full-height">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -98,7 +83,7 @@ const router = useRouter();
 const leftDrawerOpen = ref(false);
 let menuItems = [
   {
-    icon: "fas fa-list",
+    icon: "fas fa-home",
     text: "Catalogue List",
     route: router.resolve({ name: "listCatalogue" }).href,
   },
@@ -113,12 +98,12 @@ let menuItems = [
     route: router.resolve({ name: "quotation" }).href,
   },
   {
-    icon: "fas fa-file-alt",
+    icon: "fas fa-shopping-basket",
     text: "Order",
     route: router.resolve({ name: "order" }).href,
   },
   {
-    icon: "fas fa-file-alt",
+    icon: "fas fa-file-invoice",
     text: "Invoice",
     route: router.resolve({ name: "invoicePage" }).href,
   },
@@ -187,5 +172,10 @@ const logout = async () => {
 </script>
 
 <style lang="sass">
-/* Your styles here */
+
+
+.drawer-custom
+  overflow: hidden
+
+
 </style>

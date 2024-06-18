@@ -2,19 +2,9 @@
   <q-page>
     <q-tabs v-model="tab" class="text-h6">
       <q-tab name="detail">
-        <router-link
-          :to="{ name: 'quotationDetail', params: { id: quotationId } }"
-        >
-          Quotation Detail
-        </router-link>
+        <router-link :to="{ name: 'quotationDetail', params: { id: quotationId } }">Quotation Detail</router-link>
       </q-tab>
-      <q-tab name="fix">
-        <router-link
-          :to="{ name: 'quotationFix', params: { id: quotationId } }"
-        >
-          Quotation Fix
-        </router-link>
-      </q-tab>
+
     </q-tabs>
     <q-container>
       <q-card class="rounded-md shadow-md m-6 p-4" v-if="quotation">
@@ -48,14 +38,7 @@
 
         <q-card-section class="text-h6">Item Details</q-card-section>
         <q-card-section>
-          <q-table
-            class="shadow-md"
-            flat
-            bordered
-            :rows="quotation.line_items"
-            :columns="columns"
-            row-key="id"
-          />
+          <q-table class="shadow-md" flat bordered :rows="quotation.line_items" :columns="columns" row-key="id" />
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
@@ -71,37 +54,6 @@
         </q-card-section>
       </q-card>
     </q-container>
-
-    <!-- Edit Quotation Dialog -->
-    <q-dialog v-model="editDialog" persistent>
-      <q-card>
-        <q-card-section class="text-h6">Edit Product Prices</q-card-section>
-        <q-card-section>
-          <q-list>
-            <q-item v-for="(item, index) in quotation.line_items" :key="index">
-              <q-item-section>
-                <q-item-label>
-                  <span class="q-item-label__secondary text-black">
-                    {{ item.product_name }}
-                  </span>
-                </q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-input
-                  v-model="editedProductPrices[index]"
-                  outlined
-                  type="number"
-                />
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn label="Cancel" color="primary" @click="cancelEdit" />
-          <q-btn label="Save" color="primary" @click="confirmSaveEdit" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-page>
 </template>
 
@@ -121,7 +73,6 @@ export default {
     return {
       quotationId: null,
       quotation: null,
-      editDialog: false,
       editedProductPrices: [],
       totalPrice: 0,
 
@@ -209,34 +160,46 @@ export default {
       }).format(value);
     },
 
-    editQuotation() {
-      this.editedProductPrices = this.quotation.line_items.map(
-        (item) => item.product_price
-      );
-      this.editDialog = true;
-    },
-    // Method to cancel editing
-    cancelEdit() {
-      this.editDialog = false;
-      this.editedProductPrices = [];
-    },
-    // Method to confirm saving the edited prices
-    confirmSaveEdit() {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "Do you want to save the changes to the quotation?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, save it!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.saveEdit();
-        }
+    async editQuotation() {
+      const { value: formValues } = await Swal.fire({
+        title: "Edit Product Prices",
+        html: this.quotation.line_items
+          .map(
+            (item, index) => `
+              <div style="text-align: center; margin-bottom: 10px;">
+                <label for="product_${index}">${item.product_name}</label>
+                <input type="number" id="product_${index}" value="${item.product_price}" class="swal2-input" style="width: 80%;">
+              </div>`
+          )
+          .join(""),
+        focusConfirm: false,
+        preConfirm: () => {
+          return this.quotation.line_items.map(
+            (item, index) =>
+              document.getElementById(`product_${index}`).value
+          );
+        },
       });
+
+      if (formValues) {
+        this.editedProductPrices = formValues.map(Number);
+
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Do you want to save the changes to the quotation?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, save it!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.saveEdit();
+          }
+        });
+      }
     },
-    // Method to save the edited prices
+
     saveEdit() {
       if (
         this.editedProductPrices.some(
@@ -296,9 +259,6 @@ export default {
         .catch((error) => {
           console.error("Failed to update quotation:", error);
         });
-
-      this.editDialog = false;
-      this.editedProductPrices = [];
     },
   },
 };
@@ -309,9 +269,11 @@ export default {
   padding: 2rem;
   margin: 2rem;
 }
+
 .q-item-label {
   font-weight: bold;
 }
+
 .swal2-container {
   z-index: 9999 !important;
 }

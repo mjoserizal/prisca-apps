@@ -1,61 +1,69 @@
 <template>
   <q-page>
-    <q-tabs v-model="tab" class="text-h6">
-      <q-tab name="detail">
-        <router-link :to="{ name: 'orderDetail', params: { id: orderId } }">
-          Order Detail
-        </router-link>
-      </q-tab>
-    </q-tabs>
+    <div class="container-box">
+      <h1 class="q-pa-md text-center font-bold text-lg">
+        Orders Detail
+      </h1>
+    </div>
     <q-container>
       <q-card class="rounded-md shadow-md m-6 p-4" v-if="order">
-        <q-card-section class="text-h6">Order Details</q-card-section>
-        <q-card-section class="flex flex-wrap">
-          <div class="w-full md:w-1/2 align-items-start">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Buyer Name:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ order.user.name }}</q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label>Buyer Phone:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ order.user.telp }}</q-item-section>
-            </q-item>
-            <q-item v-if="order.user.alamat">
-              <q-item-section>
-                <q-item-label>Buyer Address:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ order.user.alamat }}</q-item-section>
-            </q-item>
+        <q-card-section>
+          <div class="invoice-header">
+            <div>
+              <q-img src="/public/images/prisca logo.png" style="margin-right: 8px; height: 100px; width: 100px" />
+            </div>
+            <div>
+              <div class="text-right">
+                <div class="text-h5">Purchase Order</div>
+                <div>
+                  <strong>Referensi</strong>: {{ order.po_code }}
+                </div>
+                <div>
+                  <strong>Tanggal</strong>: {{ formatDate(order.tanggal_order) }}
+                </div>
+                <div>
+                  <strong>Status</strong>: {{ order.status }}
+                </div>
+                <div v-if="order.no_resi">
+                  <strong>No Resi</strong>: {{ order.no_resi }}
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="w-full md:w-1/2 align-items-end">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Vendor Name:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ order.vendor.name }}</q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label>Vendor Phone:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ order.vendor.telp }}</q-item-section>
-            </q-item>
-            <q-item v-if="order.vendor.alamat">
-              <q-item-section>
-                <q-item-label>Vendor Address:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ order.vendor.alamat }}</q-item-section>
-            </q-item>
+        </q-card-section>
+
+        <q-card-section>
+          <div class="info-section">
+            <div class="info-block">
+              <div class="text-h6">Info Perusahaan</div>
+              <hr class="custom-hr" />
+              <div>{{ order.vendor.name }}</div>
+              <div>Telp: {{ order.vendor.telp }}</div>
+              <div>{{ order.vendor.alamat }}</div>
+            </div>
+
+            <div class="info-block">
+              <div class="text-h6">Order Ke</div>
+              <hr class="custom-hr" />
+              <div>{{ order.user.name }}</div>
+              <div>{{ order.user.alamat }}</div>
+              <div>Telp: {{ order.user.telp }}</div>
+            </div>
           </div>
         </q-card-section>
 
         <q-card-section class="text-h6">Item Details</q-card-section>
         <q-card-section>
-          <q-table class="shadow-md" flat bordered :rows="order.line_items" :columns="columns" row-key="id" />
+          <q-table class="shadow-md" flat bordered :rows="order.line_items" :columns="columns" row-key="id">
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td v-for="col in props.cols" :key="col.name" :props="props"
+                  :class="col.align === 'right' ? 'text-right' : ''">
+                  {{ col.value }}
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
@@ -63,39 +71,22 @@
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
-          <q-btn v-if="order.status === 'selesai'" label="Kirim Invoice" color="primary" @click="sendInvoice" />
+          <q-btn v-if="order.status === 'selesai'" label="Buat Invoice" color="primary" class="q-mr-sm"
+            @click="sendInvoice" />
           <q-btn label="Konfirmasi Pengiriman" color="primary" @click="editOrder">
             <q-tooltip anchor="bottom middle" self="top middle">
               Input Shipping Receipt
             </q-tooltip>
           </q-btn>
-        </q-card-section>
-
-        <!-- Display receipt number if available -->
-        <q-card-section v-if="order.no_resi">
-          <q-item>
-            <q-item-section>
-              <q-item-label>Receipt Number:</q-item-label>
-            </q-item-section>
-            <q-item-section>{{ order.no_resi }}</q-item-section>
-          </q-item>
+          <q-btn v-if="order.status === 'selesai' && order.bukti" label="Lihat Bukti Barang" color="secondary"
+            @click="viewProof">
+            <q-tooltip anchor="bottom middle" self="top middle">
+              View Proof of Shipment
+            </q-tooltip>
+          </q-btn>
         </q-card-section>
       </q-card>
     </q-container>
-
-    <!-- Edit Order Dialog -->
-    <q-dialog v-model="editDialog" persistent>
-      <q-card>
-        <q-card-section class="text-h6">Input Shipping Receipt</q-card-section>
-        <q-card-section>
-          <q-input v-model="resiNumber" outlined type="text" placeholder="Enter Receipt Number" />
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn label="Cancel" color="primary" @click="cancelEdit" />
-          <q-btn label="Save" color="primary" @click="confirmSaveEdit" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-page>
 </template>
 
@@ -113,16 +104,14 @@ export default {
     return {
       orderId: null,
       order: null,
-      editDialog: false,
       resiNumber: "",
       totalPrice: 0,
-      tab: "detail",
       columns: [
         {
-          name: "product_name",
+          name: "name",
           label: "Product Name",
           align: "left",
-          field: "product_name",
+          field: "name",
           sortable: true,
         },
         {
@@ -133,10 +122,10 @@ export default {
           sortable: true,
         },
         {
-          name: "product_price",
+          name: "price",
           label: "Product Price",
           align: "right",
-          field: "product_price",
+          field: "price",
           sortable: true,
         },
         {
@@ -206,6 +195,7 @@ export default {
 
         if (response.data.success) {
           this.order.no_resi = response.data.shipment.no_resi;
+          this.order.bukti = response.data.shipment.bukti;
         } else {
           console.error("Failed to fetch shipment:", response.data.message);
         }
@@ -228,13 +218,31 @@ export default {
       }).format(value);
     },
 
-    editOrder() {
-      this.resiNumber = this.order.no_resi || "";
-      this.editDialog = true;
+    formatDate(date) {
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(date).toLocaleDateString("id-ID", options);
     },
 
-    cancelEdit() {
-      this.editDialog = false;
+    editOrder() {
+      this.resiNumber = this.order.no_resi || "";
+      Swal.fire({
+        title: "Input Shipping Receipt",
+        input: "text",
+        inputValue: this.resiNumber,
+        showCancelButton: true,
+        confirmButtonText: "Save",
+        preConfirm: (resiNumber) => {
+          if (!resiNumber) {
+            Swal.showValidationMessage("Please enter a receipt number");
+          }
+          return resiNumber;
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.resiNumber = result.value;
+          this.confirmSaveEdit();
+        }
+      });
     },
 
     async confirmSaveEdit() {
@@ -264,38 +272,25 @@ export default {
 
         if (response.data.success) {
           this.order.no_resi = this.resiNumber;
-          this.editDialog = false;
           Swal.fire({
             icon: "success",
             title: "Success",
-            text: "Receipt number updated successfully.",
+            text: "Shipping receipt updated successfully.",
           });
         } else {
-          console.error(
-            "Failed to update receipt number:",
-            response.data.message
-          );
-          // Tambahkan kondisi jika no_resi sudah ada
-          if (response.data.message && response.data.message.no_resi) {
-            Swal.fire({
-              icon: "warning",
-              title: "Warning",
-              text: `Receipt number already exists: ${this.order.no_resi}`,
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: "Failed to update receipt number.",
-            });
-          }
+          console.error("Failed to update shipping receipt:", response.data.message);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to update shipping receipt.",
+          });
         }
       } catch (error) {
-        console.error("Failed to update receipt number:", error);
+        console.error("Failed to update shipping receipt:", error);
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Failed to update receipt number.",
+          text: "Failed to update shipping receipt.",
         });
       }
     },
@@ -314,13 +309,9 @@ export default {
           },
         };
 
-        const payload = {
-          order_id: this.orderId,
-        };
-
         const response = await axios.post(
-          `${apiBaseUrl}vendor/invoice`,
-          payload,
+          `${apiBaseUrl}vendor/invoice/${this.orderId}`,
+          {},
           config
         );
 
@@ -347,12 +338,57 @@ export default {
         });
       }
     },
+
+    viewProof() {
+      if (this.order.bukti) {
+        Swal.fire({
+          title: "Proof of Receipt",
+          imageUrl: this.order.bukti,
+          imageAlt: "Proof of Receipt",
+          showCloseButton: true,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Proof of receipt not found.",
+        });
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-.q-card-section {
-  margin-bottom: 16px;
+.container-box {
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.info-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.info-block {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.custom-hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
+}
+
+.q-btn+.q-btn {
+  margin-left: 10px;
 }
 </style>

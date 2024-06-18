@@ -1,16 +1,9 @@
 <template>
   <q-page>
     <q-tabs v-model="tab" class="text-h6">
-      <q-tab name="detail">
-        <router-link
-          :to="{ name: 'quotationDetail', params: { id: quotationId } }"
-          >Quotation Detail</router-link
-        >
-      </q-tab>
+
       <q-tab name="fix">
-        <router-link :to="{ name: 'quotationFix', params: { id: quotationId } }"
-          >Quotation Fix</router-link
-        >
+        <router-link :to="{ name: 'quotationFix', params: { id: quotationId } }">Quotation Fix</router-link>
       </q-tab>
     </q-tabs>
     <q-container>
@@ -45,14 +38,7 @@
 
         <q-card-section class="text-h6">Item Details</q-card-section>
         <q-card-section>
-          <q-table
-            class="shadow-md"
-            flat
-            bordered
-            :rows="quotation.line_items"
-            :columns="columns"
-            row-key="id"
-          />
+          <q-table class="shadow-md" flat bordered :rows="quotation.line_items" :columns="columns" row-key="id" />
         </q-card-section>
 
         <!-- Total Price Section -->
@@ -61,11 +47,7 @@
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
-          <q-btn
-            label="Send Quotation"
-            color="primary"
-            @click="sendQuotation"
-          />
+          <q-btn label="Send Quotation" color="primary" @click="sendQuotation" />
         </q-card-section>
       </q-card>
     </q-container>
@@ -125,8 +107,8 @@ export default {
     totalPrice() {
       return this.quotation
         ? this.quotation.line_items.reduce((total, item) => {
-            return total + item.amount;
-          }, 0)
+          return total + item.amount;
+        }, 0)
         : 0;
     },
   },
@@ -210,6 +192,10 @@ export default {
                     icon: "success",
                     confirmButtonColor: "#3085d6",
                     confirmButtonText: "OK",
+                  }).then(() => {
+                    this.$router.push({
+                      name: "quotation",
+                    });
                   });
                 } else {
                   console.error(
@@ -244,6 +230,7 @@ export default {
   padding: 2rem;
   margin: 2rem;
 }
+
 .q-item-label {
   font-weight: bold;
 }

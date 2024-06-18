@@ -12,7 +12,7 @@
             <!-- Tombol Action -->
             <template v-slot:body-cell-action="props">
               <q-td :props="props">
-                <q-btn v-if="props.row.canSendInvoice" icon="send" color="primary" size="sm"
+                <q-btn class="q-mr-lg" v-if="props.row.invoice_created === 1" icon="send" color="primary" size="sm"
                   @click="viewInvoice(props.row)">
                   Lihat Invoice
                 </q-btn>
@@ -92,6 +92,10 @@ const viewInvoice = (order) => {
   router.push({ name: "invoiceDetail", params: { id: order.id } }); // Ubah ini sesuai dengan nama rute dan parameter yang benar
 };
 
+const sortOrdersByDate = (orders) => {
+  return orders.sort((a, b) => new Date(b.waktu_order) - new Date(a.waktu_order));
+};
+
 onMounted(async () => {
   try {
     const token = localStorage.getItem("token");
@@ -107,26 +111,26 @@ onMounted(async () => {
     const response = await axios.get(`${apiBaseUrl}vendor/order`, config);
     if (response.data.success) {
       if (Array.isArray(response.data.orders)) {
-        orders.value = response.data.orders.map((o) => ({
+        orders.value = sortOrdersByDate(response.data.orders.map((o) => ({
           id: o.id,
           code: o.code,
           company_name: o.company_name,
           status: o.status,
           waktu_order: o.waktu_order,
-          canSendInvoice: o.status === "selesai", // Tambahkan properti canSendInvoice
-        }));
+          invoice_created: o.invoice_created, // Tambahkan properti invoice_created
+        })));
       } else {
         const o = response.data.orders;
-        orders.value = [
+        orders.value = sortOrdersByDate([
           {
             id: o.id,
             code: o.code,
             company_name: o.company_name,
             status: o.status,
             waktu_order: o.waktu_order,
-            canSendInvoice: o.status === "selesai", // Tambahkan properti canSendInvoice
+            invoice_created: o.invoice_created, // Tambahkan properti invoice_created
           },
-        ];
+        ]);
       }
       loading.value = false;
     } else {

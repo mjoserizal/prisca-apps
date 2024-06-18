@@ -1,78 +1,89 @@
 <template>
   <q-page>
+    <div class="container-box">
+      <h1 class="q-pa-md text-center font-bold text-lg">Invoice Detail</h1>
+    </div>
     <q-container>
       <q-card class="rounded-md shadow-md m-6 p-4" v-if="invoice">
-        <q-card-section class="text-h6">Invoice Details</q-card-section>
-        <q-card-section class="flex flex-wrap">
-          <div class="w-full md:w-1/2 align-items-start">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Invoice Number:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ invoice.payment.no_invoice }}</q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label>Payment Status:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ invoice.payment.status }}</q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label>Total Payment:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{
-        formatToRupiah(invoice.payment.total_bayar)
-      }}</q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label>Due Date:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ invoice.payment.batas_bayar }}</q-item-section>
-            </q-item>
-          </div>
-          <div class="w-full md:w-1/2 align-items-end">
-            <q-item>
-              <q-item-section>
-                <q-item-label>Buyer Name:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ invoice.buyer.name }}</q-item-section>
-            </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label>Buyer Phone:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ invoice.buyer.telp }}</q-item-section>
-            </q-item>
-            <q-item v-if="invoice.buyer.alamat">
-              <q-item-section>
-                <q-item-label>Buyer Address:</q-item-label>
-              </q-item-section>
-              <q-item-section>{{ invoice.buyer.alamat }}</q-item-section>
-            </q-item>
+        <!-- Invoice Header -->
+        <q-card-section>
+          <div class="invoice-header">
+            <div>
+              <q-img src="/public/images/prisca logo.png" style="margin-right: 8px; height: 100px; width: 100px" />
+            </div>
+            <div>
+              <div class="text-right">
+                <div class="text-h5">Invoice</div>
+                <div>
+                  <strong>No Invoice</strong>: {{ invoice.payment.no_invoice }}
+                </div>
+                <div>
+                  <strong>Due Date</strong>: {{ invoice.payment.batas_bayar }}
+                </div>
+                <div>
+                  <strong>Status</strong>: {{ invoice.payment.status }}
+                </div>
+              </div>
+            </div>
           </div>
         </q-card-section>
 
+        <!-- Company and Buyer Info -->
+        <q-card-section>
+          <div class="info-section">
+            <div class="info-block">
+              <div class="text-h6">Company Info</div>
+              <hr class="custom-hr" />
+              <div>{{ invoice.vendor.name }}</div>
+              <div>Telp: {{ invoice.vendor.telp }}</div>
+              <div>{{ invoice.vendor.alamat }}</div>
+            </div>
+
+            <div class="info-block">
+              <div class="text-h6">Buyer Info</div>
+              <hr class="custom-hr" />
+              <div>{{ invoice.buyer.name }}</div>
+              <div>Telp: {{ invoice.buyer.telp }}</div>
+              <div>{{ invoice.buyer.alamat }}</div>
+            </div>
+          </div>
+        </q-card-section>
+
+        <!-- Item Details -->
         <q-card-section class="text-h6">Item Details</q-card-section>
         <q-card-section>
-          <q-table class="shadow-md" flat bordered :rows="invoice.line_items" :columns="columns" row-key="id" />
+          <q-table class="shadow-md" flat bordered :rows="invoice.line_items" :columns="columns" row-key="id">
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td v-for="col in props.cols" :key="col.name" :props="props"
+                  :class="col.align === 'right' ? 'text-right' : ''">
+                  {{ col.value }}
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
         </q-card-section>
 
+        <!-- Total Price -->
         <q-card-section class="text-h6 flex justify-end">
           <div>Total Price: {{ formatToRupiah(totalPrice) }}</div>
         </q-card-section>
 
-        <q-card-section v-if="invoice.pdf_url">
-          <q-btn label="Download Invoice" color="primary" @click="downloadInvoice" />
-        </q-card-section>
-
-        <q-card-section v-if="invoice.payment.bukti">
-          <q-btn label="Mark as Success" color="positive" @click="markAsSuccess" />
-        </q-card-section>
-
-        <q-card-section>
+        <!-- Actions -->
+        <q-card-section class="flex justify-end">
+          <q-btn v-if="invoice.pdf_url" label="Download Invoice" color="primary" class="q-mr-sm"
+            @click="downloadInvoice" />
           <q-btn label="Send Invoice PDF" color="primary" @click="sendInvoicePdf" />
+        </q-card-section>
+
+        <!-- Proof of Payment -->
+        <q-card-section v-if="isProofAvailable" class="flex justify-end">
+          <q-btn label="View Proof" color="primary" @click="viewProof" />
+        </q-card-section>
+
+        <!-- Mark as Success -->
+        <q-card-section v-if="isProofAvailable" class="flex justify-end">
+          <q-btn label="Mark as Success" color="positive" @click="markAsSuccess" />
         </q-card-section>
       </q-card>
     </q-container>
@@ -92,38 +103,18 @@ export default {
       orderId: null,
       invoice: null,
       totalPrice: 0,
-
       columns: [
-        {
-          name: "name",
-          label: "Product Name",
-          align: "left",
-          field: "name",
-          sortable: true,
-        },
-        {
-          name: "quantity",
-          label: "Quantity",
-          align: "center",
-          field: "quantity",
-          sortable: true,
-        },
-        {
-          name: "price",
-          label: "Price",
-          align: "right",
-          field: "price",
-          sortable: true,
-        },
-        {
-          name: "amount",
-          label: "Total Price",
-          align: "right",
-          field: "amount",
-          sortable: true,
-        },
+        { name: "name", label: "Product Name", align: "left", field: "name", sortable: true },
+        { name: "quantity", label: "Quantity", align: "center", field: "quantity", sortable: true },
+        { name: "price", label: "Price", align: "right", field: "price", sortable: true },
+        { name: "amount", label: "Total Price", align: "right", field: "amount", sortable: true },
       ],
     };
+  },
+  computed: {
+    isProofAvailable() {
+      return this.invoice && this.invoice.payment.bukti !== "http://127.0.0.1:8000/images";
+    },
   },
   async mounted() {
     this.orderId = this.$route.params.id;
@@ -138,45 +129,26 @@ export default {
           return;
         }
 
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
+        const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const invoiceResponse = await axios.get(
-          `${apiBaseUrl}vendor/invoice/${this.orderId}`,
-          config
-        );
+        const invoiceResponse = await axios.get(`${apiBaseUrl}vendor/invoice/${this.orderId}`, config);
 
         if (invoiceResponse.data.success) {
           this.invoice = invoiceResponse.data.data;
           this.calculateTotalPrice();
         } else {
-          console.error(
-            "Failed to fetch invoice detail:",
-            invoiceResponse.data.message
-          );
+          console.error("Failed to fetch invoice detail:", invoiceResponse.data.message);
         }
       } catch (error) {
         console.error("Failed to fetch invoice detail:", error);
       }
     },
-
     calculateTotalPrice() {
-      this.totalPrice = this.invoice.line_items.reduce(
-        (total, item) => total + item.amount,
-        0
-      );
+      this.totalPrice = this.invoice.line_items.reduce((total, item) => total + item.amount, 0);
     },
-
     formatToRupiah(value) {
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-      }).format(value);
+      return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(value);
     },
-
     async downloadInvoice() {
       try {
         const token = localStorage.getItem("token");
@@ -185,35 +157,22 @@ export default {
           return;
         }
 
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          responseType: "blob",
-        };
+        const config = { headers: { Authorization: `Bearer ${token}` }, responseType: "blob" };
 
         const response = await axios.get(this.invoice.pdf_url, config);
 
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute(
-          "download",
-          `invoice_${this.invoice.payment.no_invoice}.pdf`
-        );
+        link.setAttribute("download", `invoice_${this.invoice.payment.no_invoice}.pdf`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
       } catch (error) {
         console.error("Failed to download invoice:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to download invoice",
-        });
+        Swal.fire({ icon: "error", title: "Error", text: "Failed to download invoice" });
       }
     },
-
     async markAsSuccess() {
       try {
         const token = localStorage.getItem("token");
@@ -222,46 +181,22 @@ export default {
           return;
         }
 
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
+        const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const response = await axios.post(
-          `${apiBaseUrl}vendor/invoice/${this.orderId}/success`,
-          {},
-          config
-        );
+        const response = await axios.post(`${apiBaseUrl}vendor/invoice/${this.orderId}/success`, {}, config);
 
         if (response.data.success) {
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Invoice status updated successfully.",
-          });
+          Swal.fire({ icon: "success", title: "Success", text: "Invoice status updated successfully." });
           this.fetchInvoiceDetail();
         } else {
-          console.error(
-            "Failed to update invoice status:",
-            response.data.message
-          );
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Failed to update invoice status.",
-          });
+          console.error("Failed to update invoice status:", response.data.message);
+          Swal.fire({ icon: "error", title: "Error", text: "Failed to update invoice status." });
         }
       } catch (error) {
         console.error("Failed to update invoice status:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to update invoice status.",
-        });
+        Swal.fire({ icon: "error", title: "Error", text: "Failed to update invoice status." });
       }
     },
-
     async sendInvoicePdf() {
       try {
         const token = localStorage.getItem("token");
@@ -270,46 +205,42 @@ export default {
           return;
         }
 
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
+        const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const response = await axios.post(
-          `${apiBaseUrl}vendor/invoice/${this.orderId}/pdf`,
-          {},
-          config
-        );
+        const response = await axios.post(`${apiBaseUrl}vendor/invoice/${this.orderId}/pdf`, {}, config);
 
-        if (response.data.success) {
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Invoice PDF sent successfully.",
-          });
+        if (response.data.message) {
+          Swal.fire({ icon: "success", title: "Success", text: response.data.message });
         } else {
           console.error("Failed to send invoice PDF:", response.data.message);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Failed to send invoice PDF.",
-          });
+          Swal.fire({ icon: "error", title: "Error", text: "Failed to send invoice PDF." });
         }
       } catch (error) {
         console.error("Failed to send invoice PDF:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to send invoice PDF.",
-        });
+        Swal.fire({ icon: "error", title: "Error", text: "Failed to send invoice PDF." });
       }
+    },
+    viewProof() {
+      Swal.fire({
+        title: "Proof of Payment",
+        imageUrl: this.invoice.payment.bukti,
+        imageAlt: "Proof of Payment",
+        confirmButtonText: "Close",
+      });
     },
   },
 };
 </script>
 
 <style>
+.container-box {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 20px;
+  border: 1px solid #ddd;
+}
+
 .q-card-section {
   padding: 2rem;
   margin: 2rem;
@@ -317,5 +248,36 @@ export default {
 
 .q-item-label {
   font-weight: bold;
+}
+
+.q-item-label,
+.q-item-section {
+  display: flex;
+  align-items: center;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-block {
+  width: 45%;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.custom-hr {
+  border: 0.25px solid #000;
+  margin: 8px 0;
+
 }
 </style>
