@@ -5,7 +5,7 @@
         <q-card v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }" class="custom-card">
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <q-img src="/public/images/prisca logo.png" style="width: 103px; height: 103px; margin: 0 auto" />
+              <q-img src="/images/prisca logo.png" style="width: 103px; height: 103px; margin: 0 auto" />
             </div>
           </q-card-section>
           <q-card-section>
