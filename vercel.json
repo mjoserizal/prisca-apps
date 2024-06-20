@@ -14,7 +14,7 @@
       "dest": "/public/icons/$1"
     },
     {
-      "src": "/public/images/(.*)",
+      "src": "/public/(.*)",
       "dest": "/public/images/$1"
     },
     {
