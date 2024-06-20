@@ -53,7 +53,7 @@
       <!-- Sidebar Header -->
       <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <q-avatar size="125px" class="q-mb-md" style="width: 160px; height: 80px">
-          <img src="/public/images/ISM.png" alt="Logo" fit="contain" class="absolute-center" />
+          <img src="/images/ISM.png" alt="Logo" fit="contain" class="absolute-center" />
         </q-avatar>
       </div>
       <!-- Sidebar Menu -->
