@@ -8,7 +8,7 @@
         <q-btn flat dense round @click="toggleLeftDrawer" aria-label="Menu" icon="menu" />
 
         <!-- Logo -->
-        <q-img src="/images/prisca logo.png" style="margin-right: 8px; height: 50px; width: 50px" />
+        <q-img src="/images/ISM.png" style="margin-right: 8px; height: 50px; width: 50px" />
 
         <q-space />
 
