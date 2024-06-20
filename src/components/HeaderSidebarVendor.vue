@@ -8,7 +8,7 @@
         <q-btn flat dense round @click="toggleLeftDrawer" aria-label="Menu" icon="menu" />
 
         <!-- Logo -->
-        <q-img src="/public/images/prisca logo.png" style="margin-right: 8px; height: 50px; width: 50px" />
+        <q-img src="/images/prisca logo.png" style="margin-right: 8px; height: 50px; width: 50px" />
 
         <q-space />
         <!-- Account Button -->
@@ -39,7 +39,7 @@
       <!-- Sidebar Header -->
       <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <q-avatar size="125px" class="q-mb-md" style="width: 160px; height: 80px">
-          <img src="/public/images/ISM.png" alt="Logo" fit="contain" class="absolute-center" />
+          <img src="/images/ISM.png" alt="Logo" fit="contain" class="absolute-center" />
         </q-avatar>
       </div>
       <!-- Sidebar Menu -->
