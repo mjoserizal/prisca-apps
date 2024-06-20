@@ -97,7 +97,7 @@ export default defineComponent({
             title: "Registration successful",
             text: "You have been registered successfully!",
           }).then(() => {
-            router.push("/");
+            router.push({ name: "login" });
           });
         } else {
           console.error(
@@ -120,7 +120,7 @@ export default defineComponent({
     };
 
     const goToLogin = () => {
-      router.push("/login");
+      router.push({ name: "login" });
     };
 
     return {
