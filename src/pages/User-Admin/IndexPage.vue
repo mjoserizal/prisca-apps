@@ -4,13 +4,13 @@
       <div class="q-pa-md q-gutter-md row items-center justify-between">
         <div>
           <q-breadcrumbs>
-            <q-breadcrumbs-el label="Catalogue" icon="" to="/" />
-            <q-breadcrumbs-el label="Product" />
+            <q-breadcrumbs-el label="Catalogue" icon="" to="/"/>
+            <q-breadcrumbs-el label="Product"/>
           </q-breadcrumbs>
         </div>
 
         <div class="row items-center q-gutter-md">
-          <q-input outlined dense v-model="searchInput" placeholder="Search product..." class="search-input" />
+          <q-input outlined dense v-model="searchInput" placeholder="Search product..." class="search-input"/>
           <q-btn color="indigo" @click="openFilterPanel" class="filter-button">
             <i class="fa-solid fa-arrow-down-wide-short" style="padding-right: 10px"></i>
             Filter
@@ -19,10 +19,10 @@
       </div>
       <q-page class="fit row wrap justify-start items-start content-start q-pa-md">
         <q-col class="col-6 col-sm-4 col-md-3 col-lg-2 q-mb-md" style="padding: 6px" v-for="product in filteredProducts"
-          :key="product.id">
+               :key="product.id">
           <q-card class="my-card" flat bordered>
             <q-img v-if="product.images && product.images.length > 0"
-              :src="`data:image/png;base64, ${product.images[0].base64_image}`" />
+                   :src="product.images[0].url_image"/>
 
             <q-card-section>
               <div class="col text-h6 ellipsis" style="color: #013a63; font-weight: normal">
@@ -41,11 +41,11 @@
 
             <q-card-actions>
               <router-link :to="{ name: 'detail', params: { id: product.id } }">
-                <q-btn flat color="primary" label="Detail" />
+                <q-btn flat color="primary" label="Detail"/>
               </router-link>
-              <q-btn flat color="secondary" label="Compare" @click="addToCompare(product)" />
+              <q-btn flat color="secondary" label="Compare" @click="addToCompare(product)"/>
 
-              <q-space />
+              <q-space/>
             </q-card-actions>
           </q-card>
         </q-col>
@@ -54,11 +54,13 @@
   </div>
 </template>
 
+
 <script>
-import { defineComponent, ref, computed } from "vue";
+import {defineComponent, ref, computed} from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useRouter } from "vue-router";
+import {useRouter} from "vue-router";
+
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export default defineComponent({
   name: "IndexPage",
@@ -138,34 +140,34 @@ export default defineComponent({
         )} - ${formatToRupiah(maxPriceFilter.value)}</span></label>
   <br><br>
   <input type="number" id="minPriceFilter" name="minPriceFilter" min="100000" max="2000000" value="${minPriceFilter.value
-          }">
+        }">
   <input type="number" id="maxPriceFilter" name="maxPriceFilter" min="100000" max="2000000" value="${maxPriceFilter.value
-          }">
+        }">
   <br><br>
   <select id="brandFilter" name="brandFilter">
     <option value="">${brandFilter ? "Show All Brands" : "Select Brand"
-          }</option>
+        }</option>
     ${uniqueBrands
-            .map((brand) => `<option value="${brand}">${brand}</option>`)
-            .join("")}
+          .map((brand) => `<option value="${brand}">${brand}</option>`)
+          .join("")}
   </select>
   <br><br>
   <select id="categoryFilter" name="categoryFilter">
     <option value="">${categoryFilter ? "Show All Categories" : "Select Category"
-          }</option>
+        }</option>
     ${uniqueCategories
-            .map((category) => `<option value="${category}">${category}</option>`)
-            .join("")}
+          .map((category) => `<option value="${category}">${category}</option>`)
+          .join("")}
   </select>
   <select id="vendorFilter" name="vendorFilter">
     <option value="">${vendorFilter ? "Show All Vendors" : "Select Vendor"
-          }</option>
+        }</option>
     ${uniqueVendors
-            .map(
-              (vendor_name) =>
-                `<option value="${vendor_name}">${vendor_name}</option>`
-            )
-            .join("")}
+          .map(
+            (vendor_name) =>
+              `<option value="${vendor_name}">${vendor_name}</option>`
+          )
+          .join("")}
   </select>
 `,
         showCancelButton: true,
