@@ -20,11 +20,9 @@
     <div v-else>
       <p>Loading...</p>
     </div>
-    <!-- Tampilkan informasi dari setiap lineItem -->
     <div v-if="purchaseRequest && purchaseRequest.lineItems" class="q-pa-md">
       <q-table flat bordered ref="tableRef" :class="tableClass" tabindex="0" :rows="purchaseRequest.lineItems"
         :columns="lineItemColumns" row-key="id">
-        <!-- Kolom actions untuk edit -->
         <template v-if="showEditButton" v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn round dense flat color="negative" icon="edit" @click="editQuantity(props.row)" />
@@ -89,7 +87,6 @@ export default {
           sortable: true,
           format: (val) => formatToRupiah(val),
         },
-        // Kolom actions untuk edit
         {
           name: "actions",
           required: true,
@@ -111,13 +108,11 @@ export default {
         this.$router.push("/");
         return;
       }
-
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-
       axios
         .get(
           `${apiBaseUrl}buyer/purchaseRequest/${this.id}`,
@@ -125,7 +120,7 @@ export default {
         )
         .then((response) => {
           this.purchaseRequest = response.data.purchaseRequest;
-          this.updateEditButtonStatus(); // Perbarui status tombol edit setelah mendapatkan data purchaseRequest
+          this.updateEditButtonStatus();
         })
         .catch((error) => {
           console.error("Error fetching purchase request:", error);
@@ -141,7 +136,6 @@ export default {
         this.$router.push("/");
         return;
       }
-
       Swal.fire({
         title: "Edit Quantity",
         input: "number",
@@ -167,7 +161,6 @@ export default {
               config
             )
             .then(() => {
-              // Refresh data setelah berhasil disimpan
               this.fetchPurchaseRequest();
             })
             .catch((error) => {
@@ -182,7 +175,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .container-box {
   background-color: #f9f9f9;
