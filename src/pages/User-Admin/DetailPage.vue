@@ -4,12 +4,12 @@
       <!-- Q-Carousel for product images -->
       <q-carousel v-if="product.images && product.images.length > 1" animated v-model="slide" arrows navigation infinite
         class="carousel-container">
-        <q-carousel-slide v-for="(image, index) in product.images" :key="image.id" :name="index"
-          :img-src="image.url_image" class="carousel-image" />
+        <q-carousel-slide v-for="(image, index) in product.images" :key="index" :name="index" :img-src="image.url_image"
+          class="carousel-image" />
       </q-carousel>
 
       <!-- Display a single image if there's only one -->
-      <img v-else-if="product.images && product.images.length === 1" :src="product.images[0].url_image"
+      <img v-else-if="product.images && product.images.length === 1" :src="product.images[0].url_image || ''"
         alt="Product Image" class="single-image" style="margin: 10px" />
 
       <!-- Product description -->
@@ -19,7 +19,11 @@
         </div>
         <br />
         <div class="text-subtitle2" style="font-weight: bold; font-size: 42px">
-          {{ productPrice }}
+          {{
+        product.commercial_info && product.commercial_info.commercialInfo
+          ? formatPrice(product.commercial_info.commercialInfo.price)
+          : "N/A"
+      }}
         </div>
         <br />
         <div class="text-subtitle2" style="margin-bottom: 10px">
@@ -27,19 +31,42 @@
         </div>
         <div class="text-subtitle2">Category : {{ product.category }}</div>
         <div class="text-subtitle2">
-          Stock: {{ productStock }}
+          Stock:
+          {{
+        product.commercial_info && product.commercial_info.commercialInfo
+          ? product.commercial_info.commercialInfo.stock
+          : "N/A"
+      }}
         </div>
         <div class="text-subtitle2">
-          Product Specifications : {{ productSpecification }}
+          Product Specifications :
+          {{
+          product.detail && product.detail.productSpecification
+            ? product.detail.productSpecification
+            : "N/A"
+        }}
         </div>
         <div class="text-subtitle2">
-          Min Purchase : {{ minPurchase }} Pcs
+          Min Purchase :
+          {{
+          product.commercial_info && product.commercial_info.purchaseQty
+            ? product.commercial_info.purchaseQty.min
+            : "N/A"
+        }}
+          Pcs
         </div>
         <div class="text-subtitle2">
-          SKU : {{ sku }}
+          SKU :
+          {{ product.other && product.other.sku ? product.other.sku : "N/A" }}
         </div>
         <div class="text-subtitle2">
-          Warranty : {{ warranty }} Months
+          Warranty :
+          {{
+        product.other && product.other.warranty
+          ? product.other.warranty
+          : "N/A"
+      }}
+          Months
         </div>
         <div class="row justify-end">
           <q-btn outline rounded @click="addToCart" color="deep-orange" icon="add_shopping_cart"
@@ -113,7 +140,9 @@
 <script>
 import { defineComponent, ref, onMounted } from "vue";
 import axios from "axios";
+import "@fortawesome/fontawesome-free";
 import { useStore } from "vuex";
+import store from "src/router/store";
 import { useRouter } from "vue-router";
 import { EventBus } from "src/router/EventBus";
 import Swal from "sweetalert2";
@@ -136,7 +165,7 @@ export default defineComponent({
     const stock = ref(0); // Add stock variable
     const manipulatedVideoUrl = ref(""); // Add manipulatedVideoUrl variable
 
-    const vuexStore = useStore();
+    const vuexStore = useStore(store);
     const router = useRouter();
 
     const getProductDetails = async () => {
@@ -154,11 +183,12 @@ export default defineComponent({
           },
         };
 
-        const { data } = await axios.get(`${apiBaseUrl}buyer/product/${props.id}`, config);
+        const response = await axios.get(`${apiBaseUrl}buyer/product/${props.id}`, config);
 
-        product.value = data.product;
-        stock.value = data.product.commercial_info.commercialInfo.stock;
-        manipulatedVideoUrl.value = data.product.detail.video.replace(/\\/g, "/");
+        product.value = response.data.product;
+        stock.value = response.data.product.commercial_info.commercialInfo.stock;
+        manipulatedVideoUrl.value = response.data.product.detail.video.replace(/\\/g, "/");
+        // Manipulate video URL
       } catch (error) {
         console.log("Error fetching data: ", error);
       }
@@ -238,12 +268,6 @@ export default defineComponent({
       formatPrice,
       selectedTab,
       manipulatedVideoUrl,
-      productPrice: computed(() => product.value.commercial_info?.commercialInfo?.price ? formatPrice(product.value.commercial_info.commercialInfo.price) : "N/A"),
-      productStock: computed(() => product.value.commercial_info?.commercialInfo?.stock ?? "N/A"),
-      productSpecification: computed(() => product.value.detail?.productSpecification ?? "N/A"),
-      minPurchase: computed(() => product.value.commercial_info?.purchaseQty?.min ?? "N/A"),
-      sku: computed(() => product.value.detail?.sku ?? "N/A"),
-      warranty: computed(() => product.value.commercial_info?.commercialInfo?.warranty ?? "N/A"),
     };
   },
 });
@@ -251,34 +275,58 @@ export default defineComponent({
 
 <style scoped>
 .my-card {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px;
 }
 
-.carousel-container {
-  max-height: 400px;
-  margin-bottom: 10px;
-}
-
-.carousel-image {
-  object-fit: cover;
-}
-
-.single-image {
-  display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  max-height: 400px;
+.product-details-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Change to grid with two columns */
+  gap: 20px;
+  /* Add spacing between elements */
 }
 
 .product-description {
   padding: 20px;
 }
 
-.product-video {
-  margin: 10px auto;
-  max-width: 100%;
-  max-height: 400px;
+.carousel-container,
+.single-image {
+  width: 100%;
+  /* Fill container width */
+  height: auto;
+  /* Maintain proportional height */
+}
+
+.carousel-image {
+  object-fit: cover;
+  /* Ensure image is proportionally filled */
+  width: 100%;
+  /* Set image width */
+  height: 200px;
+  /* Set image height */
+}
+
+/* Set responsive layout using media queries */
+@media screen and (max-width: 768px) {
+  .product-details-section {
+    grid-template-columns: 1fr;
+    /* Change to single column on mobile devices */
+  }
+
+  .carousel-container,
+  .single-image {
+    width: 100%;
+    /* Fill container width */
+    height: auto;
+    /* Maintain proportional height */
+  }
+
+  .carousel-image {
+    height: 150px;
+    /* Change image height for mobile devices */
+  }
 }
 </style>
