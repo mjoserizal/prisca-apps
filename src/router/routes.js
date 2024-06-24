@@ -1,7 +1,13 @@
 const routes = [
-  //Login
+  //Landing Page
   {
     path: "/",
+    component: () => import("pages/LandingPage.vue"),
+    name: "landingPage",
+  },
+  //Login
+  {
+    path: "/login",
     component: () => import("pages/Auth/LoginPage.vue"),
     name: "login",
   },
@@ -9,6 +15,7 @@ const routes = [
   {
     path: "/register-buyer",
     component: () => import("pages/Auth/RegisterBuyerPage.vue"),
+    name: "register-buyer",
   },
   //Register-vendor
   {

@@ -21,8 +21,6 @@
         </q-card-section>
       </q-card>
     </div>
-    <!-- Popup untuk Advance Search -->
-    <!-- Remaining code for Advance Search dialog remains the same -->
   </div>
 </template>
 
@@ -114,6 +112,7 @@ onMounted(async () => {
     } else {
       console.error("Failed to fetch quotations:", response.data.message);
     }
+
   } catch (error) {
     loading.value = false;
     console.error("Failed to fetch quotations:", error);

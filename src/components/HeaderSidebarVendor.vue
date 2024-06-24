@@ -98,7 +98,7 @@ let menuItems = [
     route: router.resolve({ name: "quotation" }).href,
   },
   {
-    icon: "fas fa-shopping-basket",
+    icon: "fas fa-file-alt",
     text: "Order",
     route: router.resolve({ name: "order" }).href,
   },
@@ -172,7 +172,10 @@ const logout = async () => {
 </script>
 
 <style lang="sass">
-
+.full-height
+  height: 100%
+  display: flex
+  flex-direction: column
 
 .drawer-custom
   overflow: hidden

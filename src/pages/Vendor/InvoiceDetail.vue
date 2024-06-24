@@ -276,8 +276,8 @@ export default {
 }
 
 .custom-hr {
-  border: 0.25px solid #000;
-  margin: 8px 0;
-
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
 }
 </style>

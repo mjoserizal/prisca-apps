@@ -58,9 +58,10 @@
       <q-card-section class="row">
         <div class="col-6">
           <div class="text-h6 text-primary">Tanggal Berdiri</div>
-          <div class="text-body1">{{ vendorDetail.master.tanggal_berdiri || "Tahun berdiri tidak tersedia" }}</div>
+          <div class="text-body1">
+            {{ formatTanggal(vendorDetail.master.tanggal_berdiri || "Tahun berdiri tidak tersedia") }}
+          </div>
         </div>
-
       </q-card-section>
     </q-card>
     <q-btn label="Edit Profile" color="primary" @click="toggleEditProfile" class="q-mt-md full-width" icon="edit" />

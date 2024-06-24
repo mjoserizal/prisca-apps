@@ -45,8 +45,7 @@
           :key="product.id">
 
           <q-card class="my-card" flat bordered>
-            <q-img v-if="product.images && product.images.length > 0"
-              :src="`data:image/png;base64, ${product.images[0].base64_image}`" />
+            <q-img v-if="product.images && product.images.length > 0" :src="product.images[0].url_image" />
 
             <q-card-section>
               <div class="col text-h6 ellipsis" style="color: #013a63; font-weight: normal">
