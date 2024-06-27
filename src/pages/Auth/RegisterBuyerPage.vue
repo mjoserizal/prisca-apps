@@ -111,7 +111,7 @@ export default defineComponent({
         );
 
         if (response.data.success) {
-          router.push("/");
+          router.push({ name: "login" });
         } else {
           Swal.fire({
             icon: "error",
@@ -127,7 +127,7 @@ export default defineComponent({
     };
 
     const goToLogin = () => {
-      router.push("/");
+      router.push({ name: "login" });
     };
 
     const togglePassword = () => {
@@ -148,10 +148,10 @@ export default defineComponent({
       errorMessage,
       register,
       goToLogin,
-      showPassword, // New
-      showConfirmPassword, // New
-      togglePassword, // New
-      toggleConfirmPassword, // New
+      showPassword,
+      showConfirmPassword,
+      togglePassword,
+      toggleConfirmPassword,
     };
   },
 });

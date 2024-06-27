@@ -5,7 +5,7 @@
       <div class="flex-1 pr-0 md:pr-4 mb-4 md:mb-0">
         <div class="mb-4">
           <label for="large-product-image" class="block mb-2 text-sm font-medium text-gray-600">
-            Large Product Image:
+            Upload Image:
           </label>
           <div class="mt-2 flex justify-center rounded-lg border border-dashed shadow-md border-gray-300 px-6 py-10">
             <div class="text-center">
@@ -16,7 +16,7 @@
               <div class="mt-4 flex text-sm leading-6 text-gray-600">
                 <label for="large-product-image"
                   class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                  <span>Upload Large Image</span>
+                  <span>Upload Image</span>
                   <input type="file" id="large-product-image" name="large-product-image"
                     @change="onImageChange('large-product-image', $event)" class="sr-only" />
                 </label>
@@ -33,7 +33,7 @@
           <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
               <label for="product-image1" class="block mb-2 text-sm font-medium text-gray-600">
-                Upload Image 1:
+                Upload Image :
               </label>
               <div
                 class="mt-2 flex justify-center shadow-md rounded-lg border border-dashed border-gray-300 px-6 py-10">
@@ -44,7 +44,7 @@
                   <div class="mt-4 flex text-sm leading-6 text-gray-600">
                     <label for="product-image1"
                       class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                      <span>Upload Image 1</span>
+                      <span>Upload Image </span>
                       <input type="file" id="product-image1" name="product-image1"
                         @change="onImageChange('product-image1', $event)" class="sr-only" />
                     </label>
@@ -60,7 +60,7 @@
           <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
               <label for="product-image2" class="block mb-2 text-sm font-medium text-gray-600">
-                Upload Image 2:
+                Upload Image:
               </label>
               <div
                 class="mt-2 flex justify-center rounded-lg border shadow-md border-dashed border-gray-300 px-6 py-10">
@@ -72,7 +72,7 @@
                   <div class="mt-4 flex text-sm leading-6 text-gray-600">
                     <label for="product-image2"
                       class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                      <span>Upload Image 2</span>
+                      <span>Upload Image </span>
                       <input type="file" id="product-image2" name="product-image2"
                         @change="onImageChange('product-image2', $event)" class="sr-only" />
                     </label>
@@ -87,7 +87,7 @@
           <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
             <div class="mb-4">
               <label for="product-image3" class="block mb-2 text-sm font-medium text-gray-600">
-                Upload Image 3:
+                Upload Image :
               </label>
               <div
                 class="mt-2 flex justify-center rounded-lg shadow-md border border-dashed border-gray-300 px-6 py-10">
@@ -99,7 +99,7 @@
                   <div class="mt-4 flex text-sm leading-6 text-gray-600">
                     <label for="product-image3"
                       class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                      <span>Upload Image 3</span>
+                      <span>Upload Image </span>
                       <input type="file" id="product-image3" name="product-image3"
                         @change="onImageChange('product-image3', $event)" class="sr-only" />
                     </label>
@@ -326,15 +326,13 @@
             <div class="w-1/2 pr-2">
               <label for="min-purchase-quantity" class="block mb-2 text-sm font-medium text-gray-600">Minimum:</label>
               <input placeholder="0" type="number" id="min-purchase-quantity" name="min-purchase-quantity" v-model="products.commercial_info.commercialInfo.purchase_q_t_y.min
-    "
-                class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+    " class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
             </div>
             <!-- Bagian kanan untuk Maximum Purchase Quantity -->
             <div class="w-1/2 pl-2">
               <label for="max-purchase-quantity" class="block mb-2 text-sm font-medium text-gray-600">Maximum:</label>
               <input placeholder="0" type="number" id="max-purchase-quantity" name="max-purchase-quantity" v-model="products.commercial_info.commercialInfo.purchase_q_t_y.max
-    "
-                class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+    " class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
             </div>
           </div>
         </div>
@@ -420,9 +418,9 @@
 <script>
 import { Notify } from "quasar";
 import axios from "axios";
-import Swal from "sweetalert2"; // Pastikan Anda telah mengimpor SweetAlert
+import Swal from "sweetalert2";
 
-const apiBaseUrl = process.env.VUE_APP_API_BASE_URL; // Mengambil base URL dari environment variable
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
 export default {
   name: "addProductForm",
@@ -528,19 +526,13 @@ export default {
       const file = event.target.files[0];
       if (!file) return;
 
-      // Simpan nama file saja
       this.products.images[field] = file.name;
       console.log(`${field}:`, file.name);
-
-      // Buat file reader
       const reader = new FileReader();
-
-      // Ketika file selesai dibaca, set URL data sebagai preview gambar
       reader.onload = (e) => {
         this.previewImages[field] = e.target.result;
       };
 
-      // Baca file sebagai URL data
       reader.readAsDataURL(file);
     },
 
@@ -555,7 +547,6 @@ export default {
     validateForm() {
       let isValid = true;
 
-      // Validasi nama produk, grup, dan kategori
       if (
         !this.products.name ||
         !this.products.group ||
@@ -592,7 +583,6 @@ export default {
         isValid = false;
       }
       if (isValid) {
-        // Jika formulir valid, kirim formulir
         this.submitProduct();
       }
       return isValid;
@@ -693,22 +683,20 @@ export default {
         );
         // formData.append("tags", this.products.other.tags.join(", ")); // Menggunakan join untuk menggabungkan array tags menjadi string
 
-        // Tambahkan file gambar ke FormData
         for (let key in this.products.images) {
           const file = document.querySelector(`input[name=${key}]`).files[0];
           if (file) {
             formData.append("image[]", file);
-            console.log(`${key}:`, file.name); // Tambahkan console log di sini
+            console.log(`${key}:`, file.name);
           }
         }
 
-        // Tambahkan file video ke FormData
         const videoFile = document.querySelector("input[name=video]").files[0];
         if (videoFile) {
           formData.append("video", videoFile);
-          console.log("Video:", videoFile.name); // Tambahkan console log di sini
+          console.log("Video:", videoFile.name);
         }
-        // Tambahkan console log untuk menampilkan data yang akan disubmit
+
         for (let pair of formData.entries()) {
           console.log(pair[0] + ": " + pair[1]);
         }
@@ -725,7 +713,6 @@ export default {
         );
         console.log("Product submitted successfully:", response.data);
 
-        // Tampilkan Swal success setelah berhasil submit produk
         Swal.fire({
           icon: "success",
           title: "Success",

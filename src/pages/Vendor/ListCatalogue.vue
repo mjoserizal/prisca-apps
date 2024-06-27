@@ -77,17 +77,17 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 
-const apiBaseUrl = process.env.VUE_APP_API_BASE_URL; // Mengambil base URL dari environment variable
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 const router = useRouter();
 
 const products = ref([]);
 const originalProducts = ref([]);
 const searchInput = ref("");
-const minPriceFilter = ref(100000); // Minimum price filter
-const maxPriceFilter = ref(2000000); // Maximum price filter
+const minPriceFilter = ref(100000);
+const maxPriceFilter = ref(2000000);
 const defaultBrandValue = ref("");
 const defaultCategoryValue = ref("");
-const loadingProducts = ref(true); // Loading state
+const loadingProducts = ref(true);
 
 const columns = [
   {
@@ -125,6 +125,41 @@ const columns = [
     field: "action",
   },
 ];
+
+onMounted(async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token not found.");
+      return;
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(`${apiBaseUrl}vendor/product`, config);
+    if (response.data.success) {
+      products.value = response.data.products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        group: product.group,
+        category: product.category,
+        brand: product.brand,
+        price: parseFloat(product.commercial_info.commercialInfo.price),
+        status: product.status,
+      }));
+      originalProducts.value = products.value;
+      loadingProducts.value = false;
+    } else {
+      loadingProducts.value = false;
+      console.error("Failed to fetch products:", response.data.message);
+    }
+  } catch (error) {
+    loadingProducts.value = false;
+    console.error("Failed to fetch products:", error);
+  }
+});
 
 const editProduct = (product) => {
   console.log("Edit product:", product);
@@ -164,7 +199,6 @@ const deleteProduct = async (product) => {
       config
     );
     if (response.data.success) {
-      // Hapus produk dari daftar setelah berhasil dihapus
       products.value = products.value.filter((p) => p.id !== product.id);
       Swal.fire("Deleted!", "Your product has been deleted.", "success");
     } else {
@@ -175,42 +209,8 @@ const deleteProduct = async (product) => {
   }
 };
 
-const loading = ref(true); // Menambahkan properti loading untuk menentukan status skeleton loading
+const loading = ref(true);
 
-onMounted(async () => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      console.error("Token not found.");
-      return;
-    }
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await axios.get(`${apiBaseUrl}vendor/product`, config);
-    if (response.data.success) {
-      products.value = response.data.products.map((product) => ({
-        id: product.id,
-        name: product.name,
-        group: product.group,
-        category: product.category,
-        brand: product.brand,
-        price: parseFloat(product.commercial_info.commercialInfo.price),
-        status: product.status,
-      }));
-      originalProducts.value = products.value;
-      loadingProducts.value = false; // Setelah fetch data selesai, set loading ke false
-    } else {
-      loadingProducts.value = false; // Pastikan untuk set loading ke false jika request gagal
-      console.error("Failed to fetch products:", response.data.message);
-    }
-  } catch (error) {
-    loadingProducts.value = false; // Set loading ke false jika terjadi error
-    console.error("Failed to fetch products:", error);
-  }
-});
 
 const filteredProducts = computed(() => {
   return products.value.filter((product) =>
