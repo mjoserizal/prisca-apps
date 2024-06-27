@@ -193,7 +193,7 @@ export default {
               localStorage.removeItem("userRole");
               localStorage.removeItem("token");
               localStorage.removeItem("userId");
-              router.push("/");
+              router.push({ name: "login" });
             })
             .catch((error) => {
               console.error("Error logging out:", error);
@@ -227,7 +227,7 @@ export default {
           .catch((error) => {
             console.error("Error fetching cart items:", error);
             if (error.response && error.response.status === 401) {
-              router.push("/"); // Redirect to home if unauthorized
+              router.push({ name: "login" }); // Redirect to home if unauthorized
             }
           });
       }

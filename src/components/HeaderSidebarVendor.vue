@@ -84,7 +84,7 @@ const leftDrawerOpen = ref(false);
 let menuItems = [
   {
     icon: "fas fa-home",
-    text: "Catalogue List",
+    text: "Dashboard",
     route: router.resolve({ name: "listCatalogue" }).href,
   },
   {
