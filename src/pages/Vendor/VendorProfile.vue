@@ -1,9 +1,6 @@
 <template>
   <div class="q-pa-md">
     <div class="q-gutter-md row items-center flex">
-      <!-- <q-avatar size="100px">
-        <img src="https://cdn.quasar.dev/img/boy-avatar.png" alt="Avatar" />
-      </q-avatar> -->
       <div class="q-pa-md">
         <div class="text-h4 text-primary">{{ vendorDetail.name }}</div>
         <div class="text-subtitle2 text-grey">{{ vendorDetail.email }}</div>

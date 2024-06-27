@@ -2,9 +2,13 @@
   <q-page>
     <q-tabs v-model="tab" class="text-h6">
       <q-tab name="detail">
-        <router-link :to="{ name: 'quotationDetail', params: { id: quotationId } }">Quotation Detail</router-link>
+        <router-link :to="{ name: 'quotationDetail', params: { id: quotationId } }">
+          Quotation Detail
+        </router-link>
       </q-tab>
-
+      <q-tab name="fix" @click="handleQuotationFixClick">
+        Quotation Fix
+      </q-tab>
     </q-tabs>
     <q-container>
       <q-card class="rounded-md shadow-md m-6 p-4" v-if="quotation">
@@ -46,7 +50,8 @@
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
-          <q-btn label="Edit Quotation" color="primary" @click="editQuotation">
+          <q-btn v-if="!quotationFixExists || (quotationFix && quotationFix.line_items.length === 0)"
+            label="Edit Quotation" color="primary" @click="editQuotation">
             <q-tooltip anchor="bottom middle" self="top middle">
               Edit Product Price for Line Items
             </q-tooltip>
@@ -71,8 +76,11 @@ export default {
   name: "QuotationDetail",
   data() {
     return {
+      tab: 'detail',
       quotationId: null,
       quotation: null,
+      quotationFix: null,
+      quotationFixExists: false,
       editedProductPrices: [],
       totalPrice: 0,
 
@@ -111,6 +119,7 @@ export default {
   async mounted() {
     this.quotationId = this.$route.params.id;
     await this.fetchQuotationDetail();
+    await this.checkQuotationFixExists();
   },
   methods: {
     async fetchQuotationDetail() {
@@ -146,6 +155,37 @@ export default {
       }
     },
 
+    async checkQuotationFixExists() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const response = await axios.get(
+          `${apiBaseUrl}vendor/quotationFix/${this.quotationId}`,
+          config
+        );
+
+        if (response.data.message === "Success" && response.data.quotation) {
+          this.quotationFixExists = true;
+          this.quotationFix = response.data.quotation;
+        } else {
+          this.quotationFixExists = false;
+        }
+      } catch (error) {
+        console.error("Failed to check quotation fix:", error);
+        this.quotationFixExists = false;
+      }
+    },
+
     calculateTotalPrice() {
       this.totalPrice = this.quotation.line_items.reduce(
         (total, item) => total + item.amount,
@@ -160,7 +200,22 @@ export default {
       }).format(value);
     },
 
-    async editQuotation() {
+    async handleQuotationFixClick() {
+      await this.checkQuotationFixExists();
+      if (this.quotationFix && this.quotationFix.line_items.length === 0) {
+        Swal.fire({
+          title: "Warning",
+          text: "Please edit the quotation to set fix price before accessing the Quotation Fix tab.",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK",
+        });
+      } else {
+        this.$router.push({ name: 'quotationFix', params: { id: this.quotationId } });
+      }
+    },
+
+    async promptEditQuotation() {
       const { value: formValues } = await Swal.fire({
         title: "Edit Product Prices",
         html: this.quotation.line_items
@@ -253,28 +308,26 @@ export default {
               });
             });
           } else {
-            console.error("Failed to update quotation:", response.data.message);
+            console.error(
+              "Failed to save quotation:",
+              response.data.message
+            );
           }
         })
         .catch((error) => {
-          console.error("Failed to update quotation:", error);
+          console.error("Failed to save quotation:", error);
         });
+    },
+
+    editQuotation() {
+      this.promptEditQuotation();
     },
   },
 };
 </script>
 
-<style>
-.q-card-section {
-  padding: 2rem;
-  margin: 2rem;
-}
-
-.q-item-label {
-  font-weight: bold;
-}
-
-.swal2-container {
-  z-index: 9999 !important;
+<style scoped>
+.q-card {
+  margin-top: 1rem;
 }
 </style>

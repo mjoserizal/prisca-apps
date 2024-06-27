@@ -75,6 +75,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { defineComponent, ref, computed } from "vue";
 import axios from "axios";

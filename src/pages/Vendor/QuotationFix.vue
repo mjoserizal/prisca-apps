@@ -1,9 +1,15 @@
 <template>
   <q-page>
     <q-tabs v-model="tab" class="text-h6">
-
+      <q-tab name="detail">
+        <router-link :to="{ name: 'quotationDetail', params: { id: quotationId } }">
+          Quotation Detail
+        </router-link>
+      </q-tab>
       <q-tab name="fix">
-        <router-link :to="{ name: 'quotationFix', params: { id: quotationId } }">Quotation Fix</router-link>
+        <router-link :to="{ name: 'quotationFix', params: { id: quotationId } }">
+          Quotation Fix
+        </router-link>
       </q-tab>
     </q-tabs>
     <q-container>
@@ -46,7 +52,7 @@
           <div>Total Price: {{ formatCurrency(totalPrice) }}</div>
         </q-card-section>
 
-        <q-card-section class="text-h6 flex justify-end">
+        <q-card-section class="text-h6 flex justify-end" v-if="!pdfExists">
           <q-btn label="Send Quotation" color="primary" @click="sendQuotation" />
         </q-card-section>
       </q-card>
@@ -110,6 +116,9 @@ export default {
           return total + item.amount;
         }, 0)
         : 0;
+    },
+    pdfExists() {
+      return this.quotation && this.quotation.pdf && this.quotation.pdf.includes("quotation_QUO-");
     },
   },
   async mounted() {
@@ -177,11 +186,11 @@ export default {
             axios
               .post(
                 `${apiBaseUrl}vendor/quotation/${this.quotationId}/pdf`,
-                null, // Tidak perlu payload
-                config // Sertakan konfigurasi dengan header otorisasi
+                null,
+                config
               )
               .then((response) => {
-                console.log(response.data); // Tambahkan ini untuk melihat respon dari server
+                console.log(response.data);
                 if (
                   response.data.message ===
                   "Quotation PDF berhasil dibuat dan dikirim ke pembeli."
@@ -205,7 +214,6 @@ export default {
                 }
               })
               .catch((error) => {
-                // Handle error response
                 console.error("Failed to send quotation:", error);
               });
           }

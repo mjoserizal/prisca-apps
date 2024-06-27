@@ -78,7 +78,7 @@ const columns = [
     name: "action",
     label: "Action",
     align: "right",
-    slot: "action", // Menambahkan properti slot untuk tombol detail
+    slot: "action",
   },
 ];
 
@@ -89,7 +89,7 @@ const viewOrder = (order) => {
 
 const viewInvoice = (order) => {
   console.log("View invoice:", order);
-  router.push({ name: "invoiceDetail", params: { id: order.id } }); // Ubah ini sesuai dengan nama rute dan parameter yang benar
+  router.push({ name: "invoiceDetail", params: { id: order.id } });
 };
 
 const sortOrdersByDate = (orders) => {
@@ -117,7 +117,7 @@ onMounted(async () => {
           company_name: o.company_name,
           status: o.status,
           waktu_order: o.waktu_order,
-          invoice_created: o.invoice_created, // Tambahkan properti invoice_created
+          invoice_created: o.invoice_created,
         })));
       } else {
         const o = response.data.orders;
@@ -128,7 +128,7 @@ onMounted(async () => {
             company_name: o.company_name,
             status: o.status,
             waktu_order: o.waktu_order,
-            invoice_created: o.invoice_created, // Tambahkan properti invoice_created
+            invoice_created: o.invoice_created,
           },
         ]);
       }

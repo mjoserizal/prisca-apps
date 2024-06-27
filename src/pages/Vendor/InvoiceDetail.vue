@@ -23,6 +23,12 @@
                 <div>
                   <strong>Status</strong>: {{ invoice.payment.status }}
                 </div>
+                <div>
+                  <strong>Bank</strong>: {{ invoice.vendor.bank }}
+                </div>
+                <div>
+                  <strong>No Rekening</strong>: {{ invoice.vendor.no_rek }}
+                </div>
               </div>
             </div>
           </div>
@@ -113,7 +119,8 @@ export default {
   },
   computed: {
     isProofAvailable() {
-      return this.invoice && this.invoice.payment.bukti !== "http://127.0.0.1:8000/images";
+      const defaultProofUrl = "http://prisca-backend.3mewj5.easypanel.host/images";
+      return this.invoice && this.invoice.payment.bukti && this.invoice.payment.bukti !== defaultProofUrl;
     },
   },
   async mounted() {
@@ -225,41 +232,17 @@ export default {
         title: "Proof of Payment",
         imageUrl: this.invoice.payment.bukti,
         imageAlt: "Proof of Payment",
-        confirmButtonText: "Close",
       });
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .container-box {
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 20px;
-  border: 1px solid #ddd;
-}
-
-.q-card-section {
-  padding: 2rem;
-  margin: 2rem;
-}
-
-.q-item-label {
-  font-weight: bold;
-}
-
-.q-item-label,
-.q-item-section {
   display: flex;
   align-items: center;
-}
-
-.invoice-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
 }
 
 .info-section {
@@ -268,16 +251,12 @@ export default {
 }
 
 .info-block {
-  width: 45%;
-}
-
-.text-right {
-  text-align: right;
+  width: 48%;
 }
 
 .custom-hr {
   border: none;
-  border-top: 1px solid #ccc;
-  margin: 10px 0;
+  border-top: 2px solid #000;
+  margin: 0.5rem 0;
 }
 </style>

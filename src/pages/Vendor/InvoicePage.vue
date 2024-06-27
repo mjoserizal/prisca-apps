@@ -3,7 +3,7 @@
     <div class="p-6">
       <q-card class="shadow-md overflow-hidden border-b border-gray-200 sm:rounded-lg" bordered>
         <q-card-section>
-          <div class="text-h6 text-grey-8">Order Invoice List</div>
+          <div class="text-h6 text-grey-8">Invoice Order List</div>
         </q-card-section>
         <q-separator></q-separator>
         <q-card-section class="q-pa-none">
@@ -81,7 +81,7 @@ const columns = [
 
 const viewInvoice = (order) => {
   console.log("View invoice:", order);
-  router.push({ name: "invoiceDetail", params: { id: order.id } }); // Ubah ini sesuai dengan nama rute dan parameter yang benar
+  router.push({ name: "invoiceDetail", params: { id: order.id } });
 };
 
 const sortOrdersByDate = (orders) => {
@@ -109,7 +109,7 @@ onMounted(async () => {
           company_name: o.company_name,
           status: o.status,
           waktu_order: o.waktu_order,
-          invoice_created: o.invoice_created, // Tambahkan properti invoice_created
+          invoice_created: o.invoice_created,
         })));
       } else {
         const o = response.data.orders;
@@ -120,7 +120,7 @@ onMounted(async () => {
             company_name: o.company_name,
             status: o.status,
             waktu_order: o.waktu_order,
-            invoice_created: o.invoice_created, // Tambahkan properti invoice_created
+            invoice_created: o.invoice_created,
           },
         ]);
       }
@@ -137,7 +137,7 @@ onMounted(async () => {
 
 <script>
 export default {
-  name: "OrderPage",
+  name: "InvoicePage",
 };
 </script>
 

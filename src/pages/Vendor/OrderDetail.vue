@@ -2,7 +2,7 @@
   <q-page>
     <div class="container-box">
       <h1 class="q-pa-md text-center font-bold text-lg">
-        Detail Order
+        Order Detail
       </h1>
     </div>
     <q-container>
@@ -282,7 +282,7 @@ export default {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: "Failed to update shipping receipt.",
+            text: "Shipping receipt already exists.",
           });
         }
       } catch (error) {
@@ -290,7 +290,7 @@ export default {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Failed to update shipping receipt.",
+          text: "Shipping receipt already exists.",
         });
       }
     },
