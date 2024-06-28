@@ -13,16 +13,18 @@
               <!-- Input fields -->
               <div class="q-row">
                 <div class="q-col-xs-6">
-                  <q-input filled v-model="name" label="Name" lazy-rules />
+                  <q-input filled v-model="name" label="Name" lazy-rules
+                    :rules="[val => !!val || 'Name is required']" />
                 </div>
                 <div class="q-col-xs-6">
-                  <q-input filled v-model="email" label="Email" lazy-rules />
+                  <q-input filled v-model="email" label="Email" lazy-rules
+                    :rules="[val => !!val || 'Email is required', val => /.+@.+\..+/.test(val) || 'Email must be valid']" />
                 </div>
               </div>
               <div class="q-row">
                 <div class="q-col-xs-6">
                   <q-input filled v-model="password" :type="showPassword ? 'text' : 'password'" label="Password"
-                    lazy-rules>
+                    lazy-rules :rules="[val => !!val || 'Password is required']">
                     <template v-slot:append>
                       <q-icon :name="showPassword ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                         @click="togglePassword" />
@@ -31,20 +33,22 @@
                 </div>
                 <div class="q-col-xs-6">
                   <q-input filled v-model="password_confirmation" :type="showConfirmPassword ? 'text' : 'password'"
-                    label="Password Confirmation" lazy-rules>
+                    label="Password Confirmation" lazy-rules :rules="passwordConfirmationRules">
                     <template v-slot:append>
-                      <q-icon :name="showConfirmPassword ? 'visibility_off' : 'visibility'
-          " class="cursor-pointer" @click="toggleConfirmPassword" />
+                      <q-icon :name="showConfirmPassword ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                        @click="toggleConfirmPassword" />
                     </template>
                   </q-input>
                 </div>
               </div>
               <div class="q-row">
                 <div class="q-col-xs-6">
-                  <q-input filled v-model="telp" label="Telp" lazy-rules />
+                  <q-input filled v-model="telp" label="Telp" lazy-rules
+                    :rules="[val => !!val || 'Telephone number is required']" />
                 </div>
                 <div class="q-col-xs-6">
-                  <q-input filled v-model="company_name" label="Company Name" lazy-rules />
+                  <q-input filled v-model="company_name" label="Company Name" lazy-rules
+                    :rules="[val => !!val || 'Company name is required']" />
                 </div>
               </div>
               <div class="text-red-9" v-if="errorMessage">
@@ -74,7 +78,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
@@ -91,12 +95,31 @@ export default defineComponent({
     const telp = ref("");
     const company_name = ref("");
     const errorMessage = ref("");
-    const showPassword = ref(false); // New
-    const showConfirmPassword = ref(false); // New
+    const showPassword = ref(false);
+    const showConfirmPassword = ref(false);
     const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
+    const passwordConfirmationRules = computed(() => [
+      val => !!val || 'Password confirmation is required',
+      val => val === password.value || 'Passwords do not match'
+    ]);
 
     const register = async () => {
+      if (!name.value || !email.value || !password.value || !password_confirmation.value || !telp.value || !company_name.value) {
+        errorMessage.value = "All fields are required";
+        return;
+      }
+
+      if (!/.+@.+\..+/.test(email.value)) {
+        errorMessage.value = "Email must be valid";
+        return;
+      }
+
+      if (password.value !== password_confirmation.value) {
+        errorMessage.value = "Passwords do not match";
+        return;
+      }
+
       try {
         const response = await axios.post(
           `${apiBaseUrl}userRegister`,
@@ -111,7 +134,7 @@ export default defineComponent({
         );
 
         if (response.data.success) {
-          router.push({ name: "login" });
+          router.push("/login");
         } else {
           Swal.fire({
             icon: "error",
@@ -127,7 +150,7 @@ export default defineComponent({
     };
 
     const goToLogin = () => {
-      router.push({ name: "login" });
+      router.push("/");
     };
 
     const togglePassword = () => {
@@ -152,6 +175,7 @@ export default defineComponent({
       showConfirmPassword,
       togglePassword,
       toggleConfirmPassword,
+      passwordConfirmationRules,
     };
   },
 });
@@ -168,12 +192,9 @@ export default defineComponent({
 
 .register-link {
   color: blue;
-  /* Atur warna teks menjadi biru */
   cursor: pointer;
-  /* Ganti kursor saat diarahkan ke tautan */
 }
 
-/* Flexbox styling */
 .q-row {
   display: flex;
   justify-content: space-between;
@@ -181,11 +202,9 @@ export default defineComponent({
 
 .q-col-xs-6 {
   flex: 0 0 48%;
-  /* Adjust width as needed */
 }
 
 .custom-card {
   background-color: #f8f6f4;
-  /* Ubah warna latar belakang sesuai kebutuhan */
 }
 </style>
