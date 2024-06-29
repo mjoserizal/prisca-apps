@@ -6,6 +6,7 @@
         <label for="name" class="block mb-2 text-sm font-medium text-gray-600">Name:</label>
         <input type="text" id="name" name="name" v-model="createUser.name"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+        <p v-if="errors.name" class="text-red-600 text-sm">{{ errors.name }}</p>
       </div>
 
       <!-- Input Email Perusahaan -->
@@ -13,6 +14,7 @@
         <label for="email" class="block mb-2 text-sm font-medium text-gray-600">Email:</label>
         <input type="text" id="email" name="email" v-model="createUser.email"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+        <p v-if="errors.email" class="text-red-600 text-sm">{{ errors.email }}</p>
       </div>
 
       <!-- Input Password -->
@@ -20,6 +22,7 @@
         <label for="password" class="block mb-2 text-sm font-medium text-gray-600">Password:</label>
         <input type="password" id="password" name="password" v-model="createUser.password"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+        <p v-if="errors.password" class="text-red-600 text-sm">{{ errors.password }}</p>
       </div>
 
       <!-- Input Password Confirmation -->
@@ -29,6 +32,7 @@
         <input type="password" id="password_confirmation" name="password_confirmation"
           v-model="createUser.password_confirmation"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+        <p v-if="errors.password_confirmation" class="text-red-600 text-sm">{{ errors.password_confirmation }}</p>
       </div>
 
       <!-- Input Divisi -->
@@ -40,6 +44,7 @@
             {{ divisi.name }}
           </option>
         </select>
+        <p v-if="errors.divisi" class="text-red-600 text-sm">{{ errors.divisi }}</p>
       </div>
 
       <!-- Input Departemen -->
@@ -51,6 +56,7 @@
             {{ departemen.name }}
           </option>
         </select>
+        <p v-if="errors.departemen" class="text-red-600 text-sm">{{ errors.departemen }}</p>
       </div>
 
       <div class="mt-4">
@@ -62,11 +68,14 @@
     </form>
   </div>
 </template>
+
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
+
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+
 export default {
   name: "createUser",
   data() {
@@ -85,6 +94,7 @@ export default {
       selectedDepartemen: "",
       showPassword: false,
       showPasswordConfirmation: false,
+      errors: {},
     };
   },
   mounted() {
@@ -132,8 +142,44 @@ export default {
           console.error("Error fetching departemen: ", error);
         });
     },
+    validateForm() {
+      this.errors = {};
 
+      if (!this.createUser.name) {
+        this.errors.name = "Name is required";
+      }
+
+      if (!this.createUser.email) {
+        this.errors.email = "Email is required";
+      } else if (!/.+@.+\..+/.test(this.createUser.email)) {
+        this.errors.email = "Email must be valid";
+      }
+
+      if (!this.createUser.password) {
+        this.errors.password = "Password is required";
+      }
+
+      if (!this.createUser.password_confirmation) {
+        this.errors.password_confirmation = "Password confirmation is required";
+      } else if (this.createUser.password !== this.createUser.password_confirmation) {
+        this.errors.password_confirmation = "Passwords do not match";
+      }
+
+      if (!this.selectedDivisi) {
+        this.errors.divisi = "Division is required";
+      }
+
+      if (!this.selectedDepartemen) {
+        this.errors.departemen = "Department is required";
+      }
+
+      return Object.keys(this.errors).length === 0;
+    },
     createUserData() {
+      if (!this.validateForm()) {
+        return;
+      }
+
       const token = localStorage.getItem("token");
       if (!token) {
         console.error("Access token not found in localStorage");
@@ -150,33 +196,31 @@ export default {
       };
 
       axios
-        .post(
-          `${apiBaseUrl}buyer/userApproval`,
-          userData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .post(`${apiBaseUrl}buyer/userApproval`, userData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((response) => {
           console.log("User data created successfully: ", response.data);
-          // Tampilkan pesan sukses menggunakan SweetAlert
           Swal.fire({
             icon: "success",
             title: "Success",
             text: "User berhasil ditambahkan!",
             confirmButtonText: "OK",
           }).then(() => {
-            // Redirect ke rute /user-management setelah menutup alert
             this.$router.push("/user-management");
           });
         })
         .catch((error) => {
-          console.error("Error updating user data: ", error);
+          console.error("Error creating user data: ", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to create user.",
+          });
         });
-    }
-
+    },
   },
 };
 </script>
