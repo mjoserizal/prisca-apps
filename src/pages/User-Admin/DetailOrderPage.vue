@@ -56,7 +56,7 @@
   <div class="back-button" style="margin: 20px; float: left;">
     <q-btn @click="$router.push('/Order-Admin')" class="q-mb-md" label="Back" color="primary" />
   </div>
-  <div class="order-received-button" style="margin: 20px; float: right;">
+  <div class="order-received-button" v-if="order.status === 'dikirim'" style="margin: 20px; float: right;">
     <q-btn @click="orderReceived" class="q-mb-md" label="Order Received" color="primary" />
   </div>
 
