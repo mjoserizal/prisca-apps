@@ -97,6 +97,40 @@ const routes = [
       },
     ],
   },
+  //Address
+  {
+    path: "/Address-Management",
+    name: "AddressAdminPage",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/User-Admin/AddressPage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/Add-Address-Management",
+    name: "AddAddressAdminPage",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/User-Admin/AddAddressPage.vue"),
+      },
+    ],
+  },
+  {
+    path: "/Edit-Address/:id",
+    name: "EditAddressAdminPage",
+    component: () => import("components/HeaderSidebar.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("pages/User-Admin/EditAddressPage.vue"),
+      },
+    ],
+  },
   //Add User
   {
     path: "/add-user",

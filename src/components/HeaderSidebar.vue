@@ -157,6 +157,12 @@ export default {
           text: "Order Admin",
           route: "/Order-Admin",
         },
+        {
+          icon: "fas fa-location-dot",
+          text: "Address Admin",
+          route: "/Address-Management",
+        },
+
       ];
     }
 

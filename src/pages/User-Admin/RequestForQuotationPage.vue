@@ -26,7 +26,7 @@
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn v-if="purchaseRequest.status === 'approved'" round dense flat color="green" icon="send"
-              @click="sendQuotationByVendor(props.row.name, props.row.groupKey)" />
+              @click="sendQuotationByVendor(props.row.vendor_name)" />
           </q-td>
         </template>
       </q-table>
@@ -62,6 +62,7 @@ export default {
     return {
       purchaseRequest: null,
       showEditButton: true,
+      addressOptions: [], // Options for address dropdown
       lineItemColumns: [
         {
           name: "vendor_name",
@@ -88,7 +89,6 @@ export default {
           sortable: true,
           format: (val) => formatToRupiah(val),
         },
-        // Kolom actions untuk edit
         {
           name: "actions",
           required: true,
@@ -102,7 +102,6 @@ export default {
   },
   computed: {
     groupedLineItems() {
-      // Mengelompokkan line items berdasarkan nama vendor
       const groups = {};
       if (this.purchaseRequest && this.purchaseRequest.lineItems) {
         this.purchaseRequest.lineItems.forEach((item) => {
@@ -114,6 +113,7 @@ export default {
               quantity: item.quantity,
               price: item.price,
               actions: item.actions,
+              address: "", // Placeholder for address
             };
           } else {
             groups[groupKey].quantity += item.quantity;
@@ -126,6 +126,7 @@ export default {
   },
   mounted() {
     this.fetchPurchaseRequest();
+    this.fetchAddresses(); // Fetch addresses on mount
   },
   methods: {
     fetchPurchaseRequest() {
@@ -142,10 +143,7 @@ export default {
       };
 
       axios
-        .get(
-          `${apiBaseUrl}buyer/purchaseRequest/${this.id}`,
-          config
-        )
+        .get(`${apiBaseUrl}buyer/purchaseRequest/${this.id}`, config)
         .then((response) => {
           this.purchaseRequest = response.data.purchaseRequest;
         })
@@ -154,59 +152,96 @@ export default {
         });
     },
 
-    sendQuotationByVendor(vendorName) {
+    async fetchAddresses() {
       const token = localStorage.getItem("token");
       if (!token) {
         this.$router.push("/");
         return;
       }
 
-      const purchaseRequestId = this.$route.params.id; // Mengambil ID dari path URL
-
-      // Filter line items berdasarkan nama vendor
-      const lineItemsByVendor = this.purchaseRequest.lineItems.filter(
-        (item) => item.vendor_name === vendorName
-      );
-
-      console.log("Line Items:", lineItemsByVendor);
-      console.log("Vendor:", vendorName);
-      console.log("Purchase Request ID:", purchaseRequestId); // Menampilkan ID pembelian
-
-      // Menyiapkan data yang akan dikirim dalam permintaan
-      const requestData = {
-        purchase_request_id: purchaseRequestId, // Menggunakan ID pembelian dari path URL
-        vendor_name: vendorName,
-        line_items: lineItemsByVendor,
-      };
-
-      axios
-        .post(
-          `${apiBaseUrl}buyer/requestForQuotation`,
-          requestData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          console.log("Quotation request sent successfully:", response.data);
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Quotation request sent successfully!",
-          });
-          // Tambahkan logika lainnya sesuai kebutuhan
-        })
-        .catch((error) => {
-          console.error("Error sending quotation request:", error);
-          // Tambahkan logika penanganan error lainnya sesuai kebutuhan
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Failed to send quotation request. Please try again later.",
-          });
+      try {
+        const response = await axios.get(`${apiBaseUrl}buyer/address`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
+
+        // Log the entire response for inspection
+        console.log("API Response:", response.data);
+
+        // Check if the response data is an array of addresses
+        if (Array.isArray(response.data)) {
+          // If response.data is an array, use it directly
+          this.addressOptions = response.data.map((address) => ({
+            label: address.address,
+            value: address.address,
+          }));
+        } else if (Array.isArray(response.data.addresses)) {
+          // If response.data has addresses field, use it
+          this.addressOptions = response.data.addresses.map((address) => ({
+            label: address.address,
+            value: address.address,
+          }));
+        } else {
+          // Log if data does not match the expected format
+          console.error("Unexpected address data format:", response.data);
+          throw new Error("Unexpected address data format.");
+        }
+
+        // Log the address options
+        console.log("Address Options:", this.addressOptions);
+      } catch (error) {
+        console.error("Error fetching addresses:", error);
+      }
+    },
+
+    async sendQuotationByVendor(vendorName) {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        this.$router.push("/");
+        return;
+      }
+
+      const purchaseRequestId = this.$route.params.id; // Get ID from URL
+
+      try {
+        // Show SweetAlert2 prompt
+        const { value: selectedAddress } = await Swal.fire({
+          title: 'Select Address',
+          input: 'select',
+          inputOptions: this.addressOptions.reduce((acc, option) => {
+            acc[option.value] = option.label;
+            return acc;
+          }, {}),
+          inputPlaceholder: 'Select an address',
+          showCancelButton: true,
+          confirmButtonText: 'Send Quotation',
+          cancelButtonText: 'Cancel',
+        });
+
+        if (selectedAddress) {
+          // Ensure selectedAddress is a string
+          const requestData = {
+            purchase_request_id: purchaseRequestId,
+            vendor_name: vendorName,
+            company_address: String(selectedAddress), // Convert to string
+            line_items: this.purchaseRequest.lineItems.filter(
+              (item) => item.vendor_name === vendorName
+            ),
+          };
+
+          await axios.post(
+            `${apiBaseUrl}buyer/requestForQuotation`,
+            requestData,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+
+          Swal.fire("Success", "Quotation request sent successfully!", "success");
+        } else {
+          Swal.fire("Cancelled", "Quotation request not sent.", "info");
+        }
+      } catch (error) {
+        console.error("Error sending quotation request:", error);
+        Swal.fire("Error", "Failed to send quotation request. Please try again later.", "error");
+      }
     },
   },
 };

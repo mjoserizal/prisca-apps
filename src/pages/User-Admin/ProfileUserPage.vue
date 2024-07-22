@@ -10,7 +10,7 @@
 
       <!-- Input Nomor Telepon Perusahaan -->
       <div class="mb-4">
-        <label for="telp" class="block mb-2 text-sm font-medium text-gray-600">Number Phone :</label>
+        <label for="telp" class="block mb-2 text-sm font-medium text-gray-600">Number Phone:</label>
         <input type="text" id="telp" name="telp" v-model="userProfile.telp"
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
       </div>
@@ -25,8 +25,12 @@
       <!-- Input Alamat Perusahaan -->
       <div class="mb-4">
         <label for="address" class="block mb-2 text-sm font-medium text-gray-600">Address:</label>
-        <input type="text" id="address" name="address" v-model="userProfile.company.address"
-          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+        <select id="address" v-model="selectedAddress"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <option v-for="address in addressList" :key="address.id" :value="address.address">
+            {{ address.address }}
+          </option>
+        </select>
       </div>
 
       <!-- Input Divisi -->
@@ -60,12 +64,13 @@
     </form>
   </div>
 </template>
-
 <script>
 import axios from "axios";
 import { useRouter } from "vue-router";
 import Swal from 'sweetalert2';
+
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+
 export default {
   name: "UserProfile",
   data() {
@@ -75,9 +80,11 @@ export default {
         telp: "",
         email: "",
         company: {
-          address: "",
+          address: "", // Existing address
         },
       },
+      addressList: [], // List of addresses
+      selectedAddress: "", // Selected address
       divisiList: [],
       selectedDivisi: "",
       departemenList: [],
@@ -88,6 +95,7 @@ export default {
     this.fetchProfile();
     this.fetchDivisi();
     this.fetchDepartemen();
+    this.fetchAddresses(); // Fetch addresses when component mounts
   },
   methods: {
     fetchProfile() {
@@ -107,6 +115,7 @@ export default {
           this.userProfile = response.data.user;
           this.selectedDivisi = response.data.user.company.divisi_code;
           this.selectedDepartemen = response.data.user.company.departemen_code;
+          this.selectedAddress = response.data.user.company.address; // Set the selected address
         })
         .catch((error) => {
           console.error("Error fetching profile: ", error);
@@ -115,6 +124,27 @@ export default {
           }
         });
     },
+    fetchAddresses() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Access token not found in localStorage");
+        return;
+      }
+
+      axios
+        .get(`${apiBaseUrl}buyer/address`, { // Adjust the endpoint if necessary
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          this.addressList = response.data; // Set the list of addresses
+        })
+        .catch((error) => {
+          console.error("Error fetching addresses: ", error);
+        });
+    },
+
     fetchDivisi() {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -166,7 +196,7 @@ export default {
         name: this.userProfile.name,
         email: this.userProfile.email,
         telp: this.userProfile.telp,
-        address: this.userProfile.company.address,
+        address: this.selectedAddress, // Use selected address
         company_code: this.userProfile.company.company_code,
         company_name: this.userProfile.company.company_name,
         divisi_code: this.selectedDivisi,
@@ -188,8 +218,8 @@ export default {
 
           // Show success alert
           Swal.fire({
-            title: 'Berhasil',
-            text: 'Profile berhasil diupdate',
+            title: 'Success',
+            text: 'Profile updated successfully',
             icon: 'success',
             confirmButtonText: 'OK'
           }).then(() => {
@@ -205,10 +235,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-form {
-  padding: 2rem;
-  border-radius: 1rem;
-}
-</style>
