@@ -189,6 +189,7 @@
           <input type="text" id="satuan" name="satuan" v-model="products.detail.satuan"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
         </div>
+
         <!-- Input Kondisi -->
         <div class="mb-4">
           <label class="block mb-2 text-sm font-medium text-gray-600">Condition:</label>
@@ -343,6 +344,12 @@
           <input type="number" id="stock" name="stock" v-model="products.commercial_info.commercialInfo.stock"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
         </div>
+        <!-- Input Berat -->
+        <div class="mb-4">
+          <label for="berat" class="block mb-2 text-sm font-medium text-gray-600">Product Weight:</label>
+          <input type="number" id="berat" name="berat" v-model="products.commercial_info.commercialInfo.berat"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+        </div>
 
         <!-- Input contract -->
         <div class="mb-4">
@@ -460,6 +467,7 @@ export default {
             discount: "",
             price_exp: "",
             stock: "",
+            berat: "",
             pre_order: "",
             contract: "",
             purchase_q_t_y: {
@@ -644,6 +652,10 @@ export default {
         formData.append(
           "stock",
           this.products.commercial_info.commercialInfo.stock
+        );
+        formData.append(
+          "berat",
+          this.products.commercial_info.commercialInfo.berat
         );
         formData.append(
           "pre_order",

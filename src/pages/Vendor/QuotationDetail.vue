@@ -58,6 +58,29 @@
           </q-btn>
         </q-card-section>
       </q-card>
+
+      <q-card class="rounded-md shadow-md m-6 p-4">
+        <q-card-section class="text-h6">Chat</q-card-section>
+        <q-card-section v-if="negotiation && negotiation.length > 0" class="chat-container">
+          <div v-for="chat in negotiation" :key="chat.id"
+            :class="['chat-message', chat.user.role === 'vendor' ? 'vendor-message' : 'company-message']">
+            <div class="message-header">
+              <span>{{ chat.user.name }} ({{ chat.user.role }}):</span>
+              <span>{{ formatDate(chat.created_at) }}</span>
+            </div>
+            <div class="message-content">
+              {{ chat.description }}
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-section v-else>
+          No chat history.
+        </q-card-section>
+        <q-card-section class="chat-input-section">
+          <q-input v-model="newMessage" label="Type your message" @keyup.enter="sendMessage" />
+          <q-btn label="Send" color="primary" @click="sendMessage" class="mt-2" />
+        </q-card-section>
+      </q-card>
     </q-container>
   </q-page>
 </template>
@@ -83,6 +106,8 @@ export default {
       quotationFixExists: false,
       editedProductPrices: [],
       totalPrice: 0,
+      newMessage: "",
+      negotiation: [],
 
       columns: [
         {
@@ -120,6 +145,7 @@ export default {
     this.quotationId = this.$route.params.id;
     await this.fetchQuotationDetail();
     await this.checkQuotationFixExists();
+    await this.fetchNegotiation();
   },
   methods: {
     async fetchQuotationDetail() {
@@ -174,40 +200,42 @@ export default {
           config
         );
 
-        if (response.data.message === "Success" && response.data.quotation) {
+        if (response.data.message === "Success") {
           this.quotationFixExists = true;
           this.quotationFix = response.data.quotation;
         } else {
           this.quotationFixExists = false;
+          console.error(
+            "Failed to check quotation fix existence:",
+            response.data.message
+          );
         }
       } catch (error) {
-        console.error("Failed to check quotation fix:", error);
-        this.quotationFixExists = false;
+        console.error("Failed to check quotation fix existence:", error);
       }
     },
 
     calculateTotalPrice() {
       this.totalPrice = this.quotation.line_items.reduce(
-        (total, item) => total + item.amount,
+        (acc, item) => acc + item.amount,
         0
       );
     },
 
     formatToRupiah(value) {
-      return new Intl.NumberFormat("id-ID", {
+      return value.toLocaleString("id-ID", {
         style: "currency",
         currency: "IDR",
-      }).format(value);
+      });
     },
 
     async handleQuotationFixClick() {
       await this.checkQuotationFixExists();
       if (this.quotationFix && this.quotationFix.line_items.length === 0) {
         Swal.fire({
-          title: "Warning",
-          text: "Please edit the quotation to set fix price before accessing the Quotation Fix tab.",
-          icon: "warning",
-          confirmButtonColor: "#3085d6",
+          title: "Info",
+          text: "No fixed quotation available. Please edit the quotation.",
+          icon: "info",
           confirmButtonText: "OK",
         });
       } else {
@@ -215,119 +243,185 @@ export default {
       }
     },
 
-    async promptEditQuotation() {
+    async editQuotation() {
       const { value: formValues } = await Swal.fire({
         title: "Edit Product Prices",
         html: this.quotation.line_items
           .map(
             (item, index) => `
-              <div style="text-align: center; margin-bottom: 10px;">
-                <label for="product_${index}">${item.product_name}</label>
-                <input type="number" id="product_${index}" value="${item.product_price}" class="swal2-input" style="width: 80%;">
-              </div>`
+              <div class="swal2-form-group">
+                <label for="swal-input${index}">${item.product_name}</label>
+                <input id="swal-input${index}" class="swal2-input" type="number" value="${item.product_price}">
+              </div>
+            `
           )
           .join(""),
         focusConfirm: false,
         preConfirm: () => {
-          return this.quotation.line_items.map(
-            (item, index) =>
-              document.getElementById(`product_${index}`).value
-          );
+          return this.quotation.line_items.map((item, index) => {
+            const input = document.getElementById(`swal-input${index}`);
+            return input ? input.value : item.product_price;
+          });
         },
       });
 
       if (formValues) {
-        this.editedProductPrices = formValues.map(Number);
-
-        Swal.fire({
-          title: "Are you sure?",
-          text: "Do you want to save the changes to the quotation?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, save it!",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.saveEdit();
-          }
-        });
+        this.editedProductPrices = formValues;
+        this.saveEdit();
       }
     },
 
     saveEdit() {
       if (
         this.editedProductPrices.some(
-          (price) => price === null || price === undefined
+          (price) => price === undefined || price === ""
         )
       ) {
-        console.error("Invalid edited prices.");
-        return;
-      }
-
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("Token not found.");
-        return;
-      }
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const payload = {
-        quotationItems: this.quotation.line_items.map((item, index) => ({
-          product_id: item.product_id,
-          name: item.product_name,
-          quantity: item.quantity,
-          price: this.editedProductPrices[index],
-          amount: item.amount,
-        })),
-      };
-
-      axios
-        .post(
-          `${apiBaseUrl}vendor/quotation/${this.quotationId}`,
-          payload,
-          config
-        )
-        .then((response) => {
-          if (response.data.message === "create quotation successfully") {
-            Swal.fire({
-              title: "Success",
-              text: "Quotation has been updated successfully!",
-              icon: "success",
-              confirmButtonColor: "#3085d6",
-              confirmButtonText: "OK",
-            }).then(() => {
-              this.$router.push({
-                name: "quotationFix",
-                params: { id: this.quotationId },
-              });
-            });
-          } else {
-            console.error(
-              "Failed to save quotation:",
-              response.data.message
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Failed to save quotation:", error);
+        Swal.fire({
+          title: "Error",
+          text: "All prices must be filled out.",
+          icon: "error",
+          confirmButtonText: "OK",
         });
+        return;
+      }
+
+      this.quotation.line_items.forEach((item, index) => {
+        item.product_price = this.editedProductPrices[index];
+        item.amount = item.product_price * item.quantity;
+      });
+
+      this.calculateTotalPrice();
+
+      Swal.fire({
+        title: "Success",
+        text: "Quotation updated successfully.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+
+      this.$forceUpdate();
     },
 
-    editQuotation() {
-      this.promptEditQuotation();
+    async fetchNegotiation() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const response = await axios.get(
+          `${apiBaseUrl}vendor/negotiation/${this.quotationId}`,
+          config
+        );
+
+        if (response.status === 200) {
+          this.negotiation = response.data.negotiation.negotiation;
+        } else {
+          console.error("Failed to fetch negotiation:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Failed to fetch negotiation:", error);
+      }
+    },
+
+    async sendMessage() {
+      if (!this.newMessage.trim()) return;
+
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const response = await axios.post(
+          `${apiBaseUrl}vendor/negotiation`,
+          {
+            request_for_qoutation_id: this.quotationId,
+            description: this.newMessage,
+          },
+          config
+        );
+
+        if (response.status === 201) {
+          this.newMessage = "";
+          await this.fetchNegotiation();
+        } else {
+          console.error(
+            "Failed to send message:",
+            response.data.message
+          );
+        }
+      } catch (error) {
+        console.error("Failed to send message:", error);
+      }
+    },
+
+    formatDate(date) {
+      return dayjs(date).format("DD MMM YYYY HH:mm");
     },
   },
 };
 </script>
 
 <style scoped>
-.q-card {
-  margin-top: 1rem;
+.chat-container {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.chat-message {
+  margin-bottom: 16px;
+}
+
+.vendor-message {
+  background-color: #e0f7fa;
+  padding: 10px;
+  border-radius: 8px;
+  align-self: flex-end;
+}
+
+.company-message {
+  background-color: #ffecb3;
+  padding: 10px;
+  border-radius: 8px;
+  align-self: flex-start;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.message-content {
+  margin-top: 8px;
+}
+
+.chat-input-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-input-section .q-input {
+  margin-bottom: 8px;
 }
 </style>

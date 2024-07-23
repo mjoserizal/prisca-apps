@@ -150,7 +150,7 @@ export default defineComponent({
     };
 
     const goToLogin = () => {
-      router.push("/");
+      router.push({ name: "login" });
     };
 
     const togglePassword = () => {
