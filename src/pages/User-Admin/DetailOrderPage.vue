@@ -296,7 +296,7 @@ export default {
 
           axios
             .post(
-              `${apiBaseUrl}buyer/return`,
+              `${apiBaseUrl}buyer/pengembalian`,
               { order_id: orderId, product_id: product, quantity, reason },
               config
             )
