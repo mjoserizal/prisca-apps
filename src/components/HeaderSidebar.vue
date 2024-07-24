@@ -25,7 +25,7 @@
           <q-btn flat round dense icon="account_circle" @click="toggleAccountDropdown">
             <q-menu auto-close>
               <q-list>
-                <q-item clickable @click="handleAccountClick">
+                <q-item v-if="!isUserApproval" clickable @click="handleAccountClick">
                   <q-item-section avatar>
                     <q-avatar>
                       <i class="fas fa-user"></i>
@@ -33,6 +33,16 @@
                   </q-item-section>
                   <q-item-section @click="navigateToUserProfile">
                     <q-item-label>{{ accountText }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item v-if="!isUserApproval" clickable @click="handleAccountClick">
+                  <q-item-section avatar>
+                    <q-avatar>
+                      <i class="fas fa-location-dot"></i>
+                    </q-avatar>
+                  </q-item-section>
+                  <q-item-section @click="navigateToAddress">
+                    <q-item-label>Address</q-item-label>
                   </q-item-section>
                 </q-item>
                 <q-separator />
@@ -156,13 +166,7 @@ export default {
           icon: "fas fa-shopping-basket",
           text: "Order Admin",
           route: "/Order-Admin",
-        },
-        {
-          icon: "fas fa-location-dot",
-          text: "Address Admin",
-          route: "/Address-Management",
-        },
-
+        }
       ];
     }
 
@@ -214,6 +218,9 @@ export default {
     };
     const navigateToUserProfile = () => {
       router.push("/UserProfile");
+    };
+    const navigateToAddress = () => {
+      router.push("/Address-Management");
     };
     // Fetch cart items from the server
     const fetchCartItems = () => {
@@ -288,6 +295,7 @@ export default {
       accountText,
       navigateToUserProfile,
       isUserApproval,
+      navigateToAddress,
     };
   },
 };

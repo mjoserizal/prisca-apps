@@ -253,15 +253,15 @@ export default {
       Swal.fire({
         title: "Return Item",
         html: `
-          <select id="product" class="swal2-input">
-            ${this.order.line_items.map(
+      <select id="product" class="swal2-input">
+        ${this.order.line_items.map(
           (item) =>
             `<option value="${item.product_id}">${item.name}</option>`
         ).join("")}
-          </select>
-          <input id="quantity" class="swal2-input" placeholder="Quantity" type="number">
-          <textarea id="reason" class="swal2-input" placeholder="Reason"></textarea>
-        `,
+      </select>
+      <input id="quantity" class="swal2-input" placeholder="Quantity" type="number">
+      <textarea id="reason" class="swal2-input" placeholder="Reason"></textarea>
+    `,
         focusConfirm: false,
         preConfirm: () => {
           const product = Swal.getPopup().querySelector("#product").value;
@@ -270,6 +270,7 @@ export default {
 
           if (!product || !quantity || !reason) {
             Swal.showValidationMessage("Please fill in all fields");
+            return false;
           }
 
           return {
@@ -297,11 +298,18 @@ export default {
           axios
             .post(
               `${apiBaseUrl}buyer/pengembalian`,
-              { order_id: orderId, product_id: product, quantity, reason },
+              {
+                pengembalians: [{
+                  order_id: orderId,
+                  product_id: product,
+                  quantity,
+                  reason
+                }]
+              },
               config
             )
             .then((response) => {
-              if (response.data.success) {
+              if (response.status === 201) {
                 Swal.fire("Return Submitted", "Your return request has been submitted.", "success");
                 this.fetchReturnDetails(); // Refresh return details
               } else {
@@ -315,6 +323,7 @@ export default {
         }
       });
     },
+
     formatDate(date) {
       if (!date) return "";
       return new Date(date).toLocaleDateString();
