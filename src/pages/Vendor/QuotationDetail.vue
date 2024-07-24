@@ -65,12 +65,12 @@
           <div v-for="chat in negotiation" :key="chat.id"
             :class="['chat-message', chat.user.role === 'vendor' ? 'vendor-message' : 'company-message']">
             <div class="message-header">
-              <span>{{ chat.user.name }} ({{ chat.user.role }}):</span>
-              <span>{{ formatDate(chat.created_at) }}</span>
+              <span>{{ chat.user.name }} ({{ chat.user.role === 'vendor' ? 'Vendor' : 'Buyer' }}):</span>
             </div>
             <div class="message-content">
               {{ chat.description }}
             </div>
+            <div class="mt-2">{{ formatDate(chat.created_at) }}</div>
           </div>
         </q-card-section>
         <q-card-section v-else>
@@ -81,6 +81,7 @@
           <q-btn label="Send" color="primary" @click="sendMessage" class="mt-2" />
         </q-card-section>
       </q-card>
+
     </q-container>
   </q-page>
 </template>
@@ -272,11 +273,8 @@ export default {
     },
 
     saveEdit() {
-      if (
-        this.editedProductPrices.some(
-          (price) => price === undefined || price === ""
-        )
-      ) {
+      // Check if any edited prices are null or undefined
+      if (this.editedProductPrices.some(price => price === null || price === undefined)) {
         Swal.fire({
           title: "Error",
           text: "All prices must be filled out.",
@@ -286,22 +284,74 @@ export default {
         return;
       }
 
-      this.quotation.line_items.forEach((item, index) => {
-        item.product_price = this.editedProductPrices[index];
-        item.amount = item.product_price * item.quantity;
-      });
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Token not found.");
+        return;
+      }
 
-      this.calculateTotalPrice();
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-      Swal.fire({
-        title: "Success",
-        text: "Quotation updated successfully.",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
+      const payload = {
+        quotationItems: this.quotation.line_items.map((item, index) => ({
+          product_id: item.product_id,
+          name: item.product_name,
+          quantity: item.quantity,
+          price: this.editedProductPrices[index],
+          amount: item.amount,
+        })),
+      };
 
-      this.$forceUpdate();
+      axios
+        .post(
+          `${apiBaseUrl}vendor/quotation/${this.quotationId}`,
+          payload,
+          config
+        )
+        .then((response) => {
+          if (response.data.message === "create quotation successfully") {
+            Swal.fire({
+              title: "Success",
+              text: "Quotation has been updated successfully!",
+              icon: "success",
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "OK",
+            }).then(() => {
+              this.$router.push({
+                name: "quotationFix",
+                params: { id: this.quotationId },
+              });
+            });
+          } else {
+            console.error(
+              "Failed to save quotation:",
+              response.data.message
+            );
+            Swal.fire({
+              title: "Error",
+              text: "Failed to save quotation. Please try again.",
+              icon: "error",
+              confirmButtonText: "OK",
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to save quotation:", error);
+          Swal.fire({
+            title: "Error",
+            text: "An error occurred while saving the quotation. Please try again.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        });
     },
+
+
+
 
     async fetchNegotiation() {
       try {
@@ -380,48 +430,48 @@ export default {
 
 <style scoped>
 .chat-container {
+  display: flex;
+  flex-direction: column;
   max-height: 400px;
   overflow-y: auto;
-  margin-bottom: 16px;
-  padding: 16px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
 }
 
 .chat-message {
-  margin-bottom: 16px;
-}
-
-.vendor-message {
-  background-color: #e0f7fa;
-  padding: 10px;
-  border-radius: 8px;
-  align-self: flex-end;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: fit-content;
+  max-width: 80%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .company-message {
   background-color: #ffecb3;
-  padding: 10px;
-  border-radius: 8px;
   align-self: flex-start;
 }
 
-.message-header {
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
+.vendor-message {
+  background-color: #e0f7fa;
+  align-self: flex-end;
 }
 
+.message-header {
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
 .message-content {
-  margin-top: 8px;
+  margin-top: 0.25rem;
 }
 
 .chat-input-section {
   display: flex;
   flex-direction: column;
-}
-
-.chat-input-section .q-input {
-  margin-bottom: 8px;
 }
 </style>

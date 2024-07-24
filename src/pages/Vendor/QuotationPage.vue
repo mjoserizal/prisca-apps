@@ -96,7 +96,8 @@ onMounted(async () => {
           code: q.code,
           company_name: q.company_name,
           date: dayjs(q.created_at, "DD-MM-YYYY").format("DD MMM YYYY"),
-        }));
+          created_at: q.created_at,
+        })).sort((a, b) => dayjs(b.created_at).diff(dayjs(a.created_at)));
       } else {
         const q = response.data.quotation;
         quotations.value = [
@@ -105,6 +106,7 @@ onMounted(async () => {
             code: q.code,
             company_name: q.company_name,
             date: dayjs(q.created_at, "DD-MM-YYYY").format("DD MMM YYYY"),
+            created_at: q.created_at,
           },
         ];
       }

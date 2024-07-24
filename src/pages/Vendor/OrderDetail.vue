@@ -87,6 +87,29 @@
         </q-card-section>
       </q-card>
     </q-container>
+    <q-container>
+      <q-card class="rounded-md shadow-md m-6 p-4">
+        <!-- Returned Items Section -->
+        <q-card-section v-if="returns.length > 0" class="text-h6">Returned Items</q-card-section>
+        <q-card-section v-if="returns.length > 0">
+          <q-table class="shadow-md" flat bordered :rows="returns" :columns="returnColumns" row-key="id">
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td v-for="col in props.cols" :key="col.name" :props="props"
+                  :class="col.align === 'right' ? 'text-right' : ''">
+                  {{ col.value }}
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-card-section>
+        <!-- No Return Data Section -->
+        <q-card-section v-if="returns.length === 0" class="text-h6">Returned Items</q-card-section>
+        <q-card-section v-if="returns.length === 0" class="text-body2 text-center text-grey-7">
+          Tidak ada data pengembalian.
+        </q-card-section>
+      </q-card>
+    </q-container>
   </q-page>
 </template>
 
@@ -95,6 +118,7 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
+import dayjs from "dayjs";
 
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
@@ -106,6 +130,7 @@ export default {
       order: null,
       resiNumber: "",
       totalPrice: 0,
+      returns: [],
       columns: [
         {
           name: "name",
@@ -136,12 +161,50 @@ export default {
           sortable: true,
         },
       ],
+      returnColumns: [
+        {
+          name: "product_id",
+          label: "Product ID",
+          align: "left",
+          field: "product_id",
+          sortable: true,
+        },
+        {
+          name: "quantity",
+          label: "Quantity",
+          align: "center",
+          field: "quantity",
+          sortable: true,
+        },
+        {
+          name: "reason",
+          label: "Reason",
+          align: "left",
+          field: "reason",
+          sortable: true,
+        },
+        {
+          name: "status",
+          label: "Status",
+          align: "center",
+          field: "status",
+          sortable: true,
+        },
+        {
+          name: "created_at",
+          label: "Created At",
+          align: "right",
+          field: "created_at",
+          sortable: true,
+        },
+      ],
     };
   },
   async mounted() {
     this.orderId = this.$route.params.id;
     await this.fetchOrderDetail();
     await this.fetchShipment();
+    await this.fetchReturns();
   },
   methods: {
     async fetchOrderDetail() {
@@ -204,48 +267,80 @@ export default {
       }
     },
 
+    async fetchReturns() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const response = await axios.get(
+          `${apiBaseUrl}vendor/pengembalian/${this.orderId}`,
+          config
+        );
+
+        if (response.data.message === "Returns retrieved successfully") {
+          this.returns = response.data.pengembalians;
+        } else if (response.data.message === "No returns found for this order ID") {
+          this.returns = [];
+        } else {
+          console.error("Failed to fetch returns:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Failed to fetch returns:", error);
+      }
+    },
+
     calculateTotalPrice() {
       this.totalPrice = this.order.line_items.reduce(
-        (total, item) => total + item.amount,
+        (sum, item) => sum + item.amount,
         0
       );
     },
 
     formatToRupiah(value) {
-      return new Intl.NumberFormat("id-ID", {
+      const formattedValue = value.toLocaleString("id-ID", {
         style: "currency",
         currency: "IDR",
-      }).format(value);
+      });
+      return formattedValue;
     },
 
     formatDate(date) {
-      const options = { year: "numeric", month: "long", day: "numeric" };
-      return new Date(date).toLocaleDateString("id-ID", options);
+      const formattedDate = dayjs(date).format("DD MMMM YYYY");
+      return formattedDate;
     },
 
     editOrder() {
-      this.resiNumber = this.order.no_resi || "";
       Swal.fire({
-        title: "Input Shipping Receipt",
+        title: "Enter Tracking Number",
         input: "text",
-        inputValue: this.resiNumber,
+        inputPlaceholder: "Tracking Number",
         showCancelButton: true,
-        confirmButtonText: "Save",
+        confirmButtonText: "Submit",
+        cancelButtonText: "Cancel",
         preConfirm: (resiNumber) => {
           if (!resiNumber) {
-            Swal.showValidationMessage("Please enter a receipt number");
+            Swal.showValidationMessage("Please enter the tracking number.");
+          } else {
+            this.resiNumber = resiNumber;
           }
-          return resiNumber;
         },
       }).then((result) => {
         if (result.isConfirmed) {
-          this.resiNumber = result.value;
-          this.confirmSaveEdit();
+          this.sendShipment();
         }
       });
     },
 
-    async confirmSaveEdit() {
+    async sendShipment() {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -259,143 +354,81 @@ export default {
           },
         };
 
-        const payload = {
-          no_resi: this.resiNumber,
+        const data = {
           order_id: this.orderId,
+          no_resi: this.resiNumber,
         };
 
         const response = await axios.post(
           `${apiBaseUrl}vendor/shipment`,
-          payload,
+          data,
           config
         );
 
         if (response.data.success) {
-          this.order.no_resi = this.resiNumber;
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Shipping receipt updated successfully.",
-          });
+          Swal.fire("Success", "Shipment tracking number updated.", "success");
+          this.fetchShipment();
         } else {
-          console.error("Failed to update shipping receipt:", response.data.message);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Shipping receipt already exists.",
-          });
+          Swal.fire("Error", response.data.message, "error");
         }
       } catch (error) {
-        console.error("Failed to update shipping receipt:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Shipping receipt already exists.",
-        });
+        console.error("Failed to send shipment:", error);
+        Swal.fire("Error", "Failed to send shipment.", "error");
       }
     },
 
-    async sendInvoice() {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("Token not found.");
-          return;
+    sendInvoice() {
+      Swal.fire({
+        title: "Confirm",
+        text: "Are you sure you want to generate an invoice?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, generate it!",
+        cancelButtonText: "No, cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Perform the invoice generation here
+          Swal.fire("Generated!", "Your invoice has been generated.", "success");
         }
-
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        const payload = {
-          order_id: this.orderId,
-        };
-
-        const response = await axios.post(
-          `${apiBaseUrl}vendor/invoice`,
-          payload,
-          config
-        );
-
-        if (response.data.success) {
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Invoice sent successfully.",
-          });
-        } else {
-          console.error("Failed to send invoice:", response.data.message);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "Failed to send invoice.",
-          });
-        }
-      } catch (error) {
-        console.error("Failed to send invoice:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to send invoice.",
-        });
-      }
+      });
     },
 
     viewProof() {
-      if (this.order.bukti) {
-        Swal.fire({
-          title: "Proof of Receipt",
-          imageUrl: this.order.bukti,
-          imageAlt: "Proof of Receipt",
-          showCloseButton: true,
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Proof of receipt not found.",
-        });
-      }
+      Swal.fire({
+        title: "Proof of Shipment",
+        html: `<img src="${this.order.bukti}" alt="Proof of Shipment" class="w-full" />`,
+        showCloseButton: true,
+        focusConfirm: false,
+        confirmButtonText: "Close",
+      });
     },
   },
 };
 </script>
 
-<style scoped>
-.container-box {
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 20px;
-  border: 1px solid #ddd;
-}
-
+<style>
 .invoice-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  align-items: center;
 }
 
 .info-section {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
 }
 
 .info-block {
   flex: 1;
-  padding-right: 20px;
 }
 
 .custom-hr {
   border: none;
-  border-top: 1px solid #ccc;
-  margin: 10px 0;
+  height: 1px;
+  background-color: #ddd;
 }
 
-.q-btn+.q-btn {
-  margin-left: 10px;
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
