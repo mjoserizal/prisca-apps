@@ -73,7 +73,7 @@
         <q-card-section class="text-h6 flex justify-end">
           <q-btn v-if="order.status === 'selesai'" label="Buat Invoice" color="primary" class="q-mr-sm"
             @click="sendInvoice" />
-          <q-btn label="Konfirmasi Pengiriman" color="primary" @click="editOrder">
+          <q-btn label="Konfirmasi Pengiriman" color="primary" class="q-mr-sm" @click="editOrder">
             <q-tooltip anchor="bottom middle" self="top middle">
               Input Shipping Receipt
             </q-tooltip>
@@ -89,6 +89,7 @@
     </q-container>
     <q-container>
       <q-card class="rounded-md shadow-md m-6 p-4">
+
         <!-- Returned Items Section -->
         <q-card-section v-if="returns.length > 0" class="text-h6">Returned Items</q-card-section>
         <q-card-section v-if="returns.length > 0">
@@ -97,7 +98,15 @@
               <q-tr :props="props">
                 <q-td v-for="col in props.cols" :key="col.name" :props="props"
                   :class="col.align === 'right' ? 'text-right' : ''">
-                  {{ col.value }}
+                  <template v-if="col.name === 'actions'">
+                    <q-btn label="Approve" color="positive" class="q-mr-sm"
+                      @click="updateReturnStatus(props.row.product_id, 'approved')" />
+                    <q-btn label="Reject" color="negative"
+                      @click="updateReturnStatus(props.row.product_id, 'rejected')" />
+                  </template>
+                  <template v-else>
+                    {{ col.value }}
+                  </template>
                 </q-td>
               </q-tr>
             </template>
@@ -107,6 +116,13 @@
         <q-card-section v-if="returns.length === 0" class="text-h6">Returned Items</q-card-section>
         <q-card-section v-if="returns.length === 0" class="text-body2 text-center text-grey-7">
           Tidak ada data pengembalian.
+        </q-card-section>
+
+        <!-- Tombol Send Approved Returns -->
+        <q-card-section class="text-h6 flex justify-end">
+          <div class="q-pa-md">
+            <q-btn label="Send Approved Returns" color="primary" @click="sendApprovedReturns" />
+          </div>
         </q-card-section>
       </q-card>
     </q-container>
@@ -197,7 +213,15 @@ export default {
           field: "created_at",
           sortable: true,
         },
+        {
+          name: "actions",
+          label: "Actions",
+          align: "center",
+          field: "actions",
+        },
       ],
+
+
     };
   },
   async mounted() {
@@ -264,37 +288,6 @@ export default {
         }
       } catch (error) {
         console.error("Failed to fetch shipment:", error);
-      }
-    },
-
-    async fetchReturns() {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("Token not found.");
-          return;
-        }
-
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        const response = await axios.get(
-          `${apiBaseUrl}vendor/pengembalian/${this.orderId}`,
-          config
-        );
-
-        if (response.data.message === "Returns retrieved successfully") {
-          this.returns = response.data.pengembalians;
-        } else if (response.data.message === "No returns found for this order ID") {
-          this.returns = [];
-        } else {
-          console.error("Failed to fetch returns:", response.data.message);
-        }
-      } catch (error) {
-        console.error("Failed to fetch returns:", error);
       }
     },
 
@@ -401,6 +394,125 @@ export default {
         focusConfirm: false,
         confirmButtonText: "Close",
       });
+    },
+
+    async fetchReturns() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const response = await axios.get(
+          `${apiBaseUrl}vendor/pengembalian/${this.orderId}`,
+          config
+        );
+
+        if (response.data.message === "Returns retrieved successfully") {
+          this.returns = response.data.pengembalians;
+        } else if (response.data.message === "No returns found for this order ID") {
+          this.returns = [];
+        } else {
+          console.error("Failed to fetch returns:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Failed to fetch returns:", error);
+      }
+    },
+
+    async updateReturnStatus(productId, status) {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const data = {
+          statuses: [
+            {
+              product_id: productId,
+              status: status,
+            },
+          ],
+        };
+
+        const response = await axios.post(
+          `${apiBaseUrl}vendor/pengembalian/${this.orderId}`,
+          data,
+          config
+        );
+
+        if (response.status === 200) {
+          Swal.fire("Success", `Return status updated to ${status}.`, "success");
+          await this.fetchReturns();
+        } else {
+          Swal.fire("Error", response.data.message, "error");
+        }
+      } catch (error) {
+        console.error("Failed to update return status:", error);
+        Swal.fire("Error", "Failed to update return status.", "error");
+      }
+    },
+
+    async sendApprovedReturns() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+
+        const approvedReturns = this.returns.filter(item => item.status === 'approved');
+        if (approvedReturns.length === 0) {
+          Swal.fire("Warning", "No approved returns to send.", "warning");
+          return;
+        }
+
+        const replacements = approvedReturns.map(item => ({
+          product_id: item.product_id,
+        }));
+
+        const payload = {
+          order_id: this.orderId,
+          replacements,
+        };
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const response = await axios.post(
+          `${apiBaseUrl}vendor/pengembalian`,
+          payload,
+          config
+        );
+
+        if (response.status === 200) {
+          Swal.fire("Success", "Approved returns sent successfully.", "success");
+          await this.fetchReturns();
+        } else {
+          Swal.fire("Error", response.data.message, "error");
+        }
+      } catch (error) {
+        console.error("Failed to send approved returns:", error);
+        Swal.fire("Error", "Failed to send approved returns.", "error");
+      }
     },
   },
 };
