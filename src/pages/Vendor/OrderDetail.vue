@@ -179,10 +179,10 @@ export default {
       ],
       returnColumns: [
         {
-          name: "product_id",
-          label: "Product ID",
+          name: "product_name",
+          label: "Product Name",
           align: "left",
-          field: "product_id",
+          field: "product_name",
           sortable: true,
         },
         {
@@ -207,12 +207,12 @@ export default {
           sortable: true,
         },
         {
-          name: "created_at",
-          label: "Created At",
-          align: "right",
-          field: "created_at",
-          sortable: true,
+          name: 'created_at',
+          label: 'Created At',
+          align: 'right', field: row => this.formatDate(row.created_at),
+          sortable: true
         },
+
         {
           name: "actions",
           label: "Actions",
@@ -307,7 +307,7 @@ export default {
     },
 
     formatDate(date) {
-      const formattedDate = dayjs(date).format("DD MMMM YYYY");
+      const formattedDate = dayjs(date).format('DD MMM YYYY, HH:mm');
       return formattedDate;
     },
 
