@@ -294,6 +294,8 @@ export default {
       };
 
       const payload = {
+        harga_ongkir: this.quotation.harga_ongkir,
+        total_price: this.quotation.total_price,
         quotationItems: this.quotation.line_items.map((item, index) => ({
           product_id: item.product_id,
           name: item.product_name,
