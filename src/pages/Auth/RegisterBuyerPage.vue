@@ -65,13 +65,11 @@
                   " />
               </div>
               <div class="text-center">
-                <GoogleLogin client-id="747646854459-78t99tmjoohjchnk1nh7qps9hppqded1.apps.googleusercontent.com"
-                  @success="handleGoogleLogin" @error="handleGoogleLoginError">
-                  <q-btn color="primary">
-                    <q-icon name="fab fa-google" />
-                    Sign Up with Google
-                  </q-btn>
-                </GoogleLogin>
+                <div id="g_id_onload"
+                  data-client_id="747646854459-78t99tmjoohjchnk1nh7qps9hppqded1.apps.googleusercontent.com"
+                  data-login_uri="https://prisca-apps.vercel.app/auth/callback" data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" data-type="standard"></div>
               </div>
               <div class="text-center">
                 <p>
@@ -87,26 +85,22 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
-import { useRouter } from "vue-router";
-import Swal from "sweetalert2";
-import axios from "axios";
-import { GoogleLogin } from 'vue3-google-login';
+import { defineComponent, ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 export default defineComponent({
-  name: "RegisterPage",
-  components: {
-    GoogleLogin
-  },
+  name: 'RegisterPage',
   setup() {
     const router = useRouter();
-    const name = ref("");
-    const email = ref("");
-    const password = ref("");
-    const password_confirmation = ref("");
-    const telp = ref("");
-    const company_name = ref("");
-    const errorMessage = ref("");
+    const name = ref('');
+    const email = ref('');
+    const password = ref('');
+    const password_confirmation = ref('');
+    const telp = ref('');
+    const company_name = ref('');
+    const errorMessage = ref('');
     const showPassword = ref(false);
     const showConfirmPassword = ref(false);
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -118,17 +112,17 @@ export default defineComponent({
 
     const register = async () => {
       if (!name.value || !email.value || !password.value || !password_confirmation.value || !telp.value || !company_name.value) {
-        errorMessage.value = "All fields are required";
+        errorMessage.value = 'All fields are required';
         return;
       }
 
       if (!/.+@.+\..+/.test(email.value)) {
-        errorMessage.value = "Email must be valid";
+        errorMessage.value = 'Email must be valid';
         return;
       }
 
       if (password.value !== password_confirmation.value) {
-        errorMessage.value = "Passwords do not match";
+        errorMessage.value = 'Passwords do not match';
         return;
       }
 
@@ -147,31 +141,31 @@ export default defineComponent({
 
         if (response.data.success) {
           // Clear fields if registration is successful
-          name.value = "";
-          email.value = "";
-          password.value = "";
-          password_confirmation.value = "";
-          telp.value = "";
-          company_name.value = "";
+          name.value = '';
+          email.value = '';
+          password.value = '';
+          password_confirmation.value = '';
+          telp.value = '';
+          company_name.value = '';
 
           // Redirect to login page
-          router.push("/login");
+          router.push('/login');
         } else {
           Swal.fire({
-            icon: "error",
-            title: "Registration failed",
-            text: response.data.message || "Unknown error occurred.",
+            icon: 'error',
+            title: 'Registration failed',
+            text: response.data.message || 'Unknown error occurred.',
           });
-          errorMessage.value = response.data.message || "Registration failed";
+          errorMessage.value = response.data.message || 'Registration failed';
         }
       } catch (error) {
-        console.error("Error during registration:", error);
-        errorMessage.value = "Registration failed";
+        console.error('Error during registration:', error);
+        errorMessage.value = 'Registration failed';
       }
     };
 
     const goToLogin = () => {
-      router.push({ name: "login" });
+      router.push({ name: 'login' });
     };
 
     const togglePassword = () => {
@@ -182,18 +176,32 @@ export default defineComponent({
       showConfirmPassword.value = !showConfirmPassword.value;
     };
 
-    const handleGoogleLogin = (response) => {
-      console.log("Google login response:", response);
-      const { profileObj } = response;
-      email.value = profileObj.email;
-      name.value = profileObj.name;
-      password.value = ""; // Prompt user to set a password
-      password_confirmation.value = password.value;
-    };
+    onMounted(() => {
+      window.onload = () => {
+        window.gapi.load('auth2', () => {
+          const auth2 = window.gapi.auth2.init({
+            client_id: '747646854459-78t99tmjoohjchnk1nh7qps9hppqded1.apps.googleusercontent.com',
+            scope: 'profile email'
+          });
 
-    const handleGoogleLoginError = (error) => {
-      console.error("Google login error:", error);
-    };
+          auth2.attachClickHandler(
+            document.querySelector('.g_id_signin'),
+            {},
+            (googleUser) => {
+              const profile = googleUser.getBasicProfile();
+              email.value = profile.getEmail();
+              name.value = profile.getName();
+              password.value = ''; // Prompt user to set a password
+              password_confirmation.value = password.value;
+            },
+            (error) => {
+              console.error('Error during Google sign-in:', error);
+              errorMessage.value = 'Google sign-in failed';
+            }
+          );
+        });
+      };
+    });
 
     return {
       name,
@@ -209,9 +217,7 @@ export default defineComponent({
       showConfirmPassword,
       togglePassword,
       toggleConfirmPassword,
-      passwordConfirmationRules,
-      handleGoogleLogin,
-      handleGoogleLoginError
+      passwordConfirmationRules
     };
   },
 });
