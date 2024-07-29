@@ -65,7 +65,7 @@
                   " />
               </div>
               <div class="text-center q-mt-md">
-                <q-btn @click="handleGoogleLogin" type="button" class="google-btn q-ma-xs q-ma-sm" size="md" style="
+                <q-btn @click="handleGoogleLogin" type="button" class="google-btn q-ma-xs q-ma-sm" size="lg" style="
                     width: 100%;
                     min-width: 200px;
                     max-width: 550px;
