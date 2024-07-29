@@ -49,8 +49,12 @@
 
         <!-- Total Price Section -->
         <q-card-section class="text-h6 flex justify-end">
-          <div>Total Price: {{ formatCurrency(totalPrice) }}</div>
+          <div>Harga Ongkir: {{ formatCurrency(quotation.harga_ongkir) }}</div>
         </q-card-section>
+        <q-card-section class="text-h6 flex justify-end">
+          <div>Total Price: {{ formatCurrency(quotation.total_price) }}</div>
+        </q-card-section>
+
 
         <q-card-section class="text-h6 flex justify-end" v-if="!pdfExists">
           <q-btn label="Send Quotation" color="primary" @click="sendQuotation" />
@@ -110,13 +114,7 @@ export default {
     };
   },
   computed: {
-    totalPrice() {
-      return this.quotation
-        ? this.quotation.line_items.reduce((total, item) => {
-          return total + item.amount;
-        }, 0)
-        : 0;
-    },
+
     pdfExists() {
       return this.quotation && this.quotation.pdf && this.quotation.pdf.includes("quotation_QUO-");
     },

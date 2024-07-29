@@ -357,6 +357,12 @@
           <input type="number" id="stock" name="stock" v-model="editedProduct.commercial_info.commercialInfo.stock"
             class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
         </div>
+        <!-- Input Berat -->
+        <div class="mb-4">
+          <label for="berat" class="block mb-2 text-sm font-medium text-gray-600">Product Weight:</label>
+          <input type="number" id="berat" name="berat" v-model="editedProduct.commercial_info.commercialInfo.berat"
+            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+        </div>
 
         <!-- Input contract -->
         <div class="mb-4">
@@ -476,6 +482,7 @@ export default {
             discount: "",
             price_exp: "",
             stock: "",
+            berat: "",
             pre_order: "",
             contract: "",
           },
@@ -695,6 +702,8 @@ export default {
         formData.append("discount", this.editedProduct.commercial_info.commercialInfo.discount);
         formData.append("price_exp", this.editedProduct.commercial_info.commercialInfo.price_exp);
         formData.append("stock", this.editedProduct.commercial_info.commercialInfo.stock);
+        formData.append("berat", this.editedProduct.commercial_info.commercialInfo.berat);
+
         formData.append("pre_order", this.editedProduct.commercial_info.commercialInfo.pre_order);
         formData.append("contract", this.editedProduct.commercial_info.commercialInfo.contract ? "yes" : "no");
         formData.append("min", this.editedProduct.commercial_info.purchaseQty.min);

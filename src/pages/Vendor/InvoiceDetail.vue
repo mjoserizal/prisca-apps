@@ -70,9 +70,12 @@
           </q-table>
         </q-card-section>
 
+        <q-card-section class="text-h6 flex justify-end">
+          <div>Harga Ongkir: {{ formatToRupiah(invoice.vendor.harga_ongkir) }}</div>
+        </q-card-section>
         <!-- Total Price -->
         <q-card-section class="text-h6 flex justify-end">
-          <div>Total Price: {{ formatToRupiah(totalPrice) }}</div>
+          <div>Total Price: {{ formatToRupiah(invoice.payment.total_bayar) }}</div>
         </q-card-section>
 
         <!-- Actions -->

@@ -46,8 +46,12 @@
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
-          <div>Total Price: {{ formatToRupiah(totalPrice) }}</div>
+          <div>Harga Ongkir: {{ formatToRupiah(quotation.harga_ongkir) }}</div>
         </q-card-section>
+        <q-card-section class="text-h6 flex justify-end">
+          <div>Total Price: {{ formatToRupiah(quotation.total_price) }}</div>
+        </q-card-section>
+
 
         <q-card-section class="text-h6 flex justify-end">
           <q-btn v-if="!quotationFixExists || (quotationFix && quotationFix.line_items.length === 0)"
@@ -170,7 +174,6 @@ export default {
 
         if (response.data.message === "Success") {
           this.quotation = response.data.quotation;
-          this.calculateTotalPrice();
         } else {
           console.error(
             "Failed to fetch quotation detail:",
@@ -216,12 +219,6 @@ export default {
       }
     },
 
-    calculateTotalPrice() {
-      this.totalPrice = this.quotation.line_items.reduce(
-        (acc, item) => acc + item.amount,
-        0
-      );
-    },
 
     formatToRupiah(value) {
       return value.toLocaleString("id-ID", {

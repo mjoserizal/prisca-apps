@@ -67,6 +67,9 @@
         </q-card-section>
 
         <q-card-section class="text-h6 flex justify-end">
+          <div>Harga Ongkir: {{ formatToRupiah(order.harga_ongkir) }}</div>
+        </q-card-section>
+        <q-card-section class="text-h6 flex justify-end">
           <div>Total Price: {{ formatToRupiah(totalPrice) }}</div>
         </q-card-section>
 
@@ -295,7 +298,7 @@ export default {
       this.totalPrice = this.order.line_items.reduce(
         (sum, item) => sum + item.amount,
         0
-      );
+      ) + this.order.harga_ongkir;
     },
 
     formatToRupiah(value) {
@@ -380,11 +383,46 @@ export default {
         cancelButtonText: "No, cancel",
       }).then((result) => {
         if (result.isConfirmed) {
-          // Perform the invoice generation here
-          Swal.fire("Generated!", "Your invoice has been generated.", "success");
+          this.sendInvoiceRequest();
         }
       });
     },
+
+    async sendInvoiceRequest() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("Token not found.");
+          return;
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const payload = {
+          order_id: this.orderId,
+        };
+
+        const response = await axios.post(
+          `${apiBaseUrl}vendor/invoice`,
+          payload,
+          config
+        );
+
+        if (response.data.success) {
+          Swal.fire("Generated!", "Your invoice has been generated.", "success");
+        } else {
+          Swal.fire("Error", response.data.message, "error");
+        }
+      } catch (error) {
+        console.error("Failed to send invoice:", error);
+        Swal.fire("Error", "Failed to send invoice.", "error");
+      }
+    },
+
 
     viewProof() {
       Swal.fire({
