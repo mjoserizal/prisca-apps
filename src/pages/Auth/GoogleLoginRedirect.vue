@@ -18,7 +18,7 @@ export default {
 
     const saveDataAndRedirect = () => {
       const token = extractParamFromUrl('token');
-      const userRole = extractParamFromUrl('role.name');
+      const userRole = extractParamFromUrl('role');
       const userId = extractParamFromUrl('user_id');
 
       if (token && userRole && userId) {
@@ -28,9 +28,13 @@ export default {
         localStorage.setItem("userId", userId);
 
         // Redirect to /dashboard-Admin
-        router.push("/dashboard-Admin");
+        if (userRole == "company") {
+          router.push("/dashboard-Admin");
+        } else if (userRole == "vendor") {
+          router.push({ name: "vendorProfile" });
+        }
       } else {
-        console.error("Token, role.name, or user_id not found in URL");
+        console.error("Token, role, or user_id not found in URL");
       }
     };
 
