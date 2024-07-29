@@ -42,12 +42,14 @@
     <div class="shipment-details">
       <h3>Shipment</h3>
       <p><strong>Tracking Number:</strong> {{ shipment.no_resi }}</p>
+      <p><strong>Total Ongkir:</strong> {{ formatCurrency(order.harga_ongkir) }}</p>
     </div>
 
     <div class="invoice-footer q-pa-md">
       <div class="row justify-end">
         <div class="col-auto">
-          <p><strong>Total Paid:</strong> {{ formatCurrency(order.total) }}</p>
+          <p><strong>Total Paid:</strong> {{ formatCurrency(order.total + order.harga_ongkir) }}</p>
+
         </div>
       </div>
     </div>
@@ -193,10 +195,6 @@ export default {
             console.error("Invalid return data format:", response.data);
           }
         })
-        .catch((error) => {
-          console.error("Error fetching return details:", error);
-          Swal.fire("Error", "Failed to fetch return details. Please try again later.", "error");
-        });
     },
     orderReceived() {
       Swal.fire({

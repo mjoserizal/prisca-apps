@@ -43,6 +43,14 @@
                 <q-item-label>{{ formatCurrency(quotation.total_price) }}</q-item-label>
               </q-item-section>
             </q-item>
+            <q-item>
+              <q-item-section>
+                <q-item-label>Harga Ongkir</q-item-label>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ formatCurrency(quotation.harga_ongkir) }}</q-item-label>
+              </q-item-section>
+            </q-item>
             <q-item v-if="quotation.pdf">
               <q-item-section>
                 <q-item-label>Quotation Document</q-item-label>
