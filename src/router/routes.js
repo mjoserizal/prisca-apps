@@ -11,6 +11,11 @@ const routes = [
     component: () => import("pages/Auth/LoginPage.vue"),
     name: "login",
   },
+  {
+    path: "/auth/google/redirect",
+    name: "GoogleCallback",
+    component: () => import("pages/Auth/GoogleLoginRedirect.vue"), // The new view for handling Google OAuth callback
+  },
   //Register-buyer
   {
     path: "/register-buyer",

@@ -22,6 +22,13 @@
           class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
       </div>
 
+      <!-- Input Nama Perusahaan -->
+      <div class="mb-4">
+        <label for="company_name" class="block mb-2 text-sm font-medium text-gray-600">Company Name:</label>
+        <input type="text" id="company_name" name="company_name" v-model="userProfile.company.company_name"
+          class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+      </div>
+
       <!-- Input Alamat Perusahaan -->
       <div class="mb-4">
         <label for="address" class="block mb-2 text-sm font-medium text-gray-600">Address:</label>
@@ -66,7 +73,6 @@
 </template>
 <script>
 import axios from "axios";
-import { useRouter } from "vue-router";
 import Swal from 'sweetalert2';
 
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
@@ -80,6 +86,7 @@ export default {
         telp: "",
         email: "",
         company: {
+          company_name: "", // Ensure this is correctly bound
           address: "", // Existing address
         },
       },
@@ -144,7 +151,6 @@ export default {
           console.error("Error fetching addresses: ", error);
         });
     },
-
     fetchDivisi() {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -198,10 +204,12 @@ export default {
         telp: this.userProfile.telp,
         address: this.selectedAddress, // Use selected address
         company_code: this.userProfile.company.company_code,
-        company_name: this.userProfile.company.company_name,
+        company_name: this.userProfile.company.company_name, // Ensure this is included
         divisi_code: this.selectedDivisi,
         departemen_code: this.selectedDepartemen,
       };
+
+      console.log("Sending data:", userData); // Debugging line
 
       axios
         .post(`${apiBaseUrl}buyer/profile`, userData, {
@@ -210,26 +218,23 @@ export default {
           },
         })
         .then((response) => {
-          console.log("User data updated successfully: ", response.data);
-          // Update the user profile with the response data
-          this.userProfile = response.data.user;
-          this.selectedDivisi = response.data.user.company.divisi_code;
-          this.selectedDepartemen = response.data.user.company.departemen_code;
-
-          // Show success alert
+          console.log("Profile updated successfully: ", response.data);
           Swal.fire({
             title: 'Success',
             text: 'Profile updated successfully',
             icon: 'success',
             confirmButtonText: 'OK'
-          }).then(() => {
-            // Redirect to UserProfile
-            const router = useRouter();
-            router.push("/UserProfile");
           });
+          this.fetchProfile(); // Re-fetch profile to update the UI
         })
         .catch((error) => {
-          console.error("Error updating user data: ", error);
+          console.error("Error updating profile: ", error);
+          Swal.fire({
+            title: 'Error',
+            text: 'Failed to update profile',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
         });
     },
   },

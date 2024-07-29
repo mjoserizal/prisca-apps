@@ -60,7 +60,6 @@ export default {
     const showPassword = ref(false);
     const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
-    console.log(process.env.VUE_APP_API_BASE_URL);
     const login = async () => {
       try {
         const response = await axios.post(`${apiBaseUrl}login`, {
@@ -73,11 +72,9 @@ export default {
           const userRole = response.data.user.role.name;
           const userId = response.data.user.id;
 
-
           localStorage.setItem("token", token);
           localStorage.setItem("userRole", userRole);
           localStorage.setItem("userId", userId);
-
 
           if (userRole === "Departemen") {
             router.push("/dashboard-Admin");
@@ -103,13 +100,19 @@ export default {
         login();
       }
     };
+
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
+    };
+
+    const handleGoogleLogin = () => {
+      window.location.href = `${apiBaseUrl}auth/google/redirectCompany`;
     };
 
     const goToRegisterBuyer = () => {
       router.push("/register-buyer");
     };
+
     const goToRegisterVendor = () => {
       router.push({ name: "register-vendor" });
     };
@@ -128,6 +131,7 @@ export default {
   },
 };
 </script>
+
 
 <style>
 .bg-image {

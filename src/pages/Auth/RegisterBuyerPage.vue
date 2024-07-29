@@ -64,6 +64,20 @@
                     margin: auto;
                   " />
               </div>
+              <div class="text-center q-mt-md">
+                <q-btn @click="handleGoogleLogin" type="button" class="google-btn q-ma-xs q-ma-sm" size="md" style="
+                    width: 100%;
+                    min-width: 200px;
+                    max-width: 550px;
+                    margin: auto;
+                    background-color: white;
+                    color: black;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                  ">
+                  <q-img src="/images/google.png" style="width: 24px; height: 24px; margin-right: 8px;" />
+                  Login or Signup with Google
+                </q-btn>
+              </div>
               <div class="text-center">
                 <p>
                   <span class="register-link" @click="goToLogin">Login</span>
@@ -156,7 +170,9 @@ export default defineComponent({
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
     };
-
+    const handleGoogleLogin = () => {
+      window.location.href = `${apiBaseUrl}auth/google/redirectCompany`;
+    };
     const toggleConfirmPassword = () => {
       showConfirmPassword.value = !showConfirmPassword.value;
     };
@@ -176,6 +192,7 @@ export default defineComponent({
       togglePassword,
       toggleConfirmPassword,
       passwordConfirmationRules,
+      handleGoogleLogin
     };
   },
 });
