@@ -65,11 +65,7 @@
                   " />
               </div>
               <div class="text-center">
-                <div id="g_id_onload"
-                  data-client_id="747646854459-78t99tmjoohjchnk1nh7qps9hppqded1.apps.googleusercontent.com"
-                  data-login_uri="https://prisca-apps.vercel.app/auth/callback" data-auto_prompt="false">
-                </div>
-                <div class="g_id_signin" data-type="standard"></div>
+                <div id="g_id_signin" class="g_id_signin" data-type="standard"></div>
               </div>
               <div class="text-center">
                 <p>
@@ -177,31 +173,35 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      window.onload = () => {
-        window.gapi.load('auth2', () => {
-          const auth2 = window.gapi.auth2.init({
-            client_id: '747646854459-78t99tmjoohjchnk1nh7qps9hppqded1.apps.googleusercontent.com',
-            scope: 'profile email'
-          });
-
-          auth2.attachClickHandler(
-            document.querySelector('.g_id_signin'),
-            {},
-            (googleUser) => {
-              const profile = googleUser.getBasicProfile();
-              email.value = profile.getEmail();
-              name.value = profile.getName();
-              password.value = ''; // Prompt user to set a password
-              password_confirmation.value = password.value;
-            },
-            (error) => {
-              console.error('Error during Google sign-in:', error);
-              errorMessage.value = 'Google sign-in failed';
-            }
-          );
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.onload = () => {
+        window.google.accounts.id.initialize({
+          client_id: '747646854459-78t99tmjoohjchnk1nh7qps9hppqded1.apps.googleusercontent.com',
+          callback: handleCredentialResponse
         });
+        window.google.accounts.id.renderButton(
+          document.getElementById('g_id_signin'),
+          { theme: 'outline', size: 'large' }  // customization attributes
+        );
       };
+      document.head.appendChild(script);
     });
+
+    const handleCredentialResponse = (response) => {
+      const userObject = parseJwt(response.credential);
+      email.value = userObject.email;
+      name.value = userObject.name;
+      password.value = ''; // Prompt user to set a password
+      password_confirmation.value = password.value;
+    };
+
+    const parseJwt = (token) => {
+      const base64Url = token.split('.')[1];
+      const base64 = decodeURIComponent(atob(base64Url).replace(/\+/g, ' '));
+      return JSON.parse(base64);
+    };
 
     return {
       name,
