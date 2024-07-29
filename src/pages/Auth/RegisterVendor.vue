@@ -41,6 +41,17 @@
                   " />
               </div>
               <div class="text-center">
+                <q-btn @click="signUpWithGoogle" type="button" class="q-ma-xs q-ma-sm google-btn" size="lg" style="
+                    width: 100%;
+                    min-width: 200px;
+                    max-width: 550px;
+                    margin: auto;
+                  ">
+                  <img src="https://developers.google.com/identity/images/g-logo.png" class="google-icon" />
+                  <span>Sign Up with Google</span>
+                </q-btn>
+              </div>
+              <div class="text-center">
                 <p>
                   <span class="register-link" @click="goToLogin">Login</span>
                 </p>
@@ -123,6 +134,10 @@ export default defineComponent({
       router.push({ name: "login" });
     };
 
+    const signUpWithGoogle = () => {
+      window.location.href = `${apiBaseUrl}auth/google/redirectVendor`;
+    };
+
     return {
       name,
       email,
@@ -134,6 +149,7 @@ export default defineComponent({
       register,
       togglePassword,
       goToLogin,
+      signUpWithGoogle,
     };
   },
 });
@@ -155,5 +171,25 @@ export default defineComponent({
 
 .custom-card {
   background-color: #f9f5f6;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #757575;
+  font-weight: bold;
+}
+
+.google-btn:hover {
+  background-color: #f1f1f1;
+}
+
+.google-icon {
+  height: 18px;
+  width: 18px;
+  margin-right: 10px;
 }
 </style>
