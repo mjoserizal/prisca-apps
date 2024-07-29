@@ -65,6 +65,15 @@
                   " />
               </div>
               <div class="text-center">
+                <GoogleLogin client-id="747646854459-78t99tmjoohjchnk1nh7qps9hppqded1.apps.googleusercontent.com"
+                  @success="handleGoogleLogin" @error="handleGoogleLoginError">
+                  <q-btn color="primary">
+                    <q-icon name="fab fa-google" />
+                    Sign Up with Google
+                  </q-btn>
+                </GoogleLogin>
+              </div>
+              <div class="text-center">
                 <p>
                   <span class="register-link" @click="goToLogin">Login</span>
                 </p>
@@ -79,13 +88,16 @@
 
 <script>
 import { defineComponent, ref, computed } from "vue";
-import axios from "axios";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { GoogleLogin } from 'vue3-google-login';
 
 export default defineComponent({
-  name: "LoginPage",
-
+  name: "RegisterPage",
+  components: {
+    GoogleLogin
+  },
   setup() {
     const router = useRouter();
     const name = ref("");
@@ -97,7 +109,7 @@ export default defineComponent({
     const errorMessage = ref("");
     const showPassword = ref(false);
     const showConfirmPassword = ref(false);
-    const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
     const passwordConfirmationRules = computed(() => [
       val => !!val || 'Password confirmation is required',
@@ -134,6 +146,15 @@ export default defineComponent({
         );
 
         if (response.data.success) {
+          // Clear fields if registration is successful
+          name.value = "";
+          email.value = "";
+          password.value = "";
+          password_confirmation.value = "";
+          telp.value = "";
+          company_name.value = "";
+
+          // Redirect to login page
           router.push("/login");
         } else {
           Swal.fire({
@@ -161,6 +182,22 @@ export default defineComponent({
       showConfirmPassword.value = !showConfirmPassword.value;
     };
 
+    const handleGoogleLogin = (response) => {
+      console.log("Google login response:", response);
+      // Extract the email and name from the response
+      const { profileObj } = response;
+      email.value = profileObj.email;
+      name.value = profileObj.name;
+      // Optionally set a default password or handle password differently
+      password.value = ""; // Prompt user to set a password
+      password_confirmation.value = password.value;
+    };
+
+    const handleGoogleLoginError = (error) => {
+      console.error("Google login error:", error);
+      // Handle Google login errors
+    };
+
     return {
       name,
       email,
@@ -176,6 +213,8 @@ export default defineComponent({
       togglePassword,
       toggleConfirmPassword,
       passwordConfirmationRules,
+      handleGoogleLogin,
+      handleGoogleLoginError
     };
   },
 });
