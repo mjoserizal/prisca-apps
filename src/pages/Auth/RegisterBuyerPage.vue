@@ -65,8 +65,7 @@
                   " />
               </div>
               <div class="text-center">
-                <GoogleLogin client-id="747646854459-78t99tmjoohjchnk1nh7qps9hppqded1.apps.googleusercontent.com"
-                  @success="handleGoogleLogin" @error="handleGoogleLoginError">
+                <GoogleLogin client-id="YOUR_CLIENT_ID" @success="handleGoogleLogin" @error="handleGoogleLoginError">
                   <q-btn color="primary">
                     <q-icon name="fab fa-google" />
                     Sign Up with Google
@@ -184,18 +183,15 @@ export default defineComponent({
 
     const handleGoogleLogin = (response) => {
       console.log("Google login response:", response);
-      // Extract the email and name from the response
       const { profileObj } = response;
       email.value = profileObj.email;
       name.value = profileObj.name;
-      // Optionally set a default password or handle password differently
       password.value = ""; // Prompt user to set a password
       password_confirmation.value = password.value;
     };
 
     const handleGoogleLoginError = (error) => {
       console.error("Google login error:", error);
-      // Handle Google login errors
     };
 
     return {
