@@ -99,7 +99,7 @@ export default defineComponent({
     const errorMessage = ref('');
     const showPassword = ref(false);
     const showConfirmPassword = ref(false);
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+    const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
     const passwordConfirmationRules = computed(() => [
       val => !!val || 'Password confirmation is required',
