@@ -65,9 +65,6 @@
                   " />
               </div>
               <div class="text-center">
-                <div id="g_id_signin" class="g_id_signin" data-type="standard"></div>
-              </div>
-              <div class="text-center">
                 <p>
                   <span class="register-link" @click="goToLogin">Login</span>
                 </p>
@@ -81,22 +78,23 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import Swal from 'sweetalert2';
-import axios from 'axios';
+import { defineComponent, ref, computed } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
 
 export default defineComponent({
-  name: 'RegisterPage',
+  name: "LoginPage",
+
   setup() {
     const router = useRouter();
-    const name = ref('');
-    const email = ref('');
-    const password = ref('');
-    const password_confirmation = ref('');
-    const telp = ref('');
-    const company_name = ref('');
-    const errorMessage = ref('');
+    const name = ref("");
+    const email = ref("");
+    const password = ref("");
+    const password_confirmation = ref("");
+    const telp = ref("");
+    const company_name = ref("");
+    const errorMessage = ref("");
     const showPassword = ref(false);
     const showConfirmPassword = ref(false);
     const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
@@ -108,17 +106,17 @@ export default defineComponent({
 
     const register = async () => {
       if (!name.value || !email.value || !password.value || !password_confirmation.value || !telp.value || !company_name.value) {
-        errorMessage.value = 'All fields are required';
+        errorMessage.value = "All fields are required";
         return;
       }
 
       if (!/.+@.+\..+/.test(email.value)) {
-        errorMessage.value = 'Email must be valid';
+        errorMessage.value = "Email must be valid";
         return;
       }
 
       if (password.value !== password_confirmation.value) {
-        errorMessage.value = 'Passwords do not match';
+        errorMessage.value = "Passwords do not match";
         return;
       }
 
@@ -136,32 +134,23 @@ export default defineComponent({
         );
 
         if (response.data.success) {
-          // Clear fields if registration is successful
-          name.value = '';
-          email.value = '';
-          password.value = '';
-          password_confirmation.value = '';
-          telp.value = '';
-          company_name.value = '';
-
-          // Redirect to login page
-          router.push('/login');
+          router.push("/login");
         } else {
           Swal.fire({
-            icon: 'error',
-            title: 'Registration failed',
-            text: response.data.message || 'Unknown error occurred.',
+            icon: "error",
+            title: "Registration failed",
+            text: response.data.message || "Unknown error occurred.",
           });
-          errorMessage.value = response.data.message || 'Registration failed';
+          errorMessage.value = response.data.message || "Registration failed";
         }
       } catch (error) {
-        console.error('Error during registration:', error);
-        errorMessage.value = 'Registration failed';
+        console.error("Error during registration:", error);
+        errorMessage.value = "Registration failed";
       }
     };
 
     const goToLogin = () => {
-      router.push({ name: 'login' });
+      router.push({ name: "login" });
     };
 
     const togglePassword = () => {
@@ -170,37 +159,6 @@ export default defineComponent({
 
     const toggleConfirmPassword = () => {
       showConfirmPassword.value = !showConfirmPassword.value;
-    };
-
-    onMounted(() => {
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.onload = () => {
-        window.google.accounts.id.initialize({
-          client_id: '747646854459-78t99tmjoohjchnk1nh7qps9hppqded1.apps.googleusercontent.com',
-          callback: handleCredentialResponse
-        });
-        window.google.accounts.id.renderButton(
-          document.getElementById('g_id_signin'),
-          { theme: 'outline', size: 'large' }  // customization attributes
-        );
-      };
-      document.head.appendChild(script);
-    });
-
-    const handleCredentialResponse = (response) => {
-      const userObject = parseJwt(response.credential);
-      email.value = userObject.email;
-      name.value = userObject.name;
-      password.value = ''; // Prompt user to set a password
-      password_confirmation.value = password.value;
-    };
-
-    const parseJwt = (token) => {
-      const base64Url = token.split('.')[1];
-      const base64 = decodeURIComponent(atob(base64Url).replace(/\+/g, ' '));
-      return JSON.parse(base64);
     };
 
     return {
@@ -217,7 +175,7 @@ export default defineComponent({
       showConfirmPassword,
       togglePassword,
       toggleConfirmPassword,
-      passwordConfirmationRules
+      passwordConfirmationRules,
     };
   },
 });
