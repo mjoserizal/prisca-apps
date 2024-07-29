@@ -65,7 +65,8 @@
                   " />
               </div>
               <div class="text-center">
-                <GoogleLogin client-id="YOUR_CLIENT_ID" @success="handleGoogleLogin" @error="handleGoogleLoginError">
+                <GoogleLogin client-id="747646854459-78t99tmjoohjchnk1nh7qps9hppqded1.apps.googleusercontent.com"
+                  @success="handleGoogleLogin" @error="handleGoogleLoginError">
                   <q-btn color="primary">
                     <q-icon name="fab fa-google" />
                     Sign Up with Google
