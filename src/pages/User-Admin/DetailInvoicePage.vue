@@ -184,15 +184,17 @@ export default {
       });
     },
     printInvoice() {
-      const container = document.querySelector('.container-box');
-      if (!container) {
-        console.error("Container not found");
-        Swal.fire("Error", "Invoice content not found", "error");
-        return;
-      }
+      // Ensure the content is fully rendered
+      this.$nextTick(() => {
+        const container = document.querySelector('.container-box');
+        if (!container) {
+          console.error("Container not found");
+          Swal.fire("Error", "Invoice content not found", "error");
+          return;
+        }
 
-      // Adding inline styles to ensure proper rendering in PDF
-      const styles = `
+        // Adding inline styles to ensure proper rendering in PDF
+        const styles = `
         <style>
           .container-box {
             background-color: #fff;
@@ -246,7 +248,7 @@ export default {
         </style>
       `;
 
-      const content = `
+        const content = `
         ${styles}
         <div class="container-box">
           <div class="payment-header q-pa-md">
@@ -299,21 +301,29 @@ export default {
         </div>
       `;
 
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = content;
+        // Create a temporary div to hold the content
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content;
+        document.body.appendChild(tempDiv);
 
-      html2canvas(tempDiv, {
-        useCORS: true,
-        allowTaint: true
-      }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'pt', 'a4');
-        const imgHeight = canvas.height * 210 / canvas.width;
-        pdf.addImage(imgData, 'PNG', 0, 0, 210, imgHeight);
-        pdf.save('invoice.pdf');
-      }).catch(error => {
-        console.error("Error generating PDF:", error);
-        Swal.fire("Error", "Failed to generate invoice PDF", "error");
+        // Add a small delay to ensure the content is rendered
+        setTimeout(() => {
+          html2canvas(tempDiv, {
+            useCORS: true,
+            allowTaint: true
+          }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'pt', 'a4');
+            const imgHeight = canvas.height * 210 / canvas.width;
+            pdf.addImage(imgData, 'PNG', 0, 0, 210, imgHeight);
+            pdf.save('invoice.pdf');
+            document.body.removeChild(tempDiv); // Clean up
+          }).catch(error => {
+            console.error("Error generating PDF:", error);
+            Swal.fire("Error", "Failed to generate invoice PDF", "error");
+            document.body.removeChild(tempDiv); // Clean up
+          });
+        }, 500); // 500ms delay
       });
     },
   },
