@@ -1,62 +1,60 @@
 <template>
-  <div>
-    <div class="container-box" ref="invoiceContent">
-      <div class="payment-header q-pa-md">
-        <div class="payment-header-content">
-          <div class="payment-header-left">
-            <h2 style="font-weight: bold;">Payment</h2>
-            <p>Payment Number: {{ payment.no_payment }}</p>
-            <p>Sender: {{ vendor.name }}</p>
-            <p>Address: {{ vendor.alamat }}</p>
-            <p>Phone: {{ vendor.telp }}</p>
-            <p>Bank: {{ vendor.bank }}</p>
-            <p>Account Number: {{ vendor.no_rek }}</p>
-          </div>
-          <div class="payment-header-right">
-            <p>Payment Date: {{ formatDate(payment.created_at) }}</p>
-            <p>Status: {{ payment.status }}</p>
-            <p>Recipient: {{ buyer.name }}</p>
-            <p>Address: {{ buyer.alamat }}</p>
-            <p>Phone: {{ buyer.telp }}</p>
-          </div>
+  <div class="container-box">
+    <div class="payment-header q-pa-md">
+      <div class="payment-header-content">
+        <div class="payment-header-left">
+          <h2 style="font-weight: bold;">payment</h2>
+          <p>payment Number: {{ payment.no_payment }}</p>
+          <p>Sender: {{ vendor.name }}</p>
+          <p>Address: {{ vendor.alamat }}</p>
+          <p>Phone: {{ vendor.telp }}</p>
+          <p>Bank: {{ vendor.bank }}</p>
+          <p>Account Number: {{ vendor.no_rek }}</p>
         </div>
-      </div>
-
-      <div class="payment-body">
-        <div class="header">
-          <div class="row items-center">
-            <div class="col-2 text-center">Item</div>
-            <div class="col-5 text-center">Discount</div>
-            <div class="col-1 text-center">Quantity</div>
-            <div class="col-2 text-center">Price</div>
-            <div class="col-2 text-center">Total</div>
-          </div>
-        </div>
-
-        <div class="row items-center" v-for="(item, index) in lineItems" :key="index">
-          <div class="col-2 text-center">{{ item.name }}</div>
-          <div class="col-5 text-center">{{ item.discount === null ? '0%' : item.discount }}</div>
-          <div class="col-1 text-center">{{ item.quantity }}</div>
-          <div class="col-2 text-center">{{ formatCurrency(item.price) }}</div>
-          <div class="col-2 text-center">{{ formatCurrency(item.amount) }}</div>
-        </div>
-      </div>
-
-      <div class="payment-footer q-pa-md">
-        <div class="row justify-end">
-          <div class="col-auto">
-            <p><strong>Total Amount:</strong> {{ formatCurrency(payment.total_bayar) }}</p>
-          </div>
+        <div class="payment-header-right">
+          <p>payment Date: {{ formatDate(payment.created_at) }}</p>
+          <p>Status: {{ payment.status }}</p>
+          <p>Recipient: {{ buyer.name }}</p>
+          <p>Address: {{ buyer.alamat }}</p>
+          <p>Phone: {{ buyer.telp }}</p>
         </div>
       </div>
     </div>
-    <div class="navigation-buttons" style="display: flex; justify-content: space-between; margin: 20px;">
-      <q-btn @click="$router.push('/order-Admin')" class="q-mb-md" label="Back" color="primary" />
-      <q-btn v-if="payment.status === 'pending' && (!payment.bukti || !payment.bukti.match(/\/images\/[^/]+$/))"
-        @click="paymentReceived" class="q-mb-md" label="Payment Received" color="primary" />
-      <q-btn v-if="payment.status === 'success'" @click="printInvoice" class="q-mb-md" label="Download Invoice"
-        color="primary" />
+
+    <div class="payment-body">
+      <div class="header">
+        <div class="row items-center">
+          <div class="col-2 text-center">Item</div>
+          <div class="col-5 text-center">Discount</div>
+          <div class="col-1 text-center">Quantity</div>
+          <div class="col-2 text-center">Price</div>
+          <div class="col-2 text-center">Total</div>
+        </div>
+      </div>
+
+      <div class="row items-center" v-for="(item, index) in lineItems" :key="index">
+        <div class="col-2 text-center">{{ item.name }}</div>
+        <div class="col-5 text-center">{{ item.discount === null ? '0%' : item.discount }}</div>
+        <div class="col-1 text-center">{{ item.quantity }}</div>
+        <div class="col-2 text-center">{{ formatCurrency(item.price) }}</div>
+        <div class="col-2 text-center">{{ formatCurrency(item.amount) }}</div>
+      </div>
     </div>
+
+    <div class="payment-footer q-pa-md">
+      <div class="row justify-end">
+        <div class="col-auto">
+          <p><strong>Total Amount:</strong> {{ formatCurrency(payment.total_bayar) }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="navigation-buttons" style="display: flex; justify-content: space-between; margin: 20px;">
+    <q-btn @click="$router.push('/order-Admin')" class="q-mb-md" label="Back" color="primary" />
+    <q-btn v-if="payment.status === 'pending' && (!payment.bukti || !payment.bukti.match(/\/images\/[^/]+$/))"
+      @click="paymentReceived" class="q-mb-md" label="Payment Received" color="primary" />
+    <q-btn v-if="payment.status === 'success'" @click="printInvoice" class="q-mb-md" label="Download Invoice"
+      color="primary" />
   </div>
 </template>
 
@@ -65,10 +63,11 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
 export default {
-  name: "DetailPaymentPage",
+  name: "DetailpaymentPage",
   data() {
     return {
       payment: {
@@ -76,7 +75,7 @@ export default {
         status: "",
         total_bayar: 0,
         created_at: "",
-        bukti: "" // Add 'bukti' property here
+        bukti: ""
       },
       buyer: {
         name: "",
@@ -185,91 +184,192 @@ export default {
       });
     },
     printInvoice() {
-      const doc = new jsPDF();
-      const container = document.createElement('div');
-      container.innerHTML = `
-    <style>
-      .container-box {
-        background-color: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        margin: 20px;
-        border: 1px solid #ddd;
-        font-family: Arial, sans-serif;
+      const container = document.querySelector('.container-box');
+      if (!container) {
+        console.error("Container not found");
+        Swal.fire("Error", "Invoice content not found", "error");
+        return;
       }
-      .payment-header {
-        background-color: #f9f9f9;
-        border-bottom: 2px solid #ddd;
-        padding: 20px;
-      }
-      .payment-header-content {
-        display: flex;
-        justify-content: space-between;
-      }
-      .payment-header-left, .payment-header-right {
-        width: 48%;
-      }
-      .payment-header-left p, .payment-header-right p {
-        margin: 0;
-        padding: 5px 0;
-      }
-      .payment-body {
-        padding: 20px;
-      }
-      .payment-body .header {
-        background-color: #f0f0f0;
-        font-weight: bold;
-        padding: 10px 0;
-        margin-bottom: 10px;
-        border-bottom: 1px solid #ddd;
-      }
-      .payment-body .row {
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px solid #ddd;
-        padding: 5px 0;
-      }
-      .payment-body .col-2, .payment-body .col-5, .payment-body .col-1, .payment-body .col-2, .payment-body .col-2 {
-        text-align: center;
-      }
-      .payment-footer {
-        background-color: #f9f9f9;
-        border-top: 1px solid #ddd;
-        padding: 20px;
-        text-align: right;
-      }
-    </style>
-    ` + this.$refs.invoiceContent.innerHTML;
-      html2canvas(container, {
+
+      // Adding inline styles to ensure proper rendering in PDF
+      const styles = `
+        <style>
+          .container-box {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px;
+            border: 1px solid #ddd;
+            font-family: Arial, sans-serif;
+          }
+          .payment-header {
+            background-color: #f9f9f9;
+            border-bottom: 2px solid #ddd;
+            padding: 20px;
+          }
+          .payment-header-content {
+            display: flex;
+            justify-content: space-between;
+          }
+          .payment-header-left, .payment-header-right {
+            width: 48%;
+          }
+          .payment-header-left p, .payment-header-right p {
+            margin: 0;
+            padding: 5px 0;
+          }
+          .payment-body {
+            padding: 20px;
+          }
+          .payment-body .header {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            padding: 10px 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+          }
+          .payment-body .row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 5px 0;
+          }
+          .payment-body .col-2, .payment-body .col-5, .payment-body .col-1, .payment-body .col-2, .payment-body .col-2 {
+            text-align: center;
+          }
+          .payment-footer {
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+            padding: 20px;
+            text-align: right;
+          }
+        </style>
+      `;
+
+      const content = `
+        ${styles}
+        <div class="container-box">
+          <div class="payment-header q-pa-md">
+            <div class="payment-header-content">
+              <div class="payment-header-left">
+                <h2 style="font-weight: bold;">Payment</h2>
+                <p>Payment Number: ${this.payment.no_payment}</p>
+                <p>Sender: ${this.vendor.name}</p>
+                <p>Address: ${this.vendor.alamat}</p>
+                <p>Phone: ${this.vendor.telp}</p>
+                <p>Bank: ${this.vendor.bank}</p>
+                <p>Account Number: ${this.vendor.no_rek}</p>
+              </div>
+              <div class="payment-header-right">
+                <p>Payment Date: ${this.formatDate(this.payment.created_at)}</p>
+                <p>Status: ${this.payment.status}</p>
+                <p>Recipient: ${this.buyer.name}</p>
+                <p>Address: ${this.buyer.alamat}</p>
+                <p>Phone: ${this.buyer.telp}</p>
+              </div>
+            </div>
+          </div>
+          <div class="payment-body">
+            <div class="header">
+              <div class="row">
+                <div class="col-2">Item</div>
+                <div class="col-5">Discount</div>
+                <div class="col-1">Quantity</div>
+                <div class="col-2">Price</div>
+                <div class="col-2">Total</div>
+              </div>
+            </div>
+            ${this.lineItems.map(item => `
+              <div class="row">
+                <div class="col-2">${item.name}</div>
+                <div class="col-5">${item.discount === null ? '0%' : item.discount}</div>
+                <div class="col-1">${item.quantity}</div>
+                <div class="col-2">${this.formatCurrency(item.price)}</div>
+                <div class="col-2">${this.formatCurrency(item.amount)}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="payment-footer q-pa-md">
+            <div class="row justify-end">
+              <div class="col-auto">
+                <p><strong>Total Amount:</strong> ${this.formatCurrency(this.payment.total_bayar)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = content;
+
+      html2canvas(tempDiv, {
         useCORS: true,
         allowTaint: true
       }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 210; // A4 width in mm
-        const pageHeight = 295; // A4 height in mm
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
-
-        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          doc.addPage();
-          doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
-
-        doc.save('invoice.pdf');
+        const pdf = new jsPDF('p', 'pt', 'a4');
+        const imgHeight = canvas.height * 210 / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, 210, imgHeight);
+        pdf.save('invoice.pdf');
       }).catch(error => {
         console.error("Error generating PDF:", error);
         Swal.fire("Error", "Failed to generate invoice PDF", "error");
       });
-    }
+    },
   },
   mounted() {
     this.fetchPaymentDetails();
-  }
+  },
 };
 </script>
+
+<style scoped>
+.container-box {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 20px;
+  border: 1px solid #ddd;
+}
+
+.payment-header {
+  background-color: #f9f9f9;
+  border-bottom: 2px solid #ddd;
+}
+
+.payment-header-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.payment-header-left {
+  flex: 1;
+}
+
+.payment-header-right {
+  flex: 1;
+  text-align: right;
+}
+
+.payment-body {
+  padding: 20px;
+}
+
+.payment-body .header {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  padding: 10px 0;
+  margin-bottom: 10px;
+}
+
+.payment-footer {
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  padding: 20px;
+}
+
+.navigation-buttons {
+  margin: 20px;
+}
+</style>
