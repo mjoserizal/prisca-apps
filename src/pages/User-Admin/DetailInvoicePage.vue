@@ -1,60 +1,62 @@
 <template>
-  <div class="container-box">
-    <div class="payment-header q-pa-md">
-      <div class="payment-header-content">
-        <div class="payment-header-left">
-          <h2 style="font-weight: bold;">Payment</h2>
-          <p>Payment Number: {{ payment.no_payment }}</p>
-          <p>Sender: {{ vendor.name }}</p>
-          <p>Address: {{ vendor.alamat }}</p>
-          <p>Phone: {{ vendor.telp }}</p>
-          <p>Bank: {{ vendor.bank }}</p>
-          <p>Account Number: {{ vendor.no_rek }}</p>
-        </div>
-        <div class="payment-header-right">
-          <p>Payment Date: {{ formatDate(payment.created_at) }}</p>
-          <p>Status: {{ payment.status }}</p>
-          <p>Recipient: {{ buyer.name }}</p>
-          <p>Address: {{ buyer.alamat }}</p>
-          <p>Phone: {{ buyer.telp }}</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="payment-body">
-      <div class="header">
-        <div class="row items-center">
-          <div class="col-2 text-center">Item</div>
-          <div class="col-5 text-center">Discount</div>
-          <div class="col-1 text-center">Quantity</div>
-          <div class="col-2 text-center">Price</div>
-          <div class="col-2 text-center">Total</div>
+  <div>
+    <div class="container-box" ref="invoiceContent">
+      <div class="payment-header q-pa-md">
+        <div class="payment-header-content">
+          <div class="payment-header-left">
+            <h2 style="font-weight: bold;">Payment</h2>
+            <p>Payment Number: {{ payment.no_payment }}</p>
+            <p>Sender: {{ vendor.name }}</p>
+            <p>Address: {{ vendor.alamat }}</p>
+            <p>Phone: {{ vendor.telp }}</p>
+            <p>Bank: {{ vendor.bank }}</p>
+            <p>Account Number: {{ vendor.no_rek }}</p>
+          </div>
+          <div class="payment-header-right">
+            <p>Payment Date: {{ formatDate(payment.created_at) }}</p>
+            <p>Status: {{ payment.status }}</p>
+            <p>Recipient: {{ buyer.name }}</p>
+            <p>Address: {{ buyer.alamat }}</p>
+            <p>Phone: {{ buyer.telp }}</p>
+          </div>
         </div>
       </div>
 
-      <div class="row items-center" v-for="(item, index) in lineItems" :key="index">
-        <div class="col-2 text-center">{{ item.name }}</div>
-        <div class="col-5 text-center">{{ item.discount === null ? '0%' : item.discount }}</div>
-        <div class="col-1 text-center">{{ item.quantity }}</div>
-        <div class="col-2 text-center">{{ formatCurrency(item.price) }}</div>
-        <div class="col-2 text-center">{{ formatCurrency(item.amount) }}</div>
-      </div>
-    </div>
+      <div class="payment-body">
+        <div class="header">
+          <div class="row items-center">
+            <div class="col-2 text-center">Item</div>
+            <div class="col-5 text-center">Discount</div>
+            <div class="col-1 text-center">Quantity</div>
+            <div class="col-2 text-center">Price</div>
+            <div class="col-2 text-center">Total</div>
+          </div>
+        </div>
 
-    <div class="payment-footer q-pa-md">
-      <div class="row justify-end">
-        <div class="col-auto">
-          <p><strong>Total Amount:</strong> {{ formatCurrency(payment.total_bayar) }}</p>
+        <div class="row items-center" v-for="(item, index) in lineItems" :key="index">
+          <div class="col-2 text-center">{{ item.name }}</div>
+          <div class="col-5 text-center">{{ item.discount === null ? '0%' : item.discount }}</div>
+          <div class="col-1 text-center">{{ item.quantity }}</div>
+          <div class="col-2 text-center">{{ formatCurrency(item.price) }}</div>
+          <div class="col-2 text-center">{{ formatCurrency(item.amount) }}</div>
+        </div>
+      </div>
+
+      <div class="payment-footer q-pa-md">
+        <div class="row justify-end">
+          <div class="col-auto">
+            <p><strong>Total Amount:</strong> {{ formatCurrency(payment.total_bayar) }}</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="navigation-buttons" style="display: flex; justify-content: space-between; margin: 20px;">
-    <q-btn @click="$router.push('/order-Admin')" class="q-mb-md" label="Back" color="primary" />
-    <q-btn v-if="payment.status === 'pending' && (!payment.bukti || !payment.bukti.match(/\/images\/[^/]+$/))"
-      @click="paymentReceived" class="q-mb-md" label="Payment Received" color="primary" />
-    <q-btn v-if="payment.status === 'success'" @click="printInvoice" class="q-mb-md" label="Download Invoice"
-      color="primary" />
+    <div class="navigation-buttons" style="display: flex; justify-content: space-between; margin: 20px;">
+      <q-btn @click="$router.push('/order-Admin')" class="q-mb-md" label="Back" color="primary" />
+      <q-btn v-if="payment.status === 'pending' && (!payment.bukti || !payment.bukti.match(/\/images\/[^/]+$/))"
+        @click="paymentReceived" class="q-mb-md" label="Payment Received" color="primary" />
+      <q-btn v-if="payment.status === 'success'" @click="printInvoice" class="q-mb-md" label="Download Invoice"
+        color="primary" />
+    </div>
   </div>
 </template>
 
@@ -240,86 +242,34 @@ export default {
     ` + this.$refs.invoiceContent.innerHTML;
       html2canvas(container, {
         useCORS: true,
-        allowTaint: true,
-        logging: true,
-      }).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        doc.addImage(imgData, "PNG", 10, 10, 190, 0);
-        doc.save("invoice.pdf");
-      }).catch((error) => {
-        console.error("Error generating invoice PDF:", error);
+        allowTaint: true
+      }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 295; // A4 height in mm
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          doc.addPage();
+          doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        doc.save('invoice.pdf');
+      }).catch(error => {
+        console.error("Error generating PDF:", error);
         Swal.fire("Error", "Failed to generate invoice PDF", "error");
       });
-    },
+    }
   },
   mounted() {
     this.fetchPaymentDetails();
-  },
+  }
 };
 </script>
-
-<style scoped>
-.container-box {
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 20px;
-  border: 1px solid #ddd;
-}
-
-.payment-header {
-  background-color: #f9f9f9;
-  border-bottom: 2px solid #ddd;
-  padding: 20px;
-}
-
-.payment-header-content {
-  display: flex;
-  justify-content: space-between;
-}
-
-.payment-header-left,
-.payment-header-right {
-  width: 48%;
-}
-
-.payment-header-left p,
-.payment-header-right p {
-  margin: 0;
-  padding: 5px 0;
-}
-
-.payment-body {
-  padding: 20px;
-}
-
-.payment-body .header {
-  background-color: #f0f0f0;
-  font-weight: bold;
-  padding: 10px 0;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.payment-body .row {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #ddd;
-  padding: 5px 0;
-}
-
-.payment-body .col-2,
-.payment-body .col-5,
-.payment-body .col-1,
-.payment-body .col-2,
-.payment-body .col-2 {
-  text-align: center;
-}
-
-.payment-footer {
-  background-color: #f9f9f9;
-  border-top: 1px solid #ddd;
-  padding: 20px;
-  text-align: right;
-}
-</style>
