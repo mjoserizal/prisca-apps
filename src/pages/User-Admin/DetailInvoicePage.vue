@@ -184,7 +184,6 @@ export default {
       });
     },
     printInvoice() {
-      // Ensure the content is fully rendered
       this.$nextTick(() => {
         const container = document.querySelector('.container-box');
         if (!container) {
@@ -193,7 +192,6 @@ export default {
           return;
         }
 
-        // Adding inline styles to ensure proper rendering in PDF
         const styles = `
         <style>
           .container-box {
@@ -301,21 +299,34 @@ export default {
         </div>
       `;
 
-        // Create a temporary div to hold the content
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = content;
         document.body.appendChild(tempDiv);
 
-        // Add a small delay to ensure the content is rendered
         setTimeout(() => {
           html2canvas(tempDiv, {
             useCORS: true,
             allowTaint: true
           }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'pt', 'a4');
-            const imgHeight = canvas.height * 210 / canvas.width;
-            pdf.addImage(imgData, 'PNG', 0, 0, 210, imgHeight);
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 210; // A4 width in mm
+            const pageHeight = 295; // A4 height in mm
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+              position -= pageHeight;
+              pdf.addPage();
+              pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+              heightLeft -= pageHeight;
+            }
+
             pdf.save('invoice.pdf');
             document.body.removeChild(tempDiv); // Clean up
           }).catch(error => {
