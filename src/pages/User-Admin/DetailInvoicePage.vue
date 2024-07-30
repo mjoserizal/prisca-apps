@@ -306,27 +306,21 @@ export default {
         setTimeout(() => {
           html2canvas(tempDiv, {
             useCORS: true,
-            allowTaint: true
+            allowTaint: true,
+            scale: 2 // Increase the scale factor to improve image quality
           }).then(canvas => {
-            const pdf = new jsPDF('p', 'pt', 'a4');
+            const pdf = new jsPDF('p', 'mm', 'a4');
             const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 210; // A4 width in mm
-            const pageHeight = 295; // A4 height in mm
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            let heightLeft = imgHeight;
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = canvas.width * 210 / canvas.width; // 210 mm is the width of A4
+            const imgHeight = canvas.height * 210 / canvas.width; // Maintain aspect ratio
 
-            let position = 0;
+            // Centering the image
+            const x = (pdfWidth - imgWidth) / 2;
+            const y = (pdfHeight - imgHeight) / 2;
 
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-
-            while (heightLeft >= 0) {
-              position -= pageHeight;
-              pdf.addPage();
-              pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-              heightLeft -= pageHeight;
-            }
-
+            pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
             pdf.save('invoice.pdf');
             document.body.removeChild(tempDiv); // Clean up
           }).catch(error => {
