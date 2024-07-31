@@ -313,12 +313,12 @@ export default {
             const imgData = canvas.toDataURL('image/png');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgWidth = canvas.width * 210 / canvas.width; // 210 mm is the width of A4
-            const imgHeight = canvas.height * 210 / canvas.width; // Maintain aspect ratio
+            const imgWidth = pdfWidth - 20; // Decrease to fit within the margins
+            const imgHeight = canvas.height * imgWidth / canvas.width; // Maintain aspect ratio
 
             // Centering the image
             const x = (pdfWidth - imgWidth) / 2;
-            const y = (pdfHeight - imgHeight) / 2;
+            const y = 10; // Top margin
 
             pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
             pdf.save('invoice.pdf');
