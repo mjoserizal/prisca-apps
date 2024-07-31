@@ -313,10 +313,18 @@ export default {
             const imgData = canvas.toDataURL('image/png');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgWidth = pdfWidth - 20; // Decrease to fit within the margins
-            const imgHeight = pdfHeight - 20; // Maintain aspect ratio but fit to page height
+            const imgAspectRatio = canvas.width / canvas.height;
+            const pdfAspectRatio = pdfWidth / pdfHeight;
 
-            // Calculate height based on content to avoid empty space
+            let imgWidth, imgHeight;
+            if (imgAspectRatio > pdfAspectRatio) {
+              imgWidth = pdfWidth - 20; // Fit width
+              imgHeight = imgWidth / imgAspectRatio;
+            } else {
+              imgHeight = pdfHeight - 20; // Fit height
+              imgWidth = imgHeight * imgAspectRatio;
+            }
+
             const x = (pdfWidth - imgWidth) / 2;
             const y = 10; // Top margin
 
