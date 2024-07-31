@@ -318,7 +318,7 @@ export default {
 
             let position = 0;
 
-            if (heightLeft <= pageHeight) {
+            if (imgHeight < pageHeight) {
               pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
             } else {
               while (heightLeft >= 0) {
