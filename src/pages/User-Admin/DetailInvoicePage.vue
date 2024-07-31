@@ -316,11 +316,11 @@ export default {
             const imgWidth = pdfWidth - 20; // Decrease to fit within the margins
             const imgHeight = canvas.height * imgWidth / canvas.width; // Maintain aspect ratio
 
-            // Centering the image
+            // Calculate height based on content to avoid empty space
             const x = (pdfWidth - imgWidth) / 2;
             const y = 10; // Top margin
 
-            pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+            pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight, '', 'FAST'); // Use 'FAST' compression for better quality
             pdf.save('invoice.pdf');
             document.body.removeChild(tempDiv); // Clean up
           }).catch(error => {
