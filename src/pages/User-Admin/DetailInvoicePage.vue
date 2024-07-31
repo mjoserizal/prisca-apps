@@ -314,7 +314,7 @@ export default {
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
             const imgWidth = pdfWidth - 20; // Decrease to fit within the margins
-            const imgHeight = canvas.height * imgWidth / canvas.width; // Maintain aspect ratio
+            const imgHeight = pdfHeight - 20; // Maintain aspect ratio but fit to page height
 
             // Calculate height based on content to avoid empty space
             const x = (pdfWidth - imgWidth) / 2;
