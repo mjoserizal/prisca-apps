@@ -311,26 +311,16 @@ export default {
           }).then(canvas => {
             const pdf = new jsPDF('p', 'mm', 'a4');
             const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 210; // Width of A4 in mm
-            const pageHeight = 297; // Height of A4 in mm
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            const heightLeft = imgHeight;
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = pdfWidth - 20; // Decrease to fit within the margins
+            const imgHeight = canvas.height * imgWidth / canvas.width; // Maintain aspect ratio
 
-            let position = 0;
+            // Calculate height based on content to avoid empty space
+            const x = (pdfWidth - imgWidth) / 2;
+            const y = 10; // Top margin
 
-            if (imgHeight < pageHeight) {
-              pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-            } else {
-              while (heightLeft >= 0) {
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-                position -= pageHeight;
-                if (heightLeft > 0) {
-                  pdf.addPage();
-                }
-              }
-            }
-
+            pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight, '', 'FAST'); // Use 'FAST' compression for better quality
             pdf.save('invoice.pdf');
             document.body.removeChild(tempDiv); // Clean up
           }).catch(error => {
