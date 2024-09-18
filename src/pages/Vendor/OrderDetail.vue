@@ -10,7 +10,7 @@
         <q-card-section>
           <div class="invoice-header">
             <div>
-              <q-img src="/public/images/prisca logo.png" style="margin-right: 8px; height: 100px; width: 100px" />
+              <q-img src="/images/prisca logo.png" style="margin-right: 8px; height: 100px; width: 100px" />
             </div>
             <div>
               <div class="text-right">
